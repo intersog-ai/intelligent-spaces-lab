@@ -2,7 +2,7 @@
 
 Intelligent Spaces Lab, Build Track B02 · [Intersog](https://www.intersog.com) · November 19, 2026 · Apache-2.0
 
-> **No guarantee.** This is open research material. It was produced on one computer, with a real MQTT broker and clients but simulated devices, emulated packet loss and no radios, by AI agents under human direction. It is not a product and not safety advice. Use it at your own risk and for your own benefit.
+> **Provided as is.** This is open research material. It was produced on one computer, with a real MQTT broker and clients but simulated devices, emulated packet loss and no radios, by AI agents under human direction. It is not a product and not safety advice. Use it at your own risk and for your own benefit.
 
 ## 1. Question
 

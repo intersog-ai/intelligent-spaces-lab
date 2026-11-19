@@ -4,7 +4,7 @@
 
 Season 1 episode 4 gave the home its senses and one rule: fresh, sourced readings. Every reading carries a device ID, a timestamp and an event ID, and stale or duplicate data must not drive a decision. We built that rule as a reading-quality layer, ran the twin for a simulated week with faulty sensors, and compared it with two simpler hubs: one that trusts the latest message, and one that trusts device timestamps.
 
-Video: [CHECK: YouTube URL] · synthetic narration · research in simulation, no guarantee.
+Video: [CHECK: YouTube URL] · synthetic narration · research in simulation, provided as is.
 
 ## Findings
 

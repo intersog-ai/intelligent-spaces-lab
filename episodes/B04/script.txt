@@ -1,6 +1,6 @@
 Intersog presents. Intelligent Spaces. Build Track, episode four. Sent is not closed.
 
-In season one, water leaks under the kitchen sink, and a local rule closes the main valve. No AI in the loop. Today we build that rule and try to break it, in a digital twin. No guarantee. This is not a certified leak protection system.
+In season one, water leaks under the kitchen sink, and a local rule closes the main valve. No AI in the loop. Today we build that rule and try to break it, in a digital twin. It is provided as is, and it is not a certified leak protection system.
 
 We compared three designs. The first says the valve is closed the moment it sends the command. The second says closed when the valve answers, got it. The third is a small state machine on the hub. It says closed only when the valve reports zero percent open, and a flow meter on the pipe reads zero.
 

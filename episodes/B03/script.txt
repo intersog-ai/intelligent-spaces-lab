@@ -2,7 +2,7 @@ Intersog presents. Intelligent Spaces. Build Track, episode three. Readings you 
 
 A thermometer in our kitchen got stuck. Same number, every minute, for twelve hours. Fresh timestamp, plausible value, no duplicates. A hub that trusted it made about six hundred heating decisions in one week on a number that was no longer true.
 
-This is a research series. We take the home from season one and build it in the open, in a digital twin. The code, the data and the prompts are free to download. There is no guarantee. Use it at your own risk, and for your own benefit.
+This is a research series. We take the home from season one and build it in the open, in a digital twin. The code, the data and the prompts are free to download. It is provided as is. Use it at your own risk, and for your own benefit.
 
 Season one gave the home one rule for its senses. Fresh, sourced readings. Every reading has a device, a timestamp and an event ID. Stale or duplicate data must not drive a decision. This time we built that rule, and tested it.
 

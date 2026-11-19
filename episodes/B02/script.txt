@@ -2,7 +2,7 @@ Intersog presents. Intelligent Spaces. Build Track, episode two. Connect without
 
 In season one, episode three, someone says: we're leaving. Lights go off, the heating drops, the shades close, and the home checks a window. One shade does not respond. And the home says so. Today we build that over a real protocol, on one machine, with no cloud in the path.
 
-This is research. The broker and the messages are real. The devices are still our twin, and there are no radios. The code and the data are free to download. There is no guarantee.
+This is research. The broker and the messages are real. The devices are still our twin, and there are no radios. The code and the data are free to download. It is provided as is.
 
 We ran a real MQTT broker on the same computer as the hub. Every device got its own connection, and its own last will: a message the broker sends for it if it disappears. Every device also published configuration topics that Home Assistant can discover.
 

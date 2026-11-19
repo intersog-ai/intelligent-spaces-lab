@@ -2,7 +2,7 @@
 
 Intelligent Spaces Lab, Build Track B03 · [Intersog](https://www.intersog.com) · November 19, 2026 · Apache-2.0
 
-> **No guarantee.** This is open research material. It was produced in a simulator, with simulated devices and scripted faults, by AI agents under human direction. It is not a product, not a certified alarm system and not safety advice. Use it at your own risk and for your own benefit. Life-safety equipment must be listed and installed by qualified people.
+> **Provided as is.** This is open research material. It was produced in a simulator, with simulated devices and scripted faults, by AI agents under human direction. It is not a product, not a certified alarm system and not safety advice. Use it at your own risk and for your own benefit. Life-safety equipment must be listed and installed by qualified people.
 
 ## 1. Question
 

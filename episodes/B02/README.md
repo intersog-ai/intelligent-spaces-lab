@@ -4,7 +4,7 @@
 
 We moved the twin from its in-process bus onto a real MQTT broker running on the same machine: one client per device, Last Will for offline detection, retained state, QoS 0 and 1, and Home Assistant discovery topics. Then we ran the Season 1 E03 routine, "we're leaving": lights off, heating to the away setpoint, shades closed, a window check, with one shade losing power just before. We measured what the protocol changes and what it does not. Matter and Thread were not run on radios: the device schema is mapped to Matter clusters, with ids verified against the SDK's generated definitions.
 
-Video: [CHECK: YouTube URL] · synthetic narration · research in simulation, no guarantee.
+Video: [CHECK: YouTube URL] · synthetic narration · research in simulation, provided as is.
 
 ## Findings
 

@@ -4,7 +4,7 @@
 
 Season 1 episode five has a leak under the sink. A local rule closes the main water valve with no AI in the loop. We built that rule as a state machine on the hub, with a journal that survives a reboot, and compared it in the twin with two common designs: report "closed" when the command is sent, and report "closed" when the valve acknowledges. Then we broke the valve, the network, the hub and the internet, 500 seeded leaks per condition.
 
-Video: [CHECK: YouTube URL] · synthetic narration · research in simulation, no guarantee. This is not a certified leak-protection system.
+Video: [CHECK: YouTube URL] · synthetic narration · research in simulation, provided as is. This is not a certified leak-protection system.
 
 ## Findings
 
