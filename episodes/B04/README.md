@@ -35,7 +35,8 @@ python experiments/b04_valve/run.py         # 8 conditions x 3 designs x 500 lea
 - [`experiments/b04_valve/notes.md`](../../experiments/b04_valve/notes.md): results table and what we fixed along the way.
 - [`experiments/b04_valve/results.json`](../../experiments/b04_valve/results.json): every number in this episode.
 - [`islab/safety/`](../../islab/safety/): the controller, journal, flow meter, notifier and explanation checker.
-- [`script_draft.txt`](script_draft.txt): the narration draft.
+- [`script.txt`](script.txt): the narration, word for word.
+- Downloadable pack: `IS_B04_pack.zip` (release asset, same content as tag `b04`).
 
 ## Talk to us
 

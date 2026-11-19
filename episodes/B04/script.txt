@@ -1,0 +1,27 @@
+Intersog presents. Intelligent Spaces. Build Track, episode four. Sent is not closed.
+
+In season one, water leaks under the kitchen sink, and a local rule closes the main valve. No AI in the loop. Today we build that rule and try to break it, in a digital twin. No guarantee. This is not a certified leak protection system.
+
+We compared three designs. The first says the valve is closed the moment it sends the command. The second says closed when the valve answers, got it. The third is a small state machine on the hub. It says closed only when the valve reports zero percent open, and a flow meter on the pipe reads zero.
+
+Five hundred leaks for every design, under eight conditions: a healthy valve, a stuck valve, a valve that stops at forty percent, lost commands, lost reports, a hub reboot, the internet down, and a lost leak alert.
+
+Start with a healthy valve. The first two designs said closed while water was still flowing, every single time. The state machine confirmed the close in six and a half seconds at the median, and eight point four at the ninety fifth percentile.
+
+Now a stuck valve. It answers every command, and never moves. Both simple designs told the family the water was off, in one hundred percent of runs. It was not. A valve stuck at forty percent: the same, one hundred percent.
+
+The state machine never said closed. After thirty seconds without proof, it told people in plain words to turn off the water by hand at the main shutoff. It sent a second alarm to the monitoring centre. Both happened in every run.
+
+Lose half the commands on the network, and the fire and forget design left the valve open in about half the runs, while saying it was closed. The state machine resends with the same command ID, so the valve never acts twice. It closed the valve in all five hundred runs.
+
+Then we rebooted the hub in the middle of closing. The state machine writes each step to a journal on disk before it acts. After the restart it read the journal and finished the job. With the journal, the median confirmation took thirty four seconds. Without it, more than three minutes.
+
+With the internet down, the valve still closed and was confirmed in under nine seconds. But the alarm reached the monitoring centre only when the internet came back, four and a half minutes later. The person away from home was not told within a minute. That gap is still open.
+
+When the leak alert itself was lost, the two simple designs never closed the valve, and told no one. The state machine also listens to the sensor's status reports. It closed the valve every time.
+
+Finally, the explanation. After every leak, the hub writes what happened, using only its journal. Every sentence cites a record, and a checker tests each time and number against it. More than sixty four thousand statements, all matched. But a record can only be as true as what was written. When the simple designs wrote closed, it was not true yet.
+
+We also found a bug in our own code. After a reboot, our alarm hub sent the same leak alarm twice in most runs. The fix cut that to under one in ten.
+
+A command sent is not a valve closed. Proof comes from the device, and from the water itself. If you build devices, platforms or spaces like these, Intersog's engineers do this work.

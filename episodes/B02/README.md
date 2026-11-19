@@ -34,7 +34,8 @@ python experiments/b02_connect/run.py       # 48 routine trials over a real loca
 - [`docs/paper_b02.md`](../../docs/paper_b02.md): question, method, results, limits.
 - [`experiments/b02_connect/notes.md`](../../experiments/b02_connect/notes.md): what is real and what is modelled; facts taken from our own knowledge, to be checked.
 - [`islab/connect/`](../../islab/connect/): broker, adapter, hub, Home Assistant discovery, Matter mapping.
-- [`script_draft.txt`](script_draft.txt): narration draft.
+- [`script.txt`](script.txt): the narration, word for word.
+- Downloadable pack: `IS_B02_pack.zip` (release asset, same content as tag `b02`).
 
 ## Talk to us
 

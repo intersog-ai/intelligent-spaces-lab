@@ -33,7 +33,8 @@ python experiments/b03_readings/run.py      # 10 seeds x 7 simulated days, about
 - [`docs/paper_b03.md`](../../docs/paper_b03.md): question, method, results, limits.
 - [`islab/readings/`](../../islab/readings/): the reading-quality layer and the three hub views.
 - [`experiments/b03_readings/`](../../experiments/b03_readings/): `run.py`, `results.json` (every seed), `notes.md`.
-- [`script_draft.txt`](script_draft.txt): narration draft.
+- [`script.txt`](script.txt): the narration, word for word.
+- Downloadable pack: `IS_B03_pack.zip` (release asset, same content as tag `b03`).
 
 ## Talk to us
 
