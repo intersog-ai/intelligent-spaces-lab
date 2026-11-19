@@ -1,0 +1,890 @@
+{
+ "experiment": "alarm_path",
+ "date": "2026-11-19",
+ "method": "Discrete-event twin (islab.core.sim). Per condition, 500 independent seeded trials (seeds 10000-10499): one detector event (smoke/leak/forced entry in rotation) at t=120-180 s; AlarmHub encodes AES-128 encrypted ADM-CID DC-09, sends through EgressGate (purpose=alarm) over a simulated WAN (latency U(0.05, 0.25) s each way, loss applied independently each direction to frames and ACKs) to a simulated MonitoringCentre that decodes, checks CRC/length/timestamp band (-40/+20 s), de-duplicates by (account, sequence, token, event) and ACKs. Hub retries the same sequence number with a fresh timestamp after an ACK timeout plus exponential backoff with jitter. Receipt latency = first centre receipt minus event time. Interop: real localhost sockets against pysiaalarm receivers (aio TCP, aio UDP = what Home Assistant uses, and sync TCP).",
+ "params": {
+  "trials_per_condition": 500,
+  "hub": {
+   "ack_timeout": 5.0,
+   "backoff_base": 1.0,
+   "backoff_cap": 16.0,
+   "heartbeat_s": 60.0
+  },
+  "wan_latency_s": [
+   0.05,
+   0.25
+  ],
+  "conditions": {
+   "normal": {
+    "loss": 0.0
+   },
+   "loss_2pct": {
+    "loss": 0.02
+   },
+   "loss_20pct": {
+    "loss": 0.2
+   },
+   "outage_60s": {
+    "loss": 0.0,
+    "outage": "random_inside"
+   },
+   "outage_60s_at_start": {
+    "loss": 0.0,
+    "outage": "at_start"
+   },
+   "outage_60s_backoff_cap_4s": {
+    "loss": 0.0,
+    "outage": "random_inside",
+    "hub": {
+     "backoff_cap": 4.0
+    }
+   },
+   "loss_20pct_backoff_cap_4s": {
+    "loss": 0.2,
+    "hub": {
+     "backoff_cap": 4.0
+    }
+   }
+  },
+  "format": "ADM-CID, AES-128",
+  "centre_timeband_s": [
+   40,
+   20
+  ],
+  "run_horizon_after_event_s": 900
+ },
+ "results": {
+  "conditions": {
+   "normal": {
+    "events": 500,
+    "delivered": 500,
+    "delivered_pct": 100.0,
+    "receipt_latency_s": {
+     "p50": 0.153,
+     "p95": 0.246,
+     "p99": 0.257,
+     "max": 0.259
+    },
+    "ack_latency_s": {
+     "p50": 0.307,
+     "p95": 0.443
+    },
+    "delivered_within_60s_pct": 100.0,
+    "mean_transmissions_per_alarm": 1.0,
+    "duplicates_received_at_centre": 0,
+    "duplicates_suppressed": 0,
+    "dispatch_decisions_per_event": [
+     1
+    ],
+    "local_siren_latency_s_max": 0.01,
+    "local_siren_sounded_pct": 100.0
+   },
+   "loss_2pct": {
+    "events": 500,
+    "delivered": 500,
+    "delivered_pct": 100.0,
+    "receipt_latency_s": {
+     "p50": 0.164,
+     "p95": 0.255,
+     "p99": 6.236,
+     "max": 6.683
+    },
+    "ack_latency_s": {
+     "p50": 0.312,
+     "p95": 0.487
+    },
+    "delivered_within_60s_pct": 100.0,
+    "mean_transmissions_per_alarm": 1.044,
+    "duplicates_received_at_centre": 7,
+    "duplicates_suppressed": 7,
+    "dispatch_decisions_per_event": [
+     1
+    ],
+    "local_siren_latency_s_max": 0.01,
+    "local_siren_sounded_pct": 100.0
+   },
+   "loss_20pct": {
+    "events": 500,
+    "delivered": 500,
+    "delivered_pct": 100.0,
+    "receipt_latency_s": {
+     "p50": 0.181,
+     "p95": 6.672,
+     "p99": 22.454,
+     "max": 40.954
+    },
+    "ack_latency_s": {
+     "p50": 0.369,
+     "p95": 21.585
+    },
+    "delivered_within_60s_pct": 100.0,
+    "mean_transmissions_per_alarm": 1.6,
+    "duplicates_received_at_centre": 119,
+    "duplicates_suppressed": 119,
+    "dispatch_decisions_per_event": [
+     1
+    ],
+    "local_siren_latency_s_max": 0.01,
+    "local_siren_sounded_pct": 100.0
+   },
+   "outage_60s": {
+    "events": 500,
+    "delivered": 500,
+    "delivered_pct": 100.0,
+    "receipt_latency_s": {
+     "p50": 36.671,
+     "p95": 68.129,
+     "p99": 78.553,
+     "max": 84.023
+    },
+    "ack_latency_s": {
+     "p50": 36.776,
+     "p95": 68.214
+    },
+    "delivered_within_60s_pct": 82.4,
+    "mean_transmissions_per_alarm": 4.842,
+    "duplicates_received_at_centre": 0,
+    "duplicates_suppressed": 0,
+    "dispatch_decisions_per_event": [
+     1
+    ],
+    "local_siren_latency_s_max": 0.01,
+    "local_siren_sounded_pct": 100.0
+   },
+   "outage_60s_at_start": {
+    "events": 500,
+    "delivered": 500,
+    "delivered_pct": 100.0,
+    "receipt_latency_s": {
+     "p50": 70.882,
+     "p95": 83.722,
+     "p99": 86.556,
+     "max": 87.741
+    },
+    "ack_latency_s": {
+     "p50": 71.05,
+     "p95": 83.775
+    },
+    "delivered_within_60s_pct": 0.0,
+    "mean_transmissions_per_alarm": 6.718,
+    "duplicates_received_at_centre": 0,
+    "duplicates_suppressed": 0,
+    "dispatch_decisions_per_event": [
+     1
+    ],
+    "local_siren_latency_s_max": 0.01,
+    "local_siren_sounded_pct": 100.0
+   },
+   "outage_60s_backoff_cap_4s": {
+    "events": 500,
+    "delivered": 500,
+    "delivered_pct": 100.0,
+    "receipt_latency_s": {
+     "p50": 33.09,
+     "p95": 61.731,
+     "p99": 66.046,
+     "max": 68.125
+    },
+    "ack_latency_s": {
+     "p50": 33.3,
+     "p95": 61.975
+    },
+    "delivered_within_60s_pct": 92.8,
+    "mean_transmissions_per_alarm": 5.364,
+    "duplicates_received_at_centre": 0,
+    "duplicates_suppressed": 0,
+    "dispatch_decisions_per_event": [
+     1
+    ],
+    "local_siren_latency_s_max": 0.01,
+    "local_siren_sounded_pct": 100.0
+   },
+   "loss_20pct_backoff_cap_4s": {
+    "events": 500,
+    "delivered": 500,
+    "delivered_pct": 100.0,
+    "receipt_latency_s": {
+     "p50": 0.181,
+     "p95": 6.672,
+     "p99": 22.454,
+     "max": 35.025
+    },
+    "ack_latency_s": {
+     "p50": 0.369,
+     "p95": 21.585
+    },
+    "delivered_within_60s_pct": 100.0,
+    "mean_transmissions_per_alarm": 1.602,
+    "duplicates_received_at_centre": 120,
+    "duplicates_suppressed": 120,
+    "dispatch_decisions_per_event": [
+     1
+    ],
+    "local_siren_latency_s_max": 0.01,
+    "local_siren_sounded_pct": 100.0
+   }
+  },
+  "pysiaalarm_interop": {
+   "version": "3.2.2",
+   "error": null,
+   "matrix": {
+    "aio_TCP": {
+     "adm_cid_smoke_1111": {
+      "expected": "FA",
+      "response": "ACK",
+      "callback_code": "FA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\nD75F0016\"ACK\"0001R0L1#AAA123[]\r"
+     },
+     "adm_cid_smoke_restore_3111": {
+      "expected": "FH",
+      "response": "ACK",
+      "callback_code": "FH",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\nD45C0016\"ACK\"0002R0L1#AAA123[]\r"
+     },
+     "adm_cid_leak_1154": {
+      "expected": "WA",
+      "response": "ACK",
+      "callback_code": "YN",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": false,
+      "raw_response": "\n155C0016\"ACK\"0003R0L1#AAA123[]\r"
+     },
+     "adm_cid_burglary_1130": {
+      "expected": "BA",
+      "response": "ACK",
+      "callback_code": "BA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\nD25A0016\"ACK\"0004R0L1#AAA123[]\r"
+     },
+     "adm_cid_test_1602": {
+      "expected": "RP",
+      "response": "ACK",
+      "callback_code": "RP",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\n135A0016\"ACK\"0005R0L1#AAA123[]\r"
+     },
+     "sia_dcs_smoke_FA": {
+      "expected": "FA",
+      "response": "ACK",
+      "callback_code": "FA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\n10590016\"ACK\"0006R0L1#AAA123[]\r"
+     },
+     "sia_dcs_leak_WA": {
+      "expected": "WA",
+      "response": "ACK",
+      "callback_code": "WA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\nD1590016\"ACK\"0007R0L1#AAA123[]\r"
+     },
+     "sia_dcs_burglary_BA": {
+      "expected": "BA",
+      "response": "ACK",
+      "callback_code": "BA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\nDE560016\"ACK\"0008R0L1#AAA123[]\r"
+     },
+     "null_heartbeat": {
+      "expected": "RP",
+      "response": "ACK",
+      "callback_code": "RP",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\n1F560016\"ACK\"0009R0L1#AAA123[]\r"
+     },
+     "no_receiver_field": {
+      "expected": "FA",
+      "response": "ACK",
+      "callback_code": "FA",
+      "callback_fired": true,
+      "response_header_nonstandard": true,
+      "response_decrypted": null,
+      "pass": false,
+      "raw_response": "\n051B0018\"ACK\"0010NoneL1#AAA123[]\r"
+     },
+     "sia_dcs_with_xdata": {
+      "expected": "FA",
+      "response": "ACK",
+      "callback_code": "FA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\nD79E0016\"ACK\"0011R0L1#AAA123[]\r"
+     },
+     "enc128_adm_cid_smoke": {
+      "expected": "FA",
+      "response": "ACK",
+      "callback_code": "FA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": "]_17:11:39,11-19-2026",
+      "pass": true,
+      "raw_response": "\n3BFA0056\"*ACK\"0012R0L1#BBB456[73C47CB1533D079ECCB646DCAB3C7FE6DF5D2F6C4F8D351F0BF636EBD920314C\r"
+     },
+     "enc128_sia_dcs_leak": {
+      "expected": "WA",
+      "response": "ACK",
+      "callback_code": "WA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": "]_17:11:39,11-19-2026",
+      "pass": true,
+      "raw_response": "\nBABA0056\"*ACK\"0013R0L1#BBB456[73C47CB1533D079ECCB646DCAB3C7FE6DF5D2F6C4F8D351F0BF636EBD920314C\r"
+     },
+     "enc128_null_heartbeat": {
+      "expected": "RP",
+      "response": "ACK",
+      "callback_code": "RP",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": "]_17:11:39,11-19-2026",
+      "pass": true,
+      "raw_response": "\nFC7F0056\"*ACK\"0014R0L1#BBB456[73C47CB1533D079ECCB646DCAB3C7FE6DF5D2F6C4F8D351F0BF636EBD920314C\r"
+     },
+     "enc192_adm_cid_burglary": {
+      "expected": "BA",
+      "response": "ACK",
+      "callback_code": "BA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": "]_17:11:39,11-19-2026",
+      "pass": true,
+      "raw_response": "\n291E0056\"*ACK\"0015R0L1#DDD012[3AD316434DAC8D765E5B5FF25137E976C51077DB37A8CEF1EA96D95B308450E1\r"
+     },
+     "enc256_sia_dcs_smoke": {
+      "expected": "FA",
+      "response": "ACK",
+      "callback_code": "FA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": "]_17:11:39,11-19-2026",
+      "pass": true,
+      "raw_response": "\n094C0056\"*ACK\"0016R0L1#CCC789[EFC48AA5F17366870938DAA816F33DFFAE77F5F2398D89D64ACAD68D3F85632B\r"
+     },
+     "enc_key_as_hex_bytes_mismatch": {
+      "expected": "NAK",
+      "response": "NAK",
+      "callback_code": null,
+      "callback_fired": false,
+      "response_header_nonstandard": true,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\nEC4F0025\"NAK\"0000L0R0A0[]_17:11:39,11-19-2026\r"
+     },
+     "corrupted_crc": {
+      "expected": "no ACK",
+      "response": "EMPTY",
+      "callback_code": null,
+      "callback_fired": false,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\n\r"
+     },
+     "unknown_account": {
+      "expected": "NAK",
+      "response": "NAK",
+      "callback_code": null,
+      "callback_fired": false,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\"NAK\""
+     },
+     "stale_timestamp_-300s": {
+      "expected": "NAK",
+      "response": "NAK",
+      "callback_code": null,
+      "callback_fired": false,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\n4E720025\"NAK\"0000R0L1A0[]_17:11:40,11-19-2026\r"
+     },
+     "future_timestamp_+60s": {
+      "expected": "NAK",
+      "response": "NAK",
+      "callback_code": null,
+      "callback_fired": false,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\n4E720025\"NAK\"0000R0L1A0[]_17:11:40,11-19-2026\r"
+     },
+     "two_frames_one_tcp_write": {
+      "expected": "2 ACK",
+      "response": "\nB7580025\"NAK\"0000L0R0A0[]_17:11:40,11-19-2026\r",
+      "callback_codes": [],
+      "callback_fired": 0,
+      "pass": false
+     }
+    },
+    "aio_UDP": {
+     "adm_cid_smoke_1111": {
+      "expected": "FA",
+      "response": "ACK",
+      "callback_code": "FA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\nD75F0016\"ACK\"0001R0L1#AAA123[]\r"
+     },
+     "adm_cid_smoke_restore_3111": {
+      "expected": "FH",
+      "response": "ACK",
+      "callback_code": "FH",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\nD45C0016\"ACK\"0002R0L1#AAA123[]\r"
+     },
+     "adm_cid_leak_1154": {
+      "expected": "WA",
+      "response": "ACK",
+      "callback_code": "YN",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": false,
+      "raw_response": "\n155C0016\"ACK\"0003R0L1#AAA123[]\r"
+     },
+     "adm_cid_burglary_1130": {
+      "expected": "BA",
+      "response": "ACK",
+      "callback_code": "BA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\nD25A0016\"ACK\"0004R0L1#AAA123[]\r"
+     },
+     "adm_cid_test_1602": {
+      "expected": "RP",
+      "response": "ACK",
+      "callback_code": "RP",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\n135A0016\"ACK\"0005R0L1#AAA123[]\r"
+     },
+     "sia_dcs_smoke_FA": {
+      "expected": "FA",
+      "response": "ACK",
+      "callback_code": "FA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\n10590016\"ACK\"0006R0L1#AAA123[]\r"
+     },
+     "sia_dcs_leak_WA": {
+      "expected": "WA",
+      "response": "ACK",
+      "callback_code": "WA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\nD1590016\"ACK\"0007R0L1#AAA123[]\r"
+     },
+     "sia_dcs_burglary_BA": {
+      "expected": "BA",
+      "response": "ACK",
+      "callback_code": "BA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\nDE560016\"ACK\"0008R0L1#AAA123[]\r"
+     },
+     "null_heartbeat": {
+      "expected": "RP",
+      "response": "ACK",
+      "callback_code": "RP",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\n1F560016\"ACK\"0009R0L1#AAA123[]\r"
+     },
+     "no_receiver_field": {
+      "expected": "FA",
+      "response": "ACK",
+      "callback_code": "FA",
+      "callback_fired": true,
+      "response_header_nonstandard": true,
+      "response_decrypted": null,
+      "pass": false,
+      "raw_response": "\n051B0018\"ACK\"0010NoneL1#AAA123[]\r"
+     },
+     "sia_dcs_with_xdata": {
+      "expected": "FA",
+      "response": "ACK",
+      "callback_code": "FA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\nD79E0016\"ACK\"0011R0L1#AAA123[]\r"
+     },
+     "enc128_adm_cid_smoke": {
+      "expected": "FA",
+      "response": "ACK",
+      "callback_code": "FA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": "]_17:11:40,11-19-2026",
+      "pass": true,
+      "raw_response": "\nC1C70056\"*ACK\"0012R0L1#BBB456[73C47CB1533D079ECCB646DCAB3C7FE6441E4545BF1400EE8479DEA9BC43306E\r"
+     },
+     "enc128_sia_dcs_leak": {
+      "expected": "WA",
+      "response": "ACK",
+      "callback_code": "WA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": "]_17:11:40,11-19-2026",
+      "pass": true,
+      "raw_response": "\n40870056\"*ACK\"0013R0L1#BBB456[73C47CB1533D079ECCB646DCAB3C7FE6441E4545BF1400EE8479DEA9BC43306E\r"
+     },
+     "enc128_null_heartbeat": {
+      "expected": "RP",
+      "response": "ACK",
+      "callback_code": "RP",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": "]_17:11:41,11-19-2026",
+      "pass": true,
+      "raw_response": "\n6FFD0056\"*ACK\"0014R0L1#BBB456[73C47CB1533D079ECCB646DCAB3C7FE67E6A9EB803EDFA914B1AA36985CE687E\r"
+     },
+     "enc192_adm_cid_burglary": {
+      "expected": "BA",
+      "response": "ACK",
+      "callback_code": "BA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": "]_17:11:41,11-19-2026",
+      "pass": true,
+      "raw_response": "\n2D1F0056\"*ACK\"0015R0L1#DDD012[3AD316434DAC8D765E5B5FF25137E9764C5D6BEE3A537509A5567F6F28B2164B\r"
+     },
+     "enc256_sia_dcs_smoke": {
+      "expected": "FA",
+      "response": "ACK",
+      "callback_code": "FA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": "]_17:11:41,11-19-2026",
+      "pass": true,
+      "raw_response": "\nA94C0056\"*ACK\"0016R0L1#CCC789[EFC48AA5F17366870938DAA816F33DFF31112742573251D1577E6A1B204EE2E2\r"
+     },
+     "enc_key_as_hex_bytes_mismatch": {
+      "expected": "NAK",
+      "response": "NAK",
+      "callback_code": null,
+      "callback_fired": false,
+      "response_header_nonstandard": true,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\n74A50025\"NAK\"0000L0R0A0[]_17:11:41,11-19-2026\r"
+     },
+     "corrupted_crc": {
+      "expected": "no ACK",
+      "response": "EMPTY",
+      "callback_code": null,
+      "callback_fired": false,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\n\r"
+     },
+     "unknown_account": {
+      "expected": "NAK",
+      "response": "NAK",
+      "callback_code": null,
+      "callback_fired": false,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\"NAK\""
+     },
+     "stale_timestamp_-300s": {
+      "expected": "NAK",
+      "response": "NAK",
+      "callback_code": null,
+      "callback_fired": false,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\n8D8F0025\"NAK\"0000R0L1A0[]_17:11:41,11-19-2026\r"
+     },
+     "future_timestamp_+60s": {
+      "expected": "NAK",
+      "response": "NAK",
+      "callback_code": null,
+      "callback_fired": false,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\n8D8F0025\"NAK\"0000R0L1A0[]_17:11:41,11-19-2026\r"
+     }
+    },
+    "sync_TCP": {
+     "adm_cid_smoke_1111": {
+      "expected": "FA",
+      "response": "ACK",
+      "callback_code": "FA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\nD75F0016\"ACK\"0001R0L1#AAA123[]\r"
+     },
+     "adm_cid_smoke_restore_3111": {
+      "expected": "FH",
+      "response": "ACK",
+      "callback_code": "FH",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\nD45C0016\"ACK\"0002R0L1#AAA123[]\r"
+     },
+     "adm_cid_leak_1154": {
+      "expected": "WA",
+      "response": "ACK",
+      "callback_code": "YN",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": false,
+      "raw_response": "\n155C0016\"ACK\"0003R0L1#AAA123[]\r"
+     },
+     "adm_cid_burglary_1130": {
+      "expected": "BA",
+      "response": "ACK",
+      "callback_code": "BA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\nD25A0016\"ACK\"0004R0L1#AAA123[]\r"
+     },
+     "adm_cid_test_1602": {
+      "expected": "RP",
+      "response": "ACK",
+      "callback_code": "RP",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\n135A0016\"ACK\"0005R0L1#AAA123[]\r"
+     },
+     "sia_dcs_smoke_FA": {
+      "expected": "FA",
+      "response": "ACK",
+      "callback_code": "FA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\n10590016\"ACK\"0006R0L1#AAA123[]\r"
+     },
+     "sia_dcs_leak_WA": {
+      "expected": "WA",
+      "response": "ACK",
+      "callback_code": "WA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\nD1590016\"ACK\"0007R0L1#AAA123[]\r"
+     },
+     "sia_dcs_burglary_BA": {
+      "expected": "BA",
+      "response": "ACK",
+      "callback_code": "BA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\nDE560016\"ACK\"0008R0L1#AAA123[]\r"
+     },
+     "null_heartbeat": {
+      "expected": "RP",
+      "response": "ACK",
+      "callback_code": "RP",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\n1F560016\"ACK\"0009R0L1#AAA123[]\r"
+     },
+     "no_receiver_field": {
+      "expected": "FA",
+      "response": "ACK",
+      "callback_code": "FA",
+      "callback_fired": true,
+      "response_header_nonstandard": true,
+      "response_decrypted": null,
+      "pass": false,
+      "raw_response": "\n051B0018\"ACK\"0010NoneL1#AAA123[]\r"
+     },
+     "sia_dcs_with_xdata": {
+      "expected": "FA",
+      "response": "ACK",
+      "callback_code": "FA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\nD79E0016\"ACK\"0011R0L1#AAA123[]\r"
+     },
+     "enc128_adm_cid_smoke": {
+      "expected": "FA",
+      "response": "ACK",
+      "callback_code": "FA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": "]_17:11:42,11-19-2026",
+      "pass": true,
+      "raw_response": "\nD5BA0056\"*ACK\"0012R0L1#BBB456[73C47CB1533D079ECCB646DCAB3C7FE60CCECE634A5C78A22EEFBBCBEE603D37\r"
+     },
+     "enc128_sia_dcs_leak": {
+      "expected": "WA",
+      "response": "ACK",
+      "callback_code": "WA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": "]_17:11:42,11-19-2026",
+      "pass": true,
+      "raw_response": "\n54FA0056\"*ACK\"0013R0L1#BBB456[73C47CB1533D079ECCB646DCAB3C7FE60CCECE634A5C78A22EEFBBCBEE603D37\r"
+     },
+     "enc128_null_heartbeat": {
+      "expected": "RP",
+      "response": "ACK",
+      "callback_code": "RP",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": "]_17:11:42,11-19-2026",
+      "pass": true,
+      "raw_response": "\n123F0056\"*ACK\"0014R0L1#BBB456[73C47CB1533D079ECCB646DCAB3C7FE60CCECE634A5C78A22EEFBBCBEE603D37\r"
+     },
+     "enc192_adm_cid_burglary": {
+      "expected": "BA",
+      "response": "ACK",
+      "callback_code": "BA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": "]_17:11:42,11-19-2026",
+      "pass": true,
+      "raw_response": "\nEDF10056\"*ACK\"0015R0L1#DDD012[3AD316434DAC8D765E5B5FF25137E976E837B87B657DB21EE47656FCD4761852\r"
+     },
+     "enc256_sia_dcs_smoke": {
+      "expected": "FA",
+      "response": "ACK",
+      "callback_code": "FA",
+      "callback_fired": true,
+      "response_header_nonstandard": false,
+      "response_decrypted": "]_17:11:42,11-19-2026",
+      "pass": true,
+      "raw_response": "\nDDCA0056\"*ACK\"0016R0L1#CCC789[EFC48AA5F17366870938DAA816F33DFFD0AD54ADB252901BF061A01BA9A2D0EB\r"
+     },
+     "enc_key_as_hex_bytes_mismatch": {
+      "expected": "NAK",
+      "response": "NAK",
+      "callback_code": null,
+      "callback_fired": false,
+      "response_header_nonstandard": true,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\n70A10025\"NAK\"0000L0R0A0[]_17:11:42,11-19-2026\r"
+     },
+     "corrupted_crc": {
+      "expected": "no ACK",
+      "response": "EMPTY",
+      "callback_code": null,
+      "callback_fired": false,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\n\r"
+     },
+     "unknown_account": {
+      "expected": "NAK",
+      "response": "NAK",
+      "callback_code": null,
+      "callback_fired": false,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\"NAK\""
+     },
+     "stale_timestamp_-300s": {
+      "expected": "NAK",
+      "response": "NAK",
+      "callback_code": null,
+      "callback_fired": false,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\n898B0025\"NAK\"0000R0L1A0[]_17:11:42,11-19-2026\r"
+     },
+     "future_timestamp_+60s": {
+      "expected": "NAK",
+      "response": "NAK",
+      "callback_code": null,
+      "callback_fired": false,
+      "response_header_nonstandard": false,
+      "response_decrypted": null,
+      "pass": true,
+      "raw_response": "\n898B0025\"NAK\"0000R0L1A0[]_17:11:42,11-19-2026\r"
+     }
+    }
+   },
+   "summary": {
+    "aio_TCP": "19/22 pass",
+    "aio_UDP": "19/21 pass",
+    "sync_TCP": "19/21 pass"
+   }
+  }
+ },
+ "limitations": [
+  "WAN model is i.i.d. loss + fixed outage windows; no bursty loss, no TCP connection setup/teardown, no NAT or cellular backup path.",
+  "Monitoring centre is a simulation using our own decoder; the pysiaalarm matrix is the only independent check, and pysiaalarm is a home-automation receiver, not a certified alarm receiving centre (ARC) receiver.",
+  "DC-09 standard text was not consulted (paywalled); framing follows pysiaalarm code and public descriptions. Certification-level conformance is NOT claimed.",
+  "One alarm per trial; no queueing of many simultaneous alarms or sequence-number wrap under load.",
+  "Heartbeats run every 60 s but are not retried; supervision timing was tested in unit tests, not in this experiment.",
+  "Ack timeout/backoff values are our choices, not taken from the standard."
+ ]
+}

@@ -1,0 +1,484 @@
+{
+ "experiment": "voice_latency",
+ "date": "2026-11-19",
+ "method": "Per-stage lognormal (fit to p50/p95) Monte Carlo, N=20000, seed 2026, stages summed serially (no overlap of STT with speech, no streaming LLM->TTS beyond first sentence). Stage values in islab/voice/latency_config.json, each tagged 'assumption' or 'measured'. Local components measured by measure.py on a 2-vCPU x86 box without GPU.",
+ "params": {
+  "n": 20000,
+  "seed": 2026,
+  "config": {
+   "_doc": "Latency budget of the voice pipeline, milliseconds. Each stage is a lognormal fitted to {p50, p95} (p50 == p95 means constant). 'source' says where the number comes from: 'assumption' = NOT measured and NOT verified against vendor pages (no web access when written); 'measured: ...' = measured on the 2-vCPU x86 dev box by experiments/voice_latency/measure.py. Replace assumptions with bench numbers before quoting any of this.",
+   "common": {
+    "wake_detect": {
+     "p50": 150,
+     "p95": 300,
+     "source": "measured: openWakeWord 0.4 'hey_jarvis'/'alexa' fired 121-153 ms after end of an espeak phrase (n=2); p95 assumption"
+    },
+    "earcon_start": {
+     "p50": 25,
+     "p95": 60,
+     "source": "assumption: pre-decoded earcon in RAM, ALSA period 10-20 ms + device buffer"
+    },
+    "net_sat_to_hub": {
+     "p50": 8,
+     "p95": 40,
+     "source": "assumption: Wi-Fi 2.4/5 GHz LAN, one audio frame, occasional retries"
+    },
+    "net_hub_to_sat": {
+     "p50": 8,
+     "p95": 40,
+     "source": "assumption: same as uplink"
+    },
+    "vad_endpoint": {
+     "p50": 425,
+     "p95": 600,
+     "source": "measured p50: silero-vad 6.2 with 300 ms hangover on our VO files; p95 assumption (measured p95 1.6 s is a labelling artefact of silencedetect vs VAD on intra-sentence pauses)"
+    },
+    "intent_rules": {
+     "p50": 1,
+     "p95": 3,
+     "source": "measured: 6 regex rules < 0.001 ms in Python; 1-3 ms covers dispatch/serialisation (assumption)"
+    },
+    "audio_out": {
+     "p50": 30,
+     "p95": 70,
+     "source": "assumption: satellite jitter buffer + DAC"
+    },
+    "llm_output_tokens": {
+     "p50": 35,
+     "p95": 70,
+     "source": "assumption: one JSON tool call + short reply, tokens before the first speakable sentence"
+    }
+   },
+   "tiers": {
+    "pi5_hailo10h": {
+     "label": "Raspberry Pi 5 (8 GB) + Hailo-10H M.2 AI accelerator",
+     "stt": {
+      "p50": 450,
+      "p95": 800,
+      "source": "assumption: Whisper-base/small class on Hailo-10H, non-streaming, decode after endpoint"
+     },
+     "llm_ttft": {
+      "p50": 500,
+      "p95": 1000,
+      "source": "assumption: ~1-1.5B int4 LLM on Hailo-10H, short prompt with cached system prompt"
+     },
+     "llm_tok_per_s": {
+      "p50": 8,
+      "p95": 6,
+      "source": "assumption: decode throughput (p95 = slow tail)"
+     },
+     "tts_first_audio": {
+      "p50": 220,
+      "p95": 400,
+      "source": "assumption: Piper medium on Pi 5 CPU, first sentence"
+     }
+    },
+    "jetson_orin_nano_super": {
+     "label": "NVIDIA Jetson Orin Nano Super (8 GB)",
+     "stt": {
+      "p50": 300,
+      "p95": 550,
+      "source": "assumption: Whisper small/base, TensorRT or CTranslate2 GPU, decode after endpoint"
+     },
+     "llm_ttft": {
+      "p50": 300,
+      "p95": 650,
+      "source": "assumption: 3B Q4 LLM, llama.cpp CUDA, cached system prompt"
+     },
+     "llm_tok_per_s": {
+      "p50": 20,
+      "p95": 15,
+      "source": "assumption"
+     },
+     "tts_first_audio": {
+      "p50": 120,
+      "p95": 250,
+      "source": "assumption: Piper/VITS on GPU or CPU, first sentence"
+     }
+    },
+    "x86_gpu12gb": {
+     "label": "x86 mini-PC + 12 GB discrete GPU",
+     "stt": {
+      "p50": 150,
+      "p95": 300,
+      "source": "assumption: Whisper small / large-v3-turbo class on GPU, decode after endpoint"
+     },
+     "llm_ttft": {
+      "p50": 150,
+      "p95": 350,
+      "source": "assumption: 7-8B Q4 LLM fully on GPU, cached system prompt"
+     },
+     "llm_tok_per_s": {
+      "p50": 60,
+      "p95": 45,
+      "source": "assumption"
+     },
+     "tts_first_audio": {
+      "p50": 70,
+      "p95": 150,
+      "source": "assumption: neural TTS on GPU, first sentence"
+     }
+    },
+    "devbox_cpu_measured": {
+     "label": "This dev box: 2 vCPU x86, no GPU (measured where possible)",
+     "stt": {
+      "p50": 166,
+      "p95": 194,
+      "source": "measured: whisper tiny.en int8 via sherpa-onnx, 2 threads, 13 command utterances (p50 1.6 s long)"
+     },
+     "llm_ttft": {
+      "p50": 2500,
+      "p95": 5000,
+      "source": "assumption: no LLM weights obtainable offline (huggingface.co blocked); 1B-class Q4 on 2 vCPU"
+     },
+     "llm_tok_per_s": {
+      "p50": 8,
+      "p95": 5,
+      "source": "assumption"
+     },
+     "tts_first_audio": {
+      "p50": 86,
+      "p95": 110,
+      "source": "measured: Piper en_US-amy-low (onnxruntime, 2 threads), first sentence"
+     }
+    }
+   }
+  }
+ },
+ "results": {
+  "budget": {
+   "pi5_hailo10h": {
+    "rules": {
+     "earcon_ms": {
+      "p50": 178.7,
+      "p95": 331.2
+     },
+     "end_of_speech_to_intent_ms": {
+      "p50": 901.4,
+      "p95": 1274.6
+     },
+     "end_of_speech_to_reply_audio_ms": {
+      "p50": 1185.3,
+      "p95": 1586.4
+     }
+    },
+    "llm": {
+     "earcon_ms": {
+      "p50": 178.9,
+      "p95": 329.6
+     },
+     "end_of_speech_to_intent_ms": {
+      "p50": 5842.8,
+      "p95": 10700.7
+     },
+     "end_of_speech_to_reply_audio_ms": {
+      "p50": 6126.1,
+      "p95": 11005.6
+     }
+    }
+   },
+   "jetson_orin_nano_super": {
+    "rules": {
+     "earcon_ms": {
+      "p50": 178.7,
+      "p95": 331.2
+     },
+     "end_of_speech_to_intent_ms": {
+      "p50": 751.5,
+      "p95": 1040.7
+     },
+     "end_of_speech_to_reply_audio_ms": {
+      "p50": 931.0,
+      "p95": 1240.0
+     }
+    },
+    "llm": {
+     "earcon_ms": {
+      "p50": 178.9,
+      "p95": 329.6
+     },
+     "end_of_speech_to_intent_ms": {
+      "p50": 2855.2,
+      "p95": 4830.2
+     },
+     "end_of_speech_to_reply_audio_ms": {
+      "p50": 3035.6,
+      "p95": 5003.5
+     }
+    }
+   },
+   "x86_gpu12gb": {
+    "rules": {
+     "earcon_ms": {
+      "p50": 178.7,
+      "p95": 331.2
+     },
+     "end_of_speech_to_intent_ms": {
+      "p50": 599.7,
+      "p95": 821.5
+     },
+     "end_of_speech_to_reply_audio_ms": {
+      "p50": 725.0,
+      "p95": 958.5
+     }
+    },
+    "llm": {
+     "earcon_ms": {
+      "p50": 178.9,
+      "p95": 329.6
+     },
+     "end_of_speech_to_intent_ms": {
+      "p50": 1370.0,
+      "p95": 2053.5
+     },
+     "end_of_speech_to_reply_audio_ms": {
+      "p50": 1497.3,
+      "p95": 2184.4
+     }
+    }
+   },
+   "devbox_cpu_measured": {
+    "rules": {
+     "earcon_ms": {
+      "p50": 178.7,
+      "p95": 331.2
+     },
+     "end_of_speech_to_intent_ms": {
+      "p50": 606.1,
+      "p95": 783.1
+     },
+     "end_of_speech_to_reply_audio_ms": {
+      "p50": 739.6,
+      "p95": 923.0
+     }
+    },
+    "llm": {
+     "earcon_ms": {
+      "p50": 178.9,
+      "p95": 329.6
+     },
+     "end_of_speech_to_intent_ms": {
+      "p50": 7765.1,
+      "p95": 13843.2
+     },
+     "end_of_speech_to_reply_audio_ms": {
+      "p50": 7897.6,
+      "p95": 13972.9
+     }
+    }
+   }
+  },
+  "stage_sources": {
+   "pi5_hailo10h": {
+    "wake_detect": "measured: openWakeWord 0.4 'hey_jarvis'/'alexa' fired 121-153 ms after end of an espeak phrase (n=2); p95 assumption",
+    "earcon_start": "assumption: pre-decoded earcon in RAM, ALSA period 10-20 ms + device buffer",
+    "net_sat_to_hub": "assumption: Wi-Fi 2.4/5 GHz LAN, one audio frame, occasional retries",
+    "net_hub_to_sat": "assumption: same as uplink",
+    "vad_endpoint": "measured p50: silero-vad 6.2 with 300 ms hangover on our VO files; p95 assumption (measured p95 1.6 s is a labelling artefact of silencedetect vs VAD on intra-sentence pauses)",
+    "intent_rules": "measured: 6 regex rules < 0.001 ms in Python; 1-3 ms covers dispatch/serialisation (assumption)",
+    "audio_out": "assumption: satellite jitter buffer + DAC",
+    "llm_output_tokens": "assumption: one JSON tool call + short reply, tokens before the first speakable sentence",
+    "stt": "assumption: Whisper-base/small class on Hailo-10H, non-streaming, decode after endpoint",
+    "llm_ttft": "assumption: ~1-1.5B int4 LLM on Hailo-10H, short prompt with cached system prompt",
+    "llm_tok_per_s": "assumption: decode throughput (p95 = slow tail)",
+    "tts_first_audio": "assumption: Piper medium on Pi 5 CPU, first sentence"
+   },
+   "jetson_orin_nano_super": {
+    "wake_detect": "measured: openWakeWord 0.4 'hey_jarvis'/'alexa' fired 121-153 ms after end of an espeak phrase (n=2); p95 assumption",
+    "earcon_start": "assumption: pre-decoded earcon in RAM, ALSA period 10-20 ms + device buffer",
+    "net_sat_to_hub": "assumption: Wi-Fi 2.4/5 GHz LAN, one audio frame, occasional retries",
+    "net_hub_to_sat": "assumption: same as uplink",
+    "vad_endpoint": "measured p50: silero-vad 6.2 with 300 ms hangover on our VO files; p95 assumption (measured p95 1.6 s is a labelling artefact of silencedetect vs VAD on intra-sentence pauses)",
+    "intent_rules": "measured: 6 regex rules < 0.001 ms in Python; 1-3 ms covers dispatch/serialisation (assumption)",
+    "audio_out": "assumption: satellite jitter buffer + DAC",
+    "llm_output_tokens": "assumption: one JSON tool call + short reply, tokens before the first speakable sentence",
+    "stt": "assumption: Whisper small/base, TensorRT or CTranslate2 GPU, decode after endpoint",
+    "llm_ttft": "assumption: 3B Q4 LLM, llama.cpp CUDA, cached system prompt",
+    "llm_tok_per_s": "assumption",
+    "tts_first_audio": "assumption: Piper/VITS on GPU or CPU, first sentence"
+   },
+   "x86_gpu12gb": {
+    "wake_detect": "measured: openWakeWord 0.4 'hey_jarvis'/'alexa' fired 121-153 ms after end of an espeak phrase (n=2); p95 assumption",
+    "earcon_start": "assumption: pre-decoded earcon in RAM, ALSA period 10-20 ms + device buffer",
+    "net_sat_to_hub": "assumption: Wi-Fi 2.4/5 GHz LAN, one audio frame, occasional retries",
+    "net_hub_to_sat": "assumption: same as uplink",
+    "vad_endpoint": "measured p50: silero-vad 6.2 with 300 ms hangover on our VO files; p95 assumption (measured p95 1.6 s is a labelling artefact of silencedetect vs VAD on intra-sentence pauses)",
+    "intent_rules": "measured: 6 regex rules < 0.001 ms in Python; 1-3 ms covers dispatch/serialisation (assumption)",
+    "audio_out": "assumption: satellite jitter buffer + DAC",
+    "llm_output_tokens": "assumption: one JSON tool call + short reply, tokens before the first speakable sentence",
+    "stt": "assumption: Whisper small / large-v3-turbo class on GPU, decode after endpoint",
+    "llm_ttft": "assumption: 7-8B Q4 LLM fully on GPU, cached system prompt",
+    "llm_tok_per_s": "assumption",
+    "tts_first_audio": "assumption: neural TTS on GPU, first sentence"
+   },
+   "devbox_cpu_measured": {
+    "wake_detect": "measured: openWakeWord 0.4 'hey_jarvis'/'alexa' fired 121-153 ms after end of an espeak phrase (n=2); p95 assumption",
+    "earcon_start": "assumption: pre-decoded earcon in RAM, ALSA period 10-20 ms + device buffer",
+    "net_sat_to_hub": "assumption: Wi-Fi 2.4/5 GHz LAN, one audio frame, occasional retries",
+    "net_hub_to_sat": "assumption: same as uplink",
+    "vad_endpoint": "measured p50: silero-vad 6.2 with 300 ms hangover on our VO files; p95 assumption (measured p95 1.6 s is a labelling artefact of silencedetect vs VAD on intra-sentence pauses)",
+    "intent_rules": "measured: 6 regex rules < 0.001 ms in Python; 1-3 ms covers dispatch/serialisation (assumption)",
+    "audio_out": "assumption: satellite jitter buffer + DAC",
+    "llm_output_tokens": "assumption: one JSON tool call + short reply, tokens before the first speakable sentence",
+    "stt": "measured: whisper tiny.en int8 via sherpa-onnx, 2 threads, 13 command utterances (p50 1.6 s long)",
+    "llm_ttft": "assumption: no LLM weights obtainable offline (huggingface.co blocked); 1B-class Q4 on 2 vCPU",
+    "llm_tok_per_s": "assumption",
+    "tts_first_audio": "measured: Piper en_US-amy-low (onnxruntime, 2 threads), first sentence"
+   }
+  },
+  "n_assumed_stage_values": 34,
+  "measured_locally": {
+   "_env": {
+    "SANDBOX_SHERPA_ONNX_WHISPER_FILES": "0"
+   },
+   "_machine": {
+    "cpu": "x86_64",
+    "cpus": 2,
+    "python": "3.13.18"
+   },
+   "tts_espeak_ng": {
+    "status": "ran",
+    "engine": "espeak-ng (espeakng-loader 0.2.4 bundled lib+data), formant synthesis, low quality",
+    "time_to_first_audio_ms_p50": 0.2,
+    "time_to_first_audio_ms_p95": 0.2,
+    "rtf_p50": 0.0009,
+    "n": 20,
+    "wall_s": 0.07
+   },
+   "wake_openwakeword": {
+    "status": "ran",
+    "engine": "openWakeWord 0.4.0 onnx (melspec+embedding+keyword heads, all bundled)",
+    "frame": "80 ms",
+    "compute_ms_per_80ms_frame_p50": 2.33,
+    "compute_ms_per_80ms_frame_p95": 2.58,
+    "rtf": 0.0291,
+    "trigger_test_espeak_voice": {
+     "hey_jarvis": {
+      "detected": true,
+      "peak_score": 0.999,
+      "detection_delay_after_speech_end_ms": 153
+     },
+     "alexa": {
+      "detected": true,
+      "peak_score": 0.799,
+      "detection_delay_after_speech_end_ms": 121
+     },
+     "hey_mycroft": {
+      "detected": false,
+      "peak_score": 0.001,
+      "detection_delay_after_speech_end_ms": null
+     }
+    },
+    "note": "espeak-ng is far from the TTS the models were trained on; a miss here is not a model verdict",
+    "wall_s": 1.28
+   },
+   "vad_silero": {
+    "status": "ran",
+    "engine": "silero-vad 6.2.3 onnx (bundled)",
+    "chunk": "512 samples = 32 ms",
+    "endpoint_delay_ms_hangover_200": {
+     "p50": 324,
+     "p95": 350,
+     "n": 44
+    },
+    "endpoint_delay_ms_hangover_300": {
+     "p50": 425,
+     "p95": 1625,
+     "n": 38
+    },
+    "endpoint_delay_ms_hangover_500": {
+     "p50": 620,
+     "p95": 1966,
+     "n": 20
+    },
+    "compute_ms_per_32ms_chunk_p50": 0.199,
+    "rtf": 0.0062,
+    "note": "endpoint delay = time from true end of utterance (ffmpeg silencedetect -40 dB) to the VAD 'end' event; it is dominated by the configured hangover, i.e. a product choice, not compute",
+    "wall_s": 8.67
+   },
+   "stt_pocketsphinx": {
+    "status": "ran",
+    "engine": "pocketsphinx 5.1.1, bundled en-us HMM + 3-gram LM (CMU Sphinx)",
+    "rtf_mean": 0.182,
+    "wer_mean": 0.205,
+    "note": "batch decode of whole files; RTF on 1 thread. WER vs the voice-over scripts.",
+    "wall_s": 16.57
+   },
+   "stt_faster_whisper_tiny_en": {
+    "status": "blocked_or_failed",
+    "error": "ProxyError: 403 Forbidden (agent proxy: no rule or network setting allows this host)",
+    "wall_s": 1.6
+   },
+   "stt_vosk": {
+    "status": "blocked_or_failed",
+    "error": "ProxyError: HTTPSConnectionPool(host='alphacephei.com', port=443): Max retries exceeded with url: /vosk/models/model-list.json (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden (agent proxy: no rule or network setting allows this host)')))",
+    "wall_s": 0.1
+   },
+   "stt_sherpa_zipformer_streaming": {
+    "status": "ran",
+    "engine": "sherpa-onnx 2.0.2 streaming zipformer-transducer en-20M int8 (model from github.com releases)",
+    "threads": 1,
+    "chunk": "100 ms",
+    "compute_ms_per_100ms_chunk_p50": 0.15,
+    "compute_ms_per_100ms_chunk_p95": 7.95,
+    "final_result_after_end_of_speech_ms_p50": 14.7,
+    "final_result_after_end_of_speech_ms_p95": 18.3,
+    "rtf_whole_file": 0.03,
+    "wer_mean": 0.141,
+    "n_command_utterances": 13,
+    "wall_s": 4.83
+   },
+   "stt_sherpa_whisper_tiny_en": {
+    "status": "ran",
+    "engine": "sherpa-onnx 2.0.2 + whisper tiny.en int8 (model from github.com releases)",
+    "threads": 2,
+    "decode_ms_after_end_of_speech_p50": 156.1,
+    "decode_ms_after_end_of_speech_p95": 206.3,
+    "utterance_s_p50": 1.6,
+    "rtf_p50": 0.098,
+    "wer_mean": 0.063,
+    "n_command_utterances": 13,
+    "note": "offline (non-streaming): the whole utterance is decoded after the endpoint, so this is pure added latency",
+    "wall_s": 9.8
+   },
+   "tts_piper_amy_low": {
+    "status": "ran",
+    "engine": "Piper VITS en_US-amy-low (low quality tier) via onnxruntime 1.29, espeak-ng IPA frontend; model from sherpa-onnx github release",
+    "threads": 2,
+    "chunking": "sentence-level",
+    "time_to_first_audio_ms_p50": 80.8,
+    "time_to_first_audio_ms_p95": 106.6,
+    "rtf_p50": 0.035,
+    "n": 12,
+    "sherpa_onnx_tts_note": "sherpa-onnx 2.0.2 OfflineTts produced 0 samples: wheel lacks the espeak frontend",
+    "wall_s": 2.54
+   },
+   "intent_rules": {
+    "status": "ran",
+    "engine": "6 regex rules (python re)",
+    "us_per_utterance": 0.93,
+    "hit_rate": 0.833,
+    "wall_s": 0.01
+   },
+   "intent_llm": {
+    "status": "blocked_or_failed",
+    "error": "RuntimeError: no local LLM weights obtainable: llama.cpp/transformers models are hosted on huggingface.co (blocked); not measured, assumed values only",
+    "wall_s": 0.0
+   },
+   "speaker_embedding": {
+    "status": "ran",
+    "engine": "resemblyzer GE2E",
+    "ms_per_2s_utterance_p50": 19.9,
+    "p95": 21.7,
+    "wall_s": 1.14
+   }
+  }
+ },
+ "limitations": [
+  "Every Pi 5 + Hailo-10H, Jetson Orin Nano Super and x86+GPU number is an ASSUMPTION written without web access; none was benchmarked or checked against vendor data. Treat the tier comparison as a template to fill with bench numbers.",
+  "Stages are independent and serial; real pipelines overlap (streaming STT during speech, streaming LLM tokens into TTS), which lowers p50, and share CPU/accelerator under load, which raises p95.",
+  "LLM path cost is dominated by the assumed tokens-before-first-speakable-sentence (35 p50) and tokens/s; a rules-first design avoids it for common commands.",
+  "Local measurements: 2 vCPU cloud VM, not an ARM SBC. Wake-word delay is from 2 espeak-ng phrases only. VAD endpoint uses silencedetect boundaries as ground truth.",
+  "No LLM was measured: weights are only on huggingface.co (blocked)."
+ ]
+}

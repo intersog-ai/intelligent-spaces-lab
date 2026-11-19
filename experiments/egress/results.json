@@ -1,0 +1,172 @@
+{
+ "experiment": "egress",
+ "date": "2026-11-19",
+ "method": "Discrete-event twin, seed 2026. One 24 h household day through EgressGate (the only publisher of egress/<purpose>): 12 cloud-ASR voice requests (household opted in, provider must not store), nightly 48 MB encrypted backup, update checks every 6 h, AlarmHub supervision heartbeats every 300 s (plus, on the internet-down day only, a 14:00 leak alarm (AES-128 ADM-CID over a simulated WAN to a simulated centre)), 25 camera motion clips recorded locally while the camera firmware tries to upload each one, a fake plug that phones home every 10 min, one attempt to publish egress/ directly, and 200 local home-control commands confirmed by state. The same day is rerun with the internet down 00:00-24:00 (gate offline and WAN outage), then 1 h of internet back.",
+ "params": {
+  "seed": 2026,
+  "settings": {
+   "cloud_speech_opt_in": true,
+   "cloud_llm_opt_in": false,
+   "alarm_clips_allowed": false
+  },
+  "plan": {
+   "voice_requests_cloud_asr": 12,
+   "speech_bytes_range": [
+    9000,
+    18000
+   ],
+   "backup_bytes": 48000000,
+   "update_checks_every_s": 21600,
+   "update_check_bytes": 1200,
+   "alarm_heartbeat_s": 300.0,
+   "camera_motion_clips": 25,
+   "phone_home_every_s": 600,
+   "home_control_commands": 200,
+   "leak_event_at_s": 50400
+  }
+ },
+ "results": {
+  "normal_day": {
+   "bytes_out_by_purpose": {
+    "alarm": 27839,
+    "fleet_update": 4800,
+    "backup_encrypted": 48000000,
+    "speech_recognition_optional": 174991
+   },
+   "messages_out_by_purpose": {
+    "alarm": 287,
+    "fleet_update": 4,
+    "backup_encrypted": 1,
+    "speech_recognition_optional": 12
+   },
+   "total_bytes_out": 48207630,
+   "camera_items_out": 0,
+   "blocked": 169,
+   "blocked_by_reason": {
+    "destination_not_allowlisted": 156,
+    "payload_class_not_allowed_for_purpose:camera_clip": 13
+   },
+   "blocked_by_source": {
+    "plug.cheap": 144,
+    "camera.front": 25
+   },
+   "blocked_destinations": [
+    "backup.storage.example",
+    "cloud.camvendor.example",
+    "telemetry.unknown-vendor.example"
+   ],
+   "phone_home": {
+    "attempts": 144,
+    "blocked": 144,
+    "left_house": 0,
+    "first_log_entry": {
+     "t": 60.0,
+     "source": "plug.cheap",
+     "dest": "telemetry.unknown-vendor.example",
+     "purpose": "fleet_update",
+     "payload_class": "telemetry",
+     "reason": "destination_not_allowlisted"
+    }
+   },
+   "egress_topic_violations_logged": [
+    {
+     "t": 43200.01,
+     "source": "camera.front",
+     "topic": "egress/backup_encrypted"
+    }
+   ],
+   "dropped_offline": 0,
+   "dropped_offline_by_purpose": {},
+   "queued_at_end_of_day": 0,
+   "voice": {
+    "voice_cloud": 12,
+    "voice_local_fallback": 0,
+    "camera_clips_recorded": 25
+   },
+   "camera_clips_recorded_locally": 25,
+   "home_control": {
+    "commands": 200,
+    "confirmed": 200,
+    "confirm_latency_s_p50": 0.32,
+    "confirm_latency_s_max": 0.32
+   },
+   "leak_alarm": null,
+   "what_left_the_house_today": "Twelve voice requests for speech recognition, not stored, and last night's encrypted backup. No camera footage left the house. 169 attempts to send elsewhere were blocked (camera.front, plug.cheap).",
+   "what_left_the_house_today_incl_routine": "Twelve voice requests for speech recognition, not stored, last night's encrypted backup, 287 routine alarm-line check-ins, and four update checks. No camera footage left the house. 169 attempts to send elsewhere were blocked (camera.front, plug.cheap)."
+  },
+  "internet_down_day": {
+   "bytes_out_by_purpose": {},
+   "messages_out_by_purpose": {},
+   "total_bytes_out": 0,
+   "camera_items_out": 0,
+   "blocked": 169,
+   "blocked_by_reason": {
+    "destination_not_allowlisted": 156,
+    "payload_class_not_allowed_for_purpose:camera_clip": 13
+   },
+   "blocked_by_source": {
+    "plug.cheap": 144,
+    "camera.front": 25
+   },
+   "blocked_destinations": [
+    "backup.storage.example",
+    "cloud.camvendor.example",
+    "telemetry.unknown-vendor.example"
+   ],
+   "phone_home": {
+    "attempts": 144,
+    "blocked": 144,
+    "left_house": 0,
+    "first_log_entry": {
+     "t": 60.0,
+     "source": "plug.cheap",
+     "dest": "telemetry.unknown-vendor.example",
+     "purpose": "fleet_update",
+     "payload_class": "telemetry",
+     "reason": "destination_not_allowlisted"
+    }
+   },
+   "egress_topic_violations_logged": [
+    {
+     "t": 43200.01,
+     "source": "camera.front",
+     "topic": "egress/backup_encrypted"
+    }
+   ],
+   "dropped_offline": 303,
+   "dropped_offline_by_purpose": {
+    "alarm": 287,
+    "fleet_update": 4,
+    "speech_recognition_optional": 12
+   },
+   "queued_at_end_of_day": 2,
+   "voice": {
+    "voice_cloud": 0,
+    "voice_local_fallback": 12,
+    "camera_clips_recorded": 25
+   },
+   "camera_clips_recorded_locally": 25,
+   "home_control": {
+    "commands": 200,
+    "confirmed": 200,
+    "confirm_latency_s_p50": 0.32,
+    "confirm_latency_s_max": 0.32
+   },
+   "leak_alarm": {
+    "local_siren_s_after_event": 0.01,
+    "centre_ack_s_after_event": 36000.2,
+    "transmissions": 1720,
+    "centre_dispatch_decisions": 1
+   },
+   "what_left_the_house_today": "Nothing left the house today. 169 attempts to send elsewhere were blocked (camera.front, plug.cheap).",
+   "what_left_the_house_today_incl_routine": "Nothing left the house today. 169 attempts to send elsewhere were blocked (camera.front, plug.cheap)."
+  }
+ },
+ "limitations": [
+  "Byte sizes are modelled (Opus voice, 48 MB backup), not measured from real devices.",
+  "Home control uses a minimal stand-in device on the bus, not islab/twin; the 'unaffected' result shows no hidden dependency in our components, it does not test real device firmware that may itself require the cloud.",
+  "The gate only sees traffic that is routed through it. A device with its own route to the internet (own Wi-Fi uplink, cellular) bypasses it; in a real home this needs network enforcement (VLAN + firewall default-deny), which is not simulated.",
+  "Payload class is declared by the sender; the gate does not inspect content (an encrypted blob could contain anything). Encryption of backups is trusted from the sender's flag.",
+  "Internet-down day has no alternate alarm path (no cellular backup), so the centre only receives the leak alarm after the internet returns."
+ ]
+}

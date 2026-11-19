@@ -1,0 +1,43 @@
+{
+ "_doc": "Latency budget of the voice pipeline, milliseconds. Each stage is a lognormal fitted to {p50, p95} (p50 == p95 means constant). 'source' says where the number comes from: 'assumption' = NOT measured and NOT verified against vendor pages (no web access when written); 'measured: ...' = measured on the 2-vCPU x86 dev box by experiments/voice_latency/measure.py. Replace assumptions with bench numbers before quoting any of this.",
+ "common": {
+  "wake_detect":       {"p50": 150, "p95": 300, "source": "measured: openWakeWord 0.4 'hey_jarvis'/'alexa' fired 121-153 ms after end of an espeak phrase (n=2); p95 assumption"},
+  "earcon_start":      {"p50": 25,  "p95": 60,  "source": "assumption: pre-decoded earcon in RAM, ALSA period 10-20 ms + device buffer"},
+  "net_sat_to_hub":    {"p50": 8,   "p95": 40,  "source": "assumption: Wi-Fi 2.4/5 GHz LAN, one audio frame, occasional retries"},
+  "net_hub_to_sat":    {"p50": 8,   "p95": 40,  "source": "assumption: same as uplink"},
+  "vad_endpoint":      {"p50": 425, "p95": 600, "source": "measured p50: silero-vad 6.2 with 300 ms hangover on our VO files; p95 assumption (measured p95 1.6 s is a labelling artefact of silencedetect vs VAD on intra-sentence pauses)"},
+  "intent_rules":      {"p50": 1,   "p95": 3,   "source": "measured: 6 regex rules < 0.001 ms in Python; 1-3 ms covers dispatch/serialisation (assumption)"},
+  "audio_out":         {"p50": 30,  "p95": 70,  "source": "assumption: satellite jitter buffer + DAC"},
+  "llm_output_tokens": {"p50": 35,  "p95": 70,  "source": "assumption: one JSON tool call + short reply, tokens before the first speakable sentence"}
+ },
+ "tiers": {
+  "pi5_hailo10h": {
+   "label": "Raspberry Pi 5 (8 GB) + Hailo-10H M.2 AI accelerator",
+   "stt":               {"p50": 450, "p95": 800, "source": "assumption: Whisper-base/small class on Hailo-10H, non-streaming, decode after endpoint"},
+   "llm_ttft":          {"p50": 500, "p95": 1000,"source": "assumption: ~1-1.5B int4 LLM on Hailo-10H, short prompt with cached system prompt"},
+   "llm_tok_per_s":     {"p50": 8,   "p95": 6,   "source": "assumption: decode throughput (p95 = slow tail)"},
+   "tts_first_audio":   {"p50": 220, "p95": 400, "source": "assumption: Piper medium on Pi 5 CPU, first sentence"}
+  },
+  "jetson_orin_nano_super": {
+   "label": "NVIDIA Jetson Orin Nano Super (8 GB)",
+   "stt":               {"p50": 300, "p95": 550, "source": "assumption: Whisper small/base, TensorRT or CTranslate2 GPU, decode after endpoint"},
+   "llm_ttft":          {"p50": 300, "p95": 650, "source": "assumption: 3B Q4 LLM, llama.cpp CUDA, cached system prompt"},
+   "llm_tok_per_s":     {"p50": 20,  "p95": 15,  "source": "assumption"},
+   "tts_first_audio":   {"p50": 120, "p95": 250, "source": "assumption: Piper/VITS on GPU or CPU, first sentence"}
+  },
+  "x86_gpu12gb": {
+   "label": "x86 mini-PC + 12 GB discrete GPU",
+   "stt":               {"p50": 150, "p95": 300, "source": "assumption: Whisper small / large-v3-turbo class on GPU, decode after endpoint"},
+   "llm_ttft":          {"p50": 150, "p95": 350, "source": "assumption: 7-8B Q4 LLM fully on GPU, cached system prompt"},
+   "llm_tok_per_s":     {"p50": 60,  "p95": 45,  "source": "assumption"},
+   "tts_first_audio":   {"p50": 70,  "p95": 150, "source": "assumption: neural TTS on GPU, first sentence"}
+  },
+  "devbox_cpu_measured": {
+   "label": "This dev box: 2 vCPU x86, no GPU (measured where possible)",
+   "stt":               {"p50": 166, "p95": 194, "source": "measured: whisper tiny.en int8 via sherpa-onnx, 2 threads, 13 command utterances (p50 1.6 s long)"},
+   "llm_ttft":          {"p50": 2500,"p95": 5000,"source": "assumption: no LLM weights obtainable offline (huggingface.co blocked); 1B-class Q4 on 2 vCPU"},
+   "llm_tok_per_s":     {"p50": 8,   "p95": 5,   "source": "assumption"},
+   "tts_first_audio":   {"p50": 86,  "p95": 110, "source": "measured: Piper en_US-amy-low (onnxruntime, 2 threads), first sentence"}
+  }
+ }
+}

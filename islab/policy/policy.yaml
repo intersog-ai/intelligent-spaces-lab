@@ -1,0 +1,63 @@
+# House policy. A person edits this file; the engine reloads it with load_policy().
+# Levels:  1 = act and tell   2 = ask first   3 = never alone (needs a recorded phone approval)
+# Unknown tools default to level 3.
+
+people:
+  anna:   {role: adult}
+  mark: {role: adult}
+  sam:    {role: teen}
+
+levels:
+  get_state: 1
+  set_light: 1
+  set_shade: 1
+  set_climate: 1
+  close_valve: 1        # safety action: never slowed down
+  notify_person: 1
+  ask_person: 1
+  lock_door: 1
+  close_garage: 2
+  arm_away: 2
+  open_valve: 3
+  unlock_door: 3
+  share_camera_clip: 3
+
+# Per-person limits. 'deny' wins over everything; 'allow' (if present) is an allow-list.
+permissions:
+  sam:   {deny: [unlock_door, open_valve, share_camera_clip, arm_away]}
+  guest: {allow: [get_state, set_light, set_shade, set_climate, close_valve, lock_door, close_garage]}
+  automation: {allow: [get_state, set_light, set_shade, set_climate, close_valve, lock_door, close_garage,
+                       notify_person]}
+
+# Who may approve a level-3 action (phone reply only; voice never counts).
+approvers:
+  default: [anna, mark]
+  unlock_door: [anna, mark]
+  open_valve: [anna, mark]
+  share_camera_clip: [anna, mark]
+
+approval_ttl_s: 120      # an approval is single-use and expires
+ask_timeout_s: 120       # level-2 question: no answer means nothing happens
+action_timeout_s: 30     # time for a device to confirm by state (garage travel ~13 s)
+
+voice:
+  min_confidence: 0.80   # below this the speaker is treated as a guest
+
+freshness:
+  max_age_s: 120         # a decision may not rest on a reading older than this
+  per_device: {temp.kitchen: 300, leak.sink: 600, smoke.hall: 600}
+
+# Who hears about things nobody in particular asked for.
+default_notify: [anna]
+
+# House rules. Automations obey them; a named person's explicit request overrides them (logged).
+rules:
+  - id: quiet_hours_shade
+    tools: [set_shade]
+    when: {between_h: [22, 7]}
+    reason: "Shades stay put during quiet hours (22:00-07:00)."
+  - id: study_max_heat
+    tools: [set_climate]
+    args: {room: study}
+    args_gt: {setpoint_c: 23}
+    reason: "Study heat is capped at 23 C."

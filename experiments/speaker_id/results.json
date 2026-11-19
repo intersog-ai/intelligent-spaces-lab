@@ -1,0 +1,663 @@
+{
+ "experiment": "speaker_id",
+ "date": "2026-11-19",
+ "method": "Resemblyzer 0.1.4 GE2E d-vector encoder (pretrained weights bundled in the pip wheel; 256-d), cosine scoring against mean-of-windows enrollment profile. Segmentation: ffmpeg silencedetect -40 dB / 0.3 s, then 2 s windows with 1 s hop (min 1 s). Audio decoded to 16 kHz mono.",
+ "params": {
+  "seed": 117,
+  "window_s": 2.0,
+  "hop_s": 1.0,
+  "min_window_s": 1.0,
+  "silencedetect": {
+   "noise_db": -40,
+   "min_silence_s": 0.3
+  },
+  "enrollment_seconds_P2": [
+   10,
+   30
+  ],
+  "snr_db": [
+   20,
+   10,
+   5
+  ],
+  "replay_model": {
+   "phone_speaker": "Butterworth band-pass 300-3400 Hz (4th order) + tanh soft-clip (drive 2) + room IR RT60 0.3 s + pink noise 30 dB",
+   "bluetooth_speaker": "band-pass 120-7500 Hz (2nd order) + room IR RT60 0.2 s + pink noise 35 dB"
+  },
+  "satellite_channel": "synthetic room IR RT60 0.4 s (direct + exponential noise tail) + pink noise 30 dB SNR",
+  "noise_model": "kitchen-like: reverberant pink noise (RT60 0.5 s) + 120/240 Hz hum + ~1 clatter transient/s",
+  "voice_map": {
+   "Anna": "ElevenLabs 'Courtney'",
+   "Mark": "'Chris'",
+   "Sam": "'Eric'",
+   "David": "narrator",
+   "Amanda/Ollie/AnnaAssist": "assistant voices"
+  },
+  "source_dir": "audio"
+ },
+ "results": {
+  "speech_seconds_per_voice": {
+   "Amanda": 54.04,
+   "David": 224.21,
+   "Ollie": 65.46,
+   "Anna": 6.19,
+   "AnnaAssist": 7.18,
+   "Mark": 3.6,
+   "Sam": 1.38
+  },
+  "P2_surrogate_household": {
+   "enroll_10s": {
+    "enrolled": [
+     "David",
+     "Amanda",
+     "Ollie"
+    ],
+    "impostors": [
+     "Anna",
+     "AnnaAssist",
+     "Mark",
+     "Sam"
+    ],
+    "n_target_trials": 177,
+    "n_nontarget_trials": 384,
+    "EER": 0.0122,
+    "eer_threshold": 0.7869,
+    "far1_threshold": 0.8025,
+    "at_eer_threshold": {
+     "threshold": 0.7869,
+     "FRR": 0.0113,
+     "n_target": 177,
+     "FAR": 0.013,
+     "n_nontarget": 384
+    },
+    "at_strict_threshold": {
+     "threshold": 0.8025,
+     "FRR": 0.0226,
+     "n_target": 177,
+     "FAR": 0.0078,
+     "n_nontarget": 384
+    },
+    "at_fixed_thresholds": {
+     "0.75": {
+      "threshold": 0.75,
+      "FRR": 0.0,
+      "n_target": 177,
+      "FAR": 0.0573,
+      "n_nontarget": 384
+     },
+     "0.8": {
+      "threshold": 0.8,
+      "FRR": 0.0169,
+      "n_target": 177,
+      "FAR": 0.0104,
+      "n_nontarget": 384
+     },
+     "0.85": {
+      "threshold": 0.85,
+      "FRR": 0.1751,
+      "n_target": 177,
+      "FAR": 0.0,
+      "n_nontarget": 384
+     },
+     "0.9": {
+      "threshold": 0.9,
+      "FRR": 0.8079,
+      "n_target": 177,
+      "FAR": 0.0,
+      "n_nontarget": 384
+     }
+    },
+    "identification_at_strict": {
+     "target_correct_and_accepted": 0.9774,
+     "target_misidentified_as_other_member": 0.0,
+     "target_rejected": 0.0226,
+     "closed_set_top1": 1.0,
+     "n_target_windows": 177,
+     "impostor_accepted_as_member": 0.1,
+     "n_impostor_windows": 10
+    },
+    "mean_score_matrix": {
+     "David->David": 0.873,
+     "David->Amanda": 0.522,
+     "David->Ollie": 0.717,
+     "Amanda->David": 0.548,
+     "Amanda->Amanda": 0.88,
+     "Amanda->Ollie": 0.507,
+     "Ollie->David": 0.693,
+     "Ollie->Amanda": 0.506,
+     "Ollie->Ollie": 0.88,
+     "Anna->David": 0.556,
+     "Anna->Amanda": 0.757,
+     "Anna->Ollie": 0.511,
+     "AnnaAssist->David": 0.659,
+     "AnnaAssist->Amanda": 0.602,
+     "AnnaAssist->Ollie": 0.679,
+     "Mark->David": 0.633,
+     "Mark->Amanda": 0.575,
+     "Mark->Ollie": 0.489,
+     "Sam->David": 0.699,
+     "Sam->Amanda": 0.632,
+     "Sam->Ollie": 0.588
+    },
+    "conditions": {
+     "replay_phone": {
+      "strict": {
+       "threshold": 0.8025,
+       "FRR": 1.0,
+       "n_target": 177,
+       "FAR": 0.0,
+       "n_nontarget": 384
+      },
+      "eer_thr": {
+       "threshold": 0.7869,
+       "FRR": 1.0,
+       "n_target": 177,
+       "FAR": 0.0,
+       "n_nontarget": 384
+      },
+      "mean_target_score": 0.591
+     },
+     "noise_20dB": {
+      "strict": {
+       "threshold": 0.8025,
+       "FRR": 0.5198,
+       "n_target": 177,
+       "FAR": 0.0,
+       "n_nontarget": 384
+      },
+      "eer_thr": {
+       "threshold": 0.7869,
+       "FRR": 0.3955,
+       "n_target": 177,
+       "FAR": 0.0,
+       "n_nontarget": 384
+      },
+      "mean_target_score": 0.791
+     },
+     "noise_10dB": {
+      "strict": {
+       "threshold": 0.8025,
+       "FRR": 0.9944,
+       "n_target": 177,
+       "FAR": 0.0,
+       "n_nontarget": 384
+      },
+      "eer_thr": {
+       "threshold": 0.7869,
+       "FRR": 0.9492,
+       "n_target": 177,
+       "FAR": 0.0,
+       "n_nontarget": 384
+      },
+      "mean_target_score": 0.718
+     },
+     "noise_5dB": {
+      "strict": {
+       "threshold": 0.8025,
+       "FRR": 1.0,
+       "n_target": 177,
+       "FAR": 0.0,
+       "n_nontarget": 384
+      },
+      "eer_thr": {
+       "threshold": 0.7869,
+       "FRR": 0.9944,
+       "n_target": 177,
+       "FAR": 0.0,
+       "n_nontarget": 384
+      },
+      "mean_target_score": 0.681
+     }
+    }
+   },
+   "enroll_30s": {
+    "enrolled": [
+     "David",
+     "Amanda",
+     "Ollie"
+    ],
+    "impostors": [
+     "Anna",
+     "AnnaAssist",
+     "Mark",
+     "Sam"
+    ],
+    "n_target_trials": 144,
+    "n_nontarget_trials": 318,
+    "EER": 0.0132,
+    "eer_threshold": 0.7868,
+    "far1_threshold": 0.7928,
+    "at_eer_threshold": {
+     "threshold": 0.7868,
+     "FRR": 0.0139,
+     "n_target": 144,
+     "FAR": 0.0126,
+     "n_nontarget": 318
+    },
+    "at_strict_threshold": {
+     "threshold": 0.7928,
+     "FRR": 0.0208,
+     "n_target": 144,
+     "FAR": 0.0094,
+     "n_nontarget": 318
+    },
+    "at_fixed_thresholds": {
+     "0.75": {
+      "threshold": 0.75,
+      "FRR": 0.0,
+      "n_target": 144,
+      "FAR": 0.0723,
+      "n_nontarget": 318
+     },
+     "0.8": {
+      "threshold": 0.8,
+      "FRR": 0.0278,
+      "n_target": 144,
+      "FAR": 0.0094,
+      "n_nontarget": 318
+     },
+     "0.85": {
+      "threshold": 0.85,
+      "FRR": 0.1111,
+      "n_target": 144,
+      "FAR": 0.0,
+      "n_nontarget": 318
+     },
+     "0.9": {
+      "threshold": 0.9,
+      "FRR": 0.6181,
+      "n_target": 144,
+      "FAR": 0.0,
+      "n_nontarget": 318
+     }
+    },
+    "identification_at_strict": {
+     "target_correct_and_accepted": 0.9792,
+     "target_misidentified_as_other_member": 0.0,
+     "target_rejected": 0.0208,
+     "closed_set_top1": 1.0,
+     "n_target_windows": 144,
+     "impostor_accepted_as_member": 0.1,
+     "n_impostor_windows": 10
+    },
+    "mean_score_matrix": {
+     "David->David": 0.884,
+     "David->Amanda": 0.527,
+     "David->Ollie": 0.716,
+     "Amanda->David": 0.554,
+     "Amanda->Amanda": 0.876,
+     "Amanda->Ollie": 0.519,
+     "Ollie->David": 0.704,
+     "Ollie->Amanda": 0.505,
+     "Ollie->Ollie": 0.896,
+     "Anna->David": 0.566,
+     "Anna->Amanda": 0.748,
+     "Anna->Ollie": 0.516,
+     "AnnaAssist->David": 0.676,
+     "AnnaAssist->Amanda": 0.602,
+     "AnnaAssist->Ollie": 0.672,
+     "Mark->David": 0.633,
+     "Mark->Amanda": 0.595,
+     "Mark->Ollie": 0.494,
+     "Sam->David": 0.687,
+     "Sam->Amanda": 0.642,
+     "Sam->Ollie": 0.57
+    },
+    "conditions": {
+     "replay_phone": {
+      "strict": {
+       "threshold": 0.7928,
+       "FRR": 1.0,
+       "n_target": 144,
+       "FAR": 0.0,
+       "n_nontarget": 318
+      },
+      "eer_thr": {
+       "threshold": 0.7868,
+       "FRR": 1.0,
+       "n_target": 144,
+       "FAR": 0.0,
+       "n_nontarget": 318
+      },
+      "mean_target_score": 0.594
+     },
+     "noise_20dB": {
+      "strict": {
+       "threshold": 0.7928,
+       "FRR": 0.3611,
+       "n_target": 144,
+       "FAR": 0.0,
+       "n_nontarget": 318
+      },
+      "eer_thr": {
+       "threshold": 0.7868,
+       "FRR": 0.3264,
+       "n_target": 144,
+       "FAR": 0.0063,
+       "n_nontarget": 318
+      },
+      "mean_target_score": 0.802
+     },
+     "noise_10dB": {
+      "strict": {
+       "threshold": 0.7928,
+       "FRR": 0.9097,
+       "n_target": 144,
+       "FAR": 0.0,
+       "n_nontarget": 318
+      },
+      "eer_thr": {
+       "threshold": 0.7868,
+       "FRR": 0.875,
+       "n_target": 144,
+       "FAR": 0.0,
+       "n_nontarget": 318
+      },
+      "mean_target_score": 0.729
+     },
+     "noise_5dB": {
+      "strict": {
+       "threshold": 0.7928,
+       "FRR": 0.9861,
+       "n_target": 144,
+       "FAR": 0.0,
+       "n_nontarget": 318
+      },
+      "eer_thr": {
+       "threshold": 0.7868,
+       "FRR": 0.9861,
+       "n_target": 144,
+       "FAR": 0.0,
+       "n_nontarget": 318
+      },
+      "mean_target_score": 0.692
+     }
+    }
+   }
+  },
+  "P2_room_channel_enroll_10s": {
+   "n_target_trials": 177,
+   "n_nontarget_trials": 384,
+   "EER": 0.1192,
+   "eer_threshold": 0.7752,
+   "far1_threshold": 0.8241,
+   "at_eer_threshold": {
+    "threshold": 0.7752,
+    "FRR": 0.1186,
+    "n_target": 177,
+    "FAR": 0.1198,
+    "n_nontarget": 384
+   },
+   "at_strict_threshold": {
+    "threshold": 0.8241,
+    "FRR": 0.3446,
+    "n_target": 177,
+    "FAR": 0.0078,
+    "n_nontarget": 384
+   },
+   "mean_score_matrix": {
+    "David->David": 0.831,
+    "David->Amanda": 0.615,
+    "David->Ollie": 0.745,
+    "Amanda->David": 0.633,
+    "Amanda->Amanda": 0.826,
+    "Amanda->Ollie": 0.608,
+    "Ollie->David": 0.753,
+    "Ollie->Amanda": 0.566,
+    "Ollie->Ollie": 0.834,
+    "Anna->David": 0.605,
+    "Anna->Amanda": 0.764,
+    "Anna->Ollie": 0.537,
+    "AnnaAssist->David": 0.688,
+    "AnnaAssist->Amanda": 0.637,
+    "AnnaAssist->Ollie": 0.689,
+    "Mark->David": 0.689,
+    "Mark->Amanda": 0.567,
+    "Mark->Ollie": 0.643,
+    "Sam->David": 0.743,
+    "Sam->Amanda": 0.638,
+    "Sam->Ollie": 0.674
+   },
+   "replay": {
+    "phone_speaker": {
+     "n": 177,
+     "mean_score_vs_victim_profile": 0.669,
+     "accepted_as_victim_at_eer_thr": 0.0565,
+     "accepted_as_victim_at_strict_thr": 0.0,
+     "victim_is_top1": 0.8249
+    },
+    "bluetooth_speaker": {
+     "n": 177,
+     "mean_score_vs_victim_profile": 0.803,
+     "accepted_as_victim_at_eer_thr": 0.8079,
+     "accepted_as_victim_at_strict_thr": 0.3842,
+     "victim_is_top1": 0.9774
+    }
+   },
+   "noise": {
+    "20dB": {
+     "strict": {
+      "threshold": 0.8241,
+      "FRR": 0.4011,
+      "n_target": 177
+     },
+     "eer_thr": {
+      "threshold": 0.7752,
+      "FRR": 0.1412,
+      "n_target": 177
+     },
+     "mean_target_score": 0.822
+    },
+    "10dB": {
+     "strict": {
+      "threshold": 0.8241,
+      "FRR": 0.8531,
+      "n_target": 177
+     },
+     "eer_thr": {
+      "threshold": 0.7752,
+      "FRR": 0.452,
+      "n_target": 177
+     },
+     "mean_target_score": 0.768
+    },
+    "5dB": {
+     "strict": {
+      "threshold": 0.8241,
+      "FRR": 0.9944,
+      "n_target": 177
+     },
+     "eer_thr": {
+      "threshold": 0.7752,
+      "FRR": 0.8475,
+      "n_target": 177
+     },
+     "mean_target_score": 0.708
+    }
+   }
+  },
+  "P1_household": {
+   "enrolled": [
+    "Anna",
+    "Mark",
+    "Sam"
+   ],
+   "enrollment": "2-fold: Anna/Mark enrolled on one file (~2-7 s), tested on the other; Sam enrolled on his only 1.4 s utterance (no target test audio)",
+   "n_target_trials": 5,
+   "n_nontarget_trials": 334,
+   "EER_own_data_not_reliable": 0.0284,
+   "eer_threshold_own": 0.6793,
+   "target_scores": [
+    0.679,
+    0.679,
+    0.785,
+    0.856,
+    0.856
+   ],
+   "max_nontarget_score": 0.773,
+   "at_strict_threshold_from_P2": {
+    "threshold": 0.8025,
+    "FRR": 0.6,
+    "n_target": 5,
+    "FAR": 0.0,
+    "n_nontarget": 334
+   },
+   "at_eer_threshold_from_P2": {
+    "threshold": 0.7869,
+    "FRR": 0.6,
+    "n_target": 5,
+    "FAR": 0.0,
+    "n_nontarget": 334
+   },
+   "identification_at_strict": {
+    "target_correct_and_accepted": 0.4,
+    "target_misidentified_as_other_member": 0.0,
+    "target_rejected": 0.6,
+    "closed_set_top1": 1.0,
+    "n_target_windows": 5,
+    "impostor_accepted_as_member": 0.0,
+    "n_impostor_windows": 108
+   },
+   "identification_at_eer_thr": {
+    "target_correct_and_accepted": 0.4,
+    "target_misidentified_as_other_member": 0.0,
+    "target_rejected": 0.6,
+    "closed_set_top1": 1.0,
+    "n_target_windows": 5,
+    "impostor_accepted_as_member": 0.0,
+    "n_impostor_windows": 108
+   },
+   "mean_score_matrix": {
+    "Anna->Anna": 0.839,
+    "Anna->Mark": 0.583,
+    "Anna->Sam": 0.571,
+    "Mark->Anna": 0.595,
+    "Mark->Mark": 0.679,
+    "Mark->Sam": 0.542,
+    "AnnaAssist->Anna": 0.544,
+    "AnnaAssist->Mark": 0.51,
+    "AnnaAssist->Sam": 0.566,
+    "David->Anna": 0.517,
+    "David->Mark": 0.555,
+    "David->Sam": 0.624,
+    "Amanda->Anna": 0.693,
+    "Amanda->Mark": 0.553,
+    "Amanda->Sam": 0.579,
+    "Ollie->Anna": 0.486,
+    "Ollie->Mark": 0.458,
+    "Ollie->Sam": 0.522
+   },
+   "conditions_target_only": {
+    "replay_phone": {
+     "strict": {
+      "threshold": 0.8025,
+      "FRR": 1.0,
+      "n_target": 5
+     },
+     "eer_thr": {
+      "threshold": 0.7869,
+      "FRR": 1.0,
+      "n_target": 5
+     },
+     "mean_target_score": 0.582
+    },
+    "noise_20dB": {
+     "strict": {
+      "threshold": 0.8025,
+      "FRR": 1.0,
+      "n_target": 5
+     },
+     "eer_thr": {
+      "threshold": 0.7869,
+      "FRR": 1.0,
+      "n_target": 5
+     },
+     "mean_target_score": 0.69
+    },
+    "noise_10dB": {
+     "strict": {
+      "threshold": 0.8025,
+      "FRR": 1.0,
+      "n_target": 5
+     },
+     "eer_thr": {
+      "threshold": 0.7869,
+      "FRR": 1.0,
+      "n_target": 5
+     },
+     "mean_target_score": 0.653
+    },
+    "noise_5dB": {
+     "strict": {
+      "threshold": 0.8025,
+      "FRR": 1.0,
+      "n_target": 5
+     },
+     "eer_thr": {
+      "threshold": 0.7869,
+      "FRR": 1.0,
+      "n_target": 5
+     },
+     "mean_target_score": 0.623
+    }
+   }
+  },
+  "operating_points": {
+   "studio_eer": 0.7869,
+   "studio_strict": 0.8025,
+   "room_eer": 0.7752,
+   "room_strict": 0.8241,
+   "chosen_default": "room_strict",
+   "why": "the hub hears people through a room, so thresholds calibrated on the room channel apply; 'strict' (FAR<=1 % on these trials) because attributing a request to the wrong person is worse than asking",
+   "derived_from": "P2_surrogate_household.enroll_10s (studio) and P2_room_channel_enroll_10s (room)"
+  },
+  "household_export_scores": {
+   "Anna": {
+    "utterances": [
+     0.936,
+     0.93,
+     0.955
+    ],
+    "replay": [
+     0.732,
+     0.729,
+     0.767
+    ]
+   },
+   "Mark": {
+    "utterances": [
+     0.916,
+     0.916
+    ],
+    "replay": [
+     0.68,
+     0.632
+    ]
+   },
+   "Sam": {
+    "utterances": [
+     1.0
+    ],
+    "replay": [
+     0.687
+    ]
+   }
+  },
+  "compute": {
+   "embeddings": 2971,
+   "embed_seconds": 32.4,
+   "ms_per_2s_window": 10.9,
+   "total_runtime_s": 43.3
+  }
+ },
+ "limitations": [
+  "All voices are ElevenLabs TTS. Synthetic voices are perfectly consistent in timbre and recording chain within a voice (easier than real people, who vary with health, mood, distance, mic), but several stock voices can be acoustically close (Anna vs Amanda mean score is high) and GE2E was trained on real speech only; the net effect on real households is unknown in both directions.",
+  "P1 (the real household) has ~9 s of Anna, ~6 s of Mark and 1.4 s of Sam in total: the 10 s / 30 s enrollment requested is impossible, target trials are a handful, and Sam has no held-out audio. P1 EER is anecdotal; thresholds come from P2.",
+  "P2 uses the narrator and assistant voices as a surrogate household (they have 70-280 s each). David's lines repeat some phrases across episodes ('Intersog presents. Intelligent Spaces.'), so some test windows share text with enrollment.",
+  "Only 7 distinct voices in total, so the impostor population is tiny; FAR estimates have wide confidence intervals and a 1 % FAR threshold on a few thousand correlated window pairs is not a 1 % FAR in the field.",
+  "Windows overlap 50 % and come from the same few files, so trials are correlated; no confidence intervals are reported.",
+  "Replay is a DSP proxy (band-limit, clip, reverb, noise), not a real phone loudspeaker + room + mic. Real replay through a good speaker would be closer to the original, i.e. the proxy is if anything pessimistic for the attacker.",
+  "Noise is synthetic (no real kitchen recordings available offline); real babble/TV/extractor-fan noise is harder than pink noise.",
+  "No anti-spoofing / liveness model was available offline; none was tested."
+ ]
+}

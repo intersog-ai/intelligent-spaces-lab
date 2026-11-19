@@ -1,0 +1,248 @@
+{
+ "_env": {
+  "SANDBOX_SHERPA_ONNX_WHISPER_FILES": "0"
+ },
+ "_machine": {
+  "cpu": "x86_64",
+  "cpus": 2,
+  "python": "3.13.18"
+ },
+ "tts_espeak_ng": {
+  "status": "ran",
+  "engine": "espeak-ng (espeakng-loader 0.2.4 bundled lib+data), formant synthesis, low quality",
+  "time_to_first_audio_ms_p50": 0.2,
+  "time_to_first_audio_ms_p95": 0.2,
+  "rtf_p50": 0.0009,
+  "n": 20,
+  "wall_s": 0.07
+ },
+ "wake_openwakeword": {
+  "status": "ran",
+  "engine": "openWakeWord 0.4.0 onnx (melspec+embedding+keyword heads, all bundled)",
+  "frame": "80 ms",
+  "compute_ms_per_80ms_frame_p50": 2.33,
+  "compute_ms_per_80ms_frame_p95": 2.58,
+  "rtf": 0.0291,
+  "trigger_test_espeak_voice": {
+   "hey_jarvis": {
+    "detected": true,
+    "peak_score": 0.999,
+    "detection_delay_after_speech_end_ms": 153
+   },
+   "alexa": {
+    "detected": true,
+    "peak_score": 0.799,
+    "detection_delay_after_speech_end_ms": 121
+   },
+   "hey_mycroft": {
+    "detected": false,
+    "peak_score": 0.001,
+    "detection_delay_after_speech_end_ms": null
+   }
+  },
+  "note": "espeak-ng is far from the TTS the models were trained on; a miss here is not a model verdict",
+  "wall_s": 1.28
+ },
+ "vad_silero": {
+  "status": "ran",
+  "engine": "silero-vad 6.2.3 onnx (bundled)",
+  "chunk": "512 samples = 32 ms",
+  "endpoint_delay_ms_hangover_200": {
+   "p50": 324,
+   "p95": 350,
+   "n": 44
+  },
+  "endpoint_delay_ms_hangover_300": {
+   "p50": 425,
+   "p95": 1625,
+   "n": 38
+  },
+  "endpoint_delay_ms_hangover_500": {
+   "p50": 620,
+   "p95": 1966,
+   "n": 20
+  },
+  "compute_ms_per_32ms_chunk_p50": 0.199,
+  "rtf": 0.0062,
+  "note": "endpoint delay = time from true end of utterance (ffmpeg silencedetect -40 dB) to the VAD 'end' event; it is dominated by the configured hangover, i.e. a product choice, not compute",
+  "wall_s": 8.67
+ },
+ "stt_pocketsphinx": {
+  "status": "ran",
+  "engine": "pocketsphinx 5.1.1, bundled en-us HMM + 3-gram LM (CMU Sphinx)",
+  "rtf_mean": 0.182,
+  "wer_mean": 0.205,
+  "files": [
+   {
+    "file": "E06_Amanda.mp3",
+    "audio_s": 15.04,
+    "decode_s": 2.723,
+    "rtf": 0.181,
+    "wer": 0.342,
+    "hyp_head": "good morning on on the wall rain from about eight don't forget number on raising"
+   },
+   {
+    "file": "E07_Amanda.mp3",
+    "audio_s": 21.2,
+    "decode_s": 3.628,
+    "rtf": 0.171,
+    "wer": 0.233,
+    "hyp_head": "the kitchen window is open so i cause the heating there until it's close to the "
+   },
+   {
+    "file": "E08_Amanda.mp3",
+    "audio_s": 23.76,
+    "decode_s": 4.515,
+    "rtf": 0.19,
+    "wer": 0.234,
+    "hyp_head": "some of the parcel of the front door want to see the camera the back door opened"
+   },
+   {
+    "file": "E09_Amanda.mp3",
+    "audio_s": 13.12,
+    "decode_s": 2.481,
+    "rtf": 0.189,
+    "wer": 0.121,
+    "hyp_head": "the internet is down the house still works the weather in a calendar will come b"
+   },
+   {
+    "file": "E06_Ollie.mp3",
+    "audio_s": 4.72,
+    "decode_s": 0.868,
+    "rtf": 0.184,
+    "wer": 0.143,
+    "hyp_head": "your study is usually nineteen mock i'll keep it at twenty one you're in"
+   },
+   {
+    "file": "E09_Ollie.mp3",
+    "audio_s": 8.24,
+    "decode_s": 1.464,
+    "rtf": 0.178,
+    "wer": 0.158,
+    "hyp_head": "twelve voice requests for speech recognition not stored and last night encrypted"
+   }
+  ],
+  "note": "batch decode of whole files; RTF on 1 thread. WER vs the voice-over scripts.",
+  "wall_s": 16.57
+ },
+ "stt_faster_whisper_tiny_en": {
+  "status": "blocked_or_failed",
+  "error": "ProxyError: 403 Forbidden (agent proxy: no rule or network setting allows this host)",
+  "wall_s": 1.6
+ },
+ "stt_vosk": {
+  "status": "blocked_or_failed",
+  "error": "ProxyError: HTTPSConnectionPool(host='alphacephei.com', port=443): Max retries exceeded with url: /vosk/models/model-list.json (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden (agent proxy: no rule or network setting allows this host)')))",
+  "wall_s": 0.1
+ },
+ "stt_sherpa_zipformer_streaming": {
+  "status": "ran",
+  "engine": "sherpa-onnx 2.0.2 streaming zipformer-transducer en-20M int8 (model from github.com releases)",
+  "threads": 1,
+  "chunk": "100 ms",
+  "compute_ms_per_100ms_chunk_p50": 0.15,
+  "compute_ms_per_100ms_chunk_p95": 7.95,
+  "final_result_after_end_of_speech_ms_p50": 14.7,
+  "final_result_after_end_of_speech_ms_p95": 18.3,
+  "rtf_whole_file": 0.03,
+  "wer_mean": 0.141,
+  "n_command_utterances": 13,
+  "sample_hyps": [
+   [
+    "E06_Amanda.mp3",
+    ""
+   ],
+   [
+    "E06_Amanda.mp3",
+    "ULIN FROM ABOUT EIGHT"
+   ],
+   [
+    "E06_Amanda.mp3",
+    "T AN UMBRELLA"
+   ],
+   [
+    "E06_Amanda.mp3",
+    "IN TO TWENTY ONE"
+   ],
+   [
+    "E06_Amanda.mp3",
+    "T A FEW MINUTES"
+   ],
+   [
+    "E06_Amanda.mp3",
+    "S ANNA OR MARK CAN UNLOCK THE FRONT DO"
+   ]
+  ],
+  "wall_s": 4.83
+ },
+ "stt_sherpa_whisper_tiny_en": {
+  "status": "ran",
+  "engine": "sherpa-onnx 2.0.2 + whisper tiny.en int8 (model from github.com releases)",
+  "threads": 2,
+  "decode_ms_after_end_of_speech_p50": 156.1,
+  "decode_ms_after_end_of_speech_p95": 206.3,
+  "utterance_s_p50": 1.6,
+  "rtf_p50": 0.098,
+  "wer_mean": 0.063,
+  "n_command_utterances": 13,
+  "sample_hyps": [
+   [
+    "E06_Amanda.mp3",
+    "Good morning Anna."
+   ],
+   [
+    "E06_Amanda.mp3",
+    "It will rain from about 8."
+   ],
+   [
+    "E06_Amanda.mp3",
+    "Don't forget an umbrella."
+   ],
+   [
+    "E06_Amanda.mp3",
+    "Raising the kitchen to 21."
+   ],
+   [
+    "E06_Amanda.mp3",
+    "give it a few minutes."
+   ],
+   [
+    "E06_Amanda.mp3",
+    "Only Anna or Mark can unlock the front door."
+   ]
+  ],
+  "note": "offline (non-streaming): the whole utterance is decoded after the endpoint, so this is pure added latency",
+  "wall_s": 9.8
+ },
+ "tts_piper_amy_low": {
+  "status": "ran",
+  "engine": "Piper VITS en_US-amy-low (low quality tier) via onnxruntime 1.29, espeak-ng IPA frontend; model from sherpa-onnx github release",
+  "threads": 2,
+  "chunking": "sentence-level",
+  "time_to_first_audio_ms_p50": 80.8,
+  "time_to_first_audio_ms_p95": 106.6,
+  "rtf_p50": 0.035,
+  "n": 12,
+  "sherpa_onnx_tts_note": "sherpa-onnx 2.0.2 OfflineTts produced 0 samples: wheel lacks the espeak frontend",
+  "wall_s": 2.54
+ },
+ "intent_rules": {
+  "status": "ran",
+  "engine": "6 regex rules (python re)",
+  "us_per_utterance": 0.93,
+  "hit_rate": 0.833,
+  "wall_s": 0.01
+ },
+ "intent_llm": {
+  "status": "blocked_or_failed",
+  "error": "RuntimeError: no local LLM weights obtainable: llama.cpp/transformers models are hosted on huggingface.co (blocked); not measured, assumed values only",
+  "wall_s": 0.0
+ },
+ "speaker_embedding": {
+  "status": "ran",
+  "engine": "resemblyzer GE2E",
+  "ms_per_2s_utterance_p50": 19.9,
+  "p95": 21.7,
+  "wall_s": 1.14
+ }
+}

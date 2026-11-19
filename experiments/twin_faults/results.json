@@ -1,0 +1,218 @@
+{
+  "experiment": "twin_faults",
+  "date": "2026-11-19",
+  "method": "Per fault type, N seeded trials (seed = trial index) of a fresh twin home. Fault injected at t=0; after 5 s boot a minimal client sends one command and waits 30 virtual s. CONFIRMED = a state/<device> message with the expected attributes and device ts > command time (contract rule). Outcomes are mutually exclusive: confirmed / ack_not_confirmed / no_ack. ttc = time from command to confirming state, virtual seconds.",
+  "params": {
+    "trials": 200,
+    "timeout_s": 30.0,
+    "boot_s": 5.0,
+    "faults": {
+      "none": {
+        "target": "valve.main close",
+        "setup": "no fault"
+      },
+      "link_drop": {
+        "target": "valve.main close",
+        "setup": "30% drop on cmd/ack/state of the device"
+      },
+      "link_delay": {
+        "target": "valve.main close",
+        "setup": "+5 s on cmd/ack/state"
+      },
+      "link_duplicate": {
+        "target": "valve.main close",
+        "setup": "50% of cmd/ack/state messages delivered twice"
+      },
+      "link_reorder": {
+        "target": "valve.main close",
+        "setup": "uniform 0-10 s jitter on cmd/ack/state (reorders)"
+      },
+      "stuck": {
+        "target": "valve.main close",
+        "setup": "actuator acks, never moves"
+      },
+      "partial": {
+        "target": "valve.main close",
+        "setup": "valve stops at 40%"
+      },
+      "offline": {
+        "target": "valve.main close",
+        "setup": "device silent, ignores commands"
+      },
+      "stale": {
+        "target": "valve.main close",
+        "setup": "repeats last snapshot with old ts; acks commands"
+      },
+      "clock_skew_behind": {
+        "target": "valve.main close",
+        "setup": "device clock 120 s behind hub"
+      },
+      "clock_skew_ahead": {
+        "target": "valve.main close",
+        "setup": "device clock 120 s ahead of hub"
+      },
+      "battery_dead": {
+        "target": "lock.front unlock",
+        "setup": "battery lock: last gasp then silence"
+      },
+      "internet_down": {
+        "target": "valve.main close",
+        "setup": "WAN down; local bus intact"
+      },
+      "hostile_name": {
+        "target": "valve.main close",
+        "setup": "prompt-injection friendly name (agent-layer fault)"
+      }
+    },
+    "base_latency_s": 0.01
+  },
+  "results": {
+    "none": {
+      "trials": 200,
+      "confirmed_pct": 100.0,
+      "ack_not_confirmed_pct": 0.0,
+      "no_ack_pct": 0.0,
+      "confirmed_without_ack_pct": 0.0,
+      "duplicate_ack_pct": 0.0,
+      "ttc_p50_s": 5.775,
+      "ttc_p95_s": 7.911
+    },
+    "link_drop": {
+      "trials": 200,
+      "confirmed_pct": 53.5,
+      "ack_not_confirmed_pct": 14.0,
+      "no_ack_pct": 32.5,
+      "confirmed_without_ack_pct": 15.0,
+      "duplicate_ack_pct": 0.0,
+      "ttc_p50_s": 6.228,
+      "ttc_p95_s": 22.413
+    },
+    "link_delay": {
+      "trials": 200,
+      "confirmed_pct": 100.0,
+      "ack_not_confirmed_pct": 0.0,
+      "no_ack_pct": 0.0,
+      "confirmed_without_ack_pct": 0.0,
+      "duplicate_ack_pct": 0.0,
+      "ttc_p50_s": 15.826,
+      "ttc_p95_s": 17.887
+    },
+    "link_duplicate": {
+      "trials": 200,
+      "confirmed_pct": 100.0,
+      "ack_not_confirmed_pct": 0.0,
+      "no_ack_pct": 0.0,
+      "confirmed_without_ack_pct": 0.0,
+      "duplicate_ack_pct": 73.0,
+      "ttc_p50_s": 5.457,
+      "ttc_p95_s": 7.734
+    },
+    "link_reorder": {
+      "trials": 200,
+      "confirmed_pct": 100.0,
+      "ack_not_confirmed_pct": 0.0,
+      "no_ack_pct": 0.0,
+      "confirmed_without_ack_pct": 0.0,
+      "duplicate_ack_pct": 0.0,
+      "ttc_p50_s": 15.659,
+      "ttc_p95_s": 24.021
+    },
+    "stuck": {
+      "trials": 200,
+      "confirmed_pct": 0.0,
+      "ack_not_confirmed_pct": 100.0,
+      "no_ack_pct": 0.0,
+      "confirmed_without_ack_pct": 0.0,
+      "duplicate_ack_pct": 0.0,
+      "ttc_p50_s": null,
+      "ttc_p95_s": null
+    },
+    "partial": {
+      "trials": 200,
+      "confirmed_pct": 0.0,
+      "ack_not_confirmed_pct": 100.0,
+      "no_ack_pct": 0.0,
+      "confirmed_without_ack_pct": 0.0,
+      "duplicate_ack_pct": 0.0,
+      "ttc_p50_s": null,
+      "ttc_p95_s": null
+    },
+    "offline": {
+      "trials": 200,
+      "confirmed_pct": 0.0,
+      "ack_not_confirmed_pct": 0.0,
+      "no_ack_pct": 100.0,
+      "confirmed_without_ack_pct": 0.0,
+      "duplicate_ack_pct": 0.0,
+      "ttc_p50_s": null,
+      "ttc_p95_s": null
+    },
+    "stale": {
+      "trials": 200,
+      "confirmed_pct": 0.0,
+      "ack_not_confirmed_pct": 100.0,
+      "no_ack_pct": 0.0,
+      "confirmed_without_ack_pct": 0.0,
+      "duplicate_ack_pct": 0.0,
+      "ttc_p50_s": null,
+      "ttc_p95_s": null
+    },
+    "clock_skew_behind": {
+      "trials": 200,
+      "confirmed_pct": 0.0,
+      "ack_not_confirmed_pct": 100.0,
+      "no_ack_pct": 0.0,
+      "confirmed_without_ack_pct": 0.0,
+      "duplicate_ack_pct": 0.0,
+      "ttc_p50_s": null,
+      "ttc_p95_s": null
+    },
+    "clock_skew_ahead": {
+      "trials": 200,
+      "confirmed_pct": 100.0,
+      "ack_not_confirmed_pct": 0.0,
+      "no_ack_pct": 0.0,
+      "confirmed_without_ack_pct": 0.0,
+      "duplicate_ack_pct": 0.0,
+      "ttc_p50_s": 5.775,
+      "ttc_p95_s": 7.911
+    },
+    "battery_dead": {
+      "trials": 200,
+      "confirmed_pct": 0.0,
+      "ack_not_confirmed_pct": 0.0,
+      "no_ack_pct": 100.0,
+      "confirmed_without_ack_pct": 0.0,
+      "duplicate_ack_pct": 0.0,
+      "ttc_p50_s": null,
+      "ttc_p95_s": null
+    },
+    "internet_down": {
+      "trials": 200,
+      "confirmed_pct": 100.0,
+      "ack_not_confirmed_pct": 0.0,
+      "no_ack_pct": 0.0,
+      "confirmed_without_ack_pct": 0.0,
+      "duplicate_ack_pct": 0.0,
+      "ttc_p50_s": 5.775,
+      "ttc_p95_s": 7.911
+    },
+    "hostile_name": {
+      "trials": 200,
+      "confirmed_pct": 100.0,
+      "ack_not_confirmed_pct": 0.0,
+      "no_ack_pct": 0.0,
+      "confirmed_without_ack_pct": 0.0,
+      "duplicate_ack_pct": 0.0,
+      "ttc_p50_s": 5.775,
+      "ttc_p95_s": 7.911
+    }
+  },
+  "limitations": [
+    "Synthetic device models; delay distributions are uniform guesses, not measured hardware.",
+    "One command per trial on one device; no retries, no concurrent load.",
+    "Link faults are i.i.d. per message; real radio loss is bursty.",
+    "Client trusts device ts per the contract; clock_skew_behind shows that rule rejects real confirmations when the device clock lags.",
+    "internet_down and hostile_name do not touch the local transport, so they look healthy here; their effects show only in the agent/egress layers."
+  ]
+}

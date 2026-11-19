@@ -1,0 +1,9 @@
+# voice experiments only (heavier; CPU is fine)
+Resemblyzer==0.1.4
+librosa>=0.10
+soundfile>=0.12
+torch>=2
+openwakeword==0.4.0
+silero-vad>=5
+onnxruntime>=1.17
+sherpa-onnx>=1.10
