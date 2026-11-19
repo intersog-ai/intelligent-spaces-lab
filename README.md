@@ -4,7 +4,7 @@ A digital twin of a smart home for testing one claim: an AI home assistant can b
 
 This repo accompanies the *Intelligent Spaces* Build Track by [Intersog](https://www.intersog.com). Each episode has a folder in [`episodes/`](episodes/) with its description, findings, evidence and documents. Episode [B01](episodes/B01/) builds the twin and breaks it.
 
-> **Research material, no guarantee.** Everything here runs in simulation, with synthetic voices and simulated devices. It is not a product, not a certified alarm system and not safety advice. Use it at your own risk and for your own benefit. Life-safety equipment must be listed and installed by qualified people.
+> **Research material, provided as is.** Everything here runs in simulation, with synthetic voices and simulated devices. It is not a product, not a certified alarm system and not safety advice. Use it at your own risk and for your own benefit. Life-safety equipment must be listed and installed by qualified people.
 
 ## What is inside
 

@@ -17,4 +17,4 @@ Each Build Track episode has a folder here: a description, its findings with lin
 
 B10 closes the track with the complete research library: every paper, dataset, prompt, fact ledger and scorecard from B01 to B10 in one release.
 
-By [Intersog](https://www.intersog.com). Research in simulation, no guarantee.
+By [Intersog](https://www.intersog.com). Research in simulation, provided as is.

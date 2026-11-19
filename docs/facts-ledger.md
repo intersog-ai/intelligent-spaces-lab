@@ -53,4 +53,4 @@ Checked: 2026-11-19. Primary sources used wherever one could be opened. Where on
 
 
 ---
-Part of the Intelligent Spaces Lab by [Intersog](https://www.intersog.com). Research in simulation, no guarantee.
+Part of the Intelligent Spaces Lab by [Intersog](https://www.intersog.com). Research in simulation, provided as is.

@@ -4,7 +4,7 @@
 
 We took the home from *Intelligent Spaces* Season 1 and built it as a digital twin: 15 simulated devices, a household of three, and a fault injector. The design under test: the language model proposes, code decides, devices confirm. Then we broke it on purpose and published what failed.
 
-Video: [CHECK: YouTube URL] · 3:44 · synthetic narration · research in simulation, no guarantee.
+Video: [CHECK: YouTube URL] · 3:44 · synthetic narration · research in simulation, provided as is.
 
 ## Findings
 

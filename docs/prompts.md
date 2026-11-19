@@ -58,4 +58,4 @@ Shared preamble given to every build agent:
 
 
 ---
-Part of the Intelligent Spaces Lab by [Intersog](https://www.intersog.com). Research in simulation, no guarantee.
+Part of the Intelligent Spaces Lab by [Intersog](https://www.intersog.com). Research in simulation, provided as is.

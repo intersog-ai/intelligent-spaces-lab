@@ -11,4 +11,4 @@ Every document that supports the Build Track findings. B10 releases the complete
 | [../experiments/](../experiments/) | Seeded experiments: `run.py`, `results.json`, `notes.md` each | B01 |
 | [../episodes/](../episodes/) | Episode descriptions, findings, narration | B01 |
 
-By [Intersog](https://www.intersog.com). Research in simulation, no guarantee.
+By [Intersog](https://www.intersog.com). Research in simulation, provided as is.
