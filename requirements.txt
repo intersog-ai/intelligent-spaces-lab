@@ -5,3 +5,8 @@ cryptography>=42
 pytest>=8
 # interoperability test (independent DC-09 receiver)
 pysiaalarm==3.2.2
+# B02: real local MQTT broker and client (islab/connect, experiments/b02_connect)
+amqtt==0.12.2
+paho-mqtt>=2.1
+# optional, B02: Matter cluster ids are verified against the SDK-generated definitions when present
+# home-assistant-chip-clusters==2025.7.0

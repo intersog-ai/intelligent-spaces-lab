@@ -1,0 +1,2712 @@
+{
+ "experiment": "b02_connect",
+ "date": "2026-11-19",
+ "method": "Real MQTT 3.1.1 broker (amqtt) on 127.0.0.1 and paho-mqtt clients: one per device and the hub. Clients send a username (amqtt queues nothing for anonymous sessions). Twin devices (islab.twin, unchanged) run on a simulator driven by the wall clock x10. Routine 'we're leaving': 2 lights off, 2 thermostats to 16 C, 2 shades close, kitchen window check; the bedroom shade loses power 0-1 s before. Confirmation by later state (CONTRACT.md); resend same cmd_id after 2 s without ack (max 3); offline from Last Will. Loss = i.i.d. drop at the adapter, both directions (the radio hop into the bridge).",
+ "params": {
+  "speed_home_per_wall": 10.0,
+  "trials_per_condition": 8,
+  "qos": [
+   0,
+   1
+  ],
+  "adapter_loss": [
+   0,
+   0.05,
+   0.2
+  ],
+  "keepalive_wall_s": 1,
+  "keepalive_home_s": 10.0,
+  "routine_timeout_home_s": 30.0,
+  "resend_after_home_s": 2.0,
+  "heartbeat_rule": "offline after 2 x 60 s shade heartbeat",
+  "broker": "amqtt 0.12.2",
+  "paho_mqtt": "2.2.0",
+  "matter_ids_source": "chip.clusters.Objects (home-assistant-chip-clusters 2025.7.0), ids verified",
+  "wall_time_s": 193.0
+ },
+ "results": {
+  "A_transport_latency_wall": {
+   "qos0": {
+    "n": 300,
+    "received": 300,
+    "p50_ms": 0.45,
+    "p95_ms": 2.28,
+    "max_ms": 43.43
+   },
+   "qos1": {
+    "n": 300,
+    "received": 300,
+    "p50_ms": 0.51,
+    "p95_ms": 0.8,
+    "max_ms": 3.21
+   }
+  },
+  "B_routine": {
+   "qos0_loss0": {
+    "qos": 0,
+    "loss": 0.0,
+    "trials": 8,
+    "routine_closed_s": {
+     "p50": 15.02,
+     "p95": 15.02
+    },
+    "all_live_confirmed": {
+     "rate_pct": 100.0,
+     "p50_s": 8.29,
+     "p95_s": 9.49
+    },
+    "per_device_confirmed_pct": {
+     "light.kitchen": 100.0,
+     "light.living": 100.0,
+     "thermo.kitchen": 100.0,
+     "thermo.study": 100.0,
+     "shade.living": 100.0,
+     "shade.bedroom": 0.0
+    },
+    "dropped_shade_reported_offline_pct": 100.0,
+    "lwt_detect_s": {
+     "p50": 15.02,
+     "p95": 15.02,
+     "missing": 0
+    },
+    "heartbeat_detect_s_computed": {
+     "p50": 109.99,
+     "p95": 110.0
+    },
+    "discovery_configs_seen_min": 7,
+    "acted_but_unconfirmed_total": 0,
+    "resends_to_live_devices": 0,
+    "resends_to_dropped_shade": 24,
+    "adapter_lost_in": 0,
+    "adapter_lost_out": 0,
+    "unsolicited_msgs_to_device_clients_per_trial": {
+     "min": 42,
+     "max": 84
+    },
+    "hub_restart": {
+     "full_picture_ms_p50_when_complete": 8.7,
+     "full_picture_ms_p95_when_complete": 9.06,
+     "all_7_states_pct": 100.0,
+     "dropped_seen_offline_pct": 100.0
+    },
+    "trial_rows": [
+     {
+      "seed": 0,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 9.1,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.44,
+       "light.living": 0.53,
+       "thermo.kitchen": 0.99,
+       "thermo.study": 1.04,
+       "shade.living": 9.1
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 110.0,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 0,
+       "in": 5,
+       "out": 21,
+       "unsolicited": 42
+      },
+      "restart": {
+       "wall_ms": 7.1,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 1,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 5.22,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.45,
+       "light.living": 0.48,
+       "thermo.kitchen": 1.02,
+       "thermo.study": 0.99,
+       "shade.living": 5.22
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 0,
+       "in": 5,
+       "out": 23,
+       "unsolicited": 42
+      },
+      "restart": {
+       "wall_ms": 8.4,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 2,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 6.39,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.53,
+       "light.living": 0.53,
+       "thermo.kitchen": 0.72,
+       "thermo.study": 0.66,
+       "shade.living": 6.39
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 0,
+       "in": 5,
+       "out": 21,
+       "unsolicited": 84
+      },
+      "restart": {
+       "wall_ms": 7.6,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 3,
+      "routine_closed_s": 15.01,
+      "all_live_confirmed_s": 8.75,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.48,
+       "light.living": 0.48,
+       "thermo.kitchen": 0.95,
+       "thermo.study": 0.72,
+       "shade.living": 8.75
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.01,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 0,
+       "in": 5,
+       "out": 21,
+       "unsolicited": 84
+      },
+      "restart": {
+       "wall_ms": 9.0,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 4,
+      "routine_closed_s": 15.01,
+      "all_live_confirmed_s": 9.13,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.52,
+       "light.living": 0.51,
+       "thermo.kitchen": 0.95,
+       "thermo.study": 0.94,
+       "shade.living": 9.13
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.01,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 0,
+       "in": 5,
+       "out": 23,
+       "unsolicited": 84
+      },
+      "restart": {
+       "wall_ms": 8.2,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 5,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 9.68,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.44,
+       "light.living": 0.48,
+       "thermo.kitchen": 0.51,
+       "thermo.study": 0.56,
+       "shade.living": 9.68
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 0,
+       "in": 5,
+       "out": 19,
+       "unsolicited": 84
+      },
+      "restart": {
+       "wall_ms": 9.1,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 6,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 7.83,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.44,
+       "light.living": 0.52,
+       "thermo.kitchen": 0.92,
+       "thermo.study": 0.5,
+       "shade.living": 7.83
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 0,
+       "in": 5,
+       "out": 21,
+       "unsolicited": 84
+      },
+      "restart": {
+       "wall_ms": 9.0,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 7,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 7.06,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.45,
+       "light.living": 0.45,
+       "thermo.kitchen": 1.04,
+       "thermo.study": 0.79,
+       "shade.living": 7.06
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.98,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 0,
+       "in": 5,
+       "out": 22,
+       "unsolicited": 56
+      },
+      "restart": {
+       "wall_ms": 9.0,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     }
+    ]
+   },
+   "qos0_loss5": {
+    "qos": 0,
+    "loss": 0.05,
+    "trials": 8,
+    "routine_closed_s": {
+     "p50": 15.02,
+     "p95": 28.06
+    },
+    "all_live_confirmed": {
+     "rate_pct": 87.5,
+     "p50_s": 8.33,
+     "p95_s": 22.79
+    },
+    "per_device_confirmed_pct": {
+     "light.kitchen": 100.0,
+     "light.living": 87.5,
+     "thermo.kitchen": 100.0,
+     "thermo.study": 100.0,
+     "shade.living": 100.0,
+     "shade.bedroom": 0.0
+    },
+    "dropped_shade_reported_offline_pct": 100.0,
+    "lwt_detect_s": {
+     "p50": 15.02,
+     "p95": 15.03,
+     "missing": 0
+    },
+    "heartbeat_detect_s_computed": {
+     "p50": 109.99,
+     "p95": 110.0
+    },
+    "discovery_configs_seen_min": 7,
+    "acted_but_unconfirmed_total": 1,
+    "resends_to_live_devices": 3,
+    "resends_to_dropped_shade": 24,
+    "adapter_lost_in": 2,
+    "adapter_lost_out": 10,
+    "unsolicited_msgs_to_device_clients_per_trial": {
+     "min": 63,
+     "max": 105
+    },
+    "hub_restart": {
+     "full_picture_ms_p50_when_complete": 8.7,
+     "full_picture_ms_p95_when_complete": 9.56,
+     "all_7_states_pct": 87.5,
+     "dropped_seen_offline_pct": 100.0
+    },
+    "trial_rows": [
+     {
+      "seed": 1000,
+      "routine_closed_s": 15.01,
+      "all_live_confirmed_s": 5.14,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.48,
+       "light.living": 0.52,
+       "thermo.kitchen": 0.48,
+       "thermo.study": 0.58,
+       "shade.living": 5.14
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.01,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 1,
+       "in": 5,
+       "out": 23,
+       "unsolicited": 73
+      },
+      "restart": {
+       "wall_ms": 9.0,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 1001,
+      "routine_closed_s": 30.0,
+      "all_live_confirmed_s": null,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "not_confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.51,
+       "thermo.kitchen": 0.53,
+       "thermo.study": 0.76,
+       "shade.living": 5.93
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 2,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 110.0,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 1,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 3,
+       "in": 6,
+       "out": 24,
+       "unsolicited": 70
+      },
+      "restart": {
+       "wall_ms": 8.7,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 1002,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 8.1,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.5,
+       "light.living": 0.49,
+       "thermo.kitchen": 0.63,
+       "thermo.study": 1.01,
+       "shade.living": 8.1
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 110.0,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 0,
+       "in": 5,
+       "out": 22,
+       "unsolicited": 70
+      },
+      "restart": {
+       "wall_ms": 8.2,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 1003,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 6.04,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.5,
+       "light.living": 0.52,
+       "thermo.kitchen": 0.55,
+       "thermo.study": 0.56,
+       "shade.living": 6.04
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 2,
+       "in": 5,
+       "out": 25,
+       "unsolicited": 63
+      },
+      "restart": {
+       "wall_ms": null,
+       "states": 6,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 1004,
+      "routine_closed_s": 15.01,
+      "all_live_confirmed_s": 8.39,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.44,
+       "light.living": 0.48,
+       "thermo.kitchen": 0.48,
+       "thermo.study": 0.99,
+       "shade.living": 8.39
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.01,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 1,
+       "in": 5,
+       "out": 20,
+       "unsolicited": 105
+      },
+      "restart": {
+       "wall_ms": 8.6,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 1005,
+      "routine_closed_s": 24.47,
+      "all_live_confirmed_s": 24.47,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.51,
+       "light.living": 0.5,
+       "thermo.kitchen": 0.75,
+       "thermo.study": 0.56,
+       "shade.living": 24.47
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 1,
+       "in": 5,
+       "out": 21,
+       "unsolicited": 84
+      },
+      "restart": {
+       "wall_ms": 9.8,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 1006,
+      "routine_closed_s": 15.01,
+      "all_live_confirmed_s": 8.33,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.46,
+       "light.living": 0.55,
+       "thermo.kitchen": 0.9,
+       "thermo.study": 0.84,
+       "shade.living": 8.33
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.01,
+      "heartbeat_detect_s": 109.98,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 1,
+       "in": 5,
+       "out": 22,
+       "unsolicited": 84
+      },
+      "restart": {
+       "wall_ms": 8.3,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 1007,
+      "routine_closed_s": 18.86,
+      "all_live_confirmed_s": 18.86,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.46,
+       "light.living": 0.5,
+       "thermo.kitchen": 2.96,
+       "thermo.study": 18.86,
+       "shade.living": 8.1
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 2,
+       "thermo.study": 1,
+       "shade.living": 2,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.03,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 2,
+       "lost_out": 1,
+       "in": 7,
+       "out": 21,
+       "unsolicited": 84
+      },
+      "restart": {
+       "wall_ms": 8.8,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     }
+    ]
+   },
+   "qos0_loss20": {
+    "qos": 0,
+    "loss": 0.2,
+    "trials": 8,
+    "routine_closed_s": {
+     "p50": 15.02,
+     "p95": 30.0
+    },
+    "all_live_confirmed": {
+     "rate_pct": 75.0,
+     "p50_s": 9.34,
+     "p95_s": 18.15
+    },
+    "per_device_confirmed_pct": {
+     "light.kitchen": 87.5,
+     "light.living": 87.5,
+     "thermo.kitchen": 100.0,
+     "thermo.study": 100.0,
+     "shade.living": 100.0,
+     "shade.bedroom": 0.0
+    },
+    "dropped_shade_reported_offline_pct": 100.0,
+    "lwt_detect_s": {
+     "p50": 15.02,
+     "p95": 15.02,
+     "missing": 0
+    },
+    "heartbeat_detect_s_computed": {
+     "p50": 109.99,
+     "p95": 110.0
+    },
+    "discovery_configs_seen_min": 7,
+    "acted_but_unconfirmed_total": 2,
+    "resends_to_live_devices": 14,
+    "resends_to_dropped_shade": 24,
+    "adapter_lost_in": 10,
+    "adapter_lost_out": 32,
+    "unsolicited_msgs_to_device_clients_per_trial": {
+     "min": 91,
+     "max": 91
+    },
+    "hub_restart": {
+     "full_picture_ms_p50_when_complete": 8.6,
+     "full_picture_ms_p95_when_complete": 9.88,
+     "all_7_states_pct": 62.5,
+     "dropped_seen_offline_pct": 100.0
+    },
+    "trial_rows": [
+     {
+      "seed": 2000,
+      "routine_closed_s": 30.0,
+      "all_live_confirmed_s": null,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "not_confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.42,
+       "thermo.kitchen": 0.69,
+       "thermo.study": 13.33,
+       "shade.living": 11.54
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 2,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.01,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 1,
+      "adapter": {
+       "lost_in": 1,
+       "lost_out": 2,
+       "in": 6,
+       "out": 21,
+       "unsolicited": 91
+      },
+      "restart": {
+       "wall_ms": 8.6,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 2001,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 11.86,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 11.86,
+       "light.living": 0.46,
+       "thermo.kitchen": 0.54,
+       "thermo.study": 3.06,
+       "shade.living": 9.11
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 2,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 1,
+       "lost_out": 1,
+       "in": 6,
+       "out": 21,
+       "unsolicited": 91
+      },
+      "restart": {
+       "wall_ms": 10.1,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 2002,
+      "routine_closed_s": 20.25,
+      "all_live_confirmed_s": 20.25,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.46,
+       "light.living": 0.56,
+       "thermo.kitchen": 15.67,
+       "thermo.study": 20.06,
+       "shade.living": 20.25
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 4,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.01,
+      "heartbeat_detect_s": 110.01,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 2,
+       "lost_out": 7,
+       "in": 8,
+       "out": 24,
+       "unsolicited": 91
+      },
+      "restart": {
+       "wall_ms": 8.1,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 2003,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 7.88,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 2.47,
+       "light.living": 0.66,
+       "thermo.kitchen": 0.96,
+       "thermo.study": 0.81,
+       "shade.living": 7.88
+      },
+      "sends": {
+       "light.kitchen": 2,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 1,
+       "lost_out": 6,
+       "in": 6,
+       "out": 21,
+       "unsolicited": 91
+      },
+      "restart": {
+       "wall_ms": 6.6,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 2004,
+      "routine_closed_s": 15.01,
+      "all_live_confirmed_s": 8.53,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 2.48,
+       "light.living": 0.88,
+       "thermo.kitchen": 2.76,
+       "thermo.study": 1.01,
+       "shade.living": 8.53
+      },
+      "sends": {
+       "light.kitchen": 2,
+       "light.living": 1,
+       "thermo.kitchen": 2,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.01,
+      "heartbeat_detect_s": null,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 2,
+       "lost_out": 2,
+       "in": 7,
+       "out": 22,
+       "unsolicited": 91
+      },
+      "restart": {
+       "wall_ms": null,
+       "states": 6,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": null
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 2005,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 9.11,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.51,
+       "light.living": 2.3,
+       "thermo.kitchen": 0.93,
+       "thermo.study": 0.68,
+       "shade.living": 9.11
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 2,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 1,
+       "lost_out": 3,
+       "in": 6,
+       "out": 22,
+       "unsolicited": 91
+      },
+      "restart": {
+       "wall_ms": 9.0,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 2006,
+      "routine_closed_s": 30.0,
+      "all_live_confirmed_s": null,
+      "outcomes": {
+       "light.kitchen": "not_confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.living": 0.89,
+       "thermo.kitchen": 1.19,
+       "thermo.study": 1.17,
+       "shade.living": 23.8
+      },
+      "sends": {
+       "light.kitchen": 4,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": null,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 1,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 7,
+       "in": 8,
+       "out": 28,
+       "unsolicited": 91
+      },
+      "restart": {
+       "wall_ms": null,
+       "states": 6,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": null
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 2007,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 9.58,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.5,
+       "light.living": 0.48,
+       "thermo.kitchen": 0.71,
+       "thermo.study": 1.02,
+       "shade.living": 9.58
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 3,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 2,
+       "lost_out": 4,
+       "in": 7,
+       "out": 23,
+       "unsolicited": 91
+      },
+      "restart": {
+       "wall_ms": null,
+       "states": 6,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     }
+    ]
+   },
+   "qos1_loss0": {
+    "qos": 1,
+    "loss": 0.0,
+    "trials": 8,
+    "routine_closed_s": {
+     "p50": 15.02,
+     "p95": 15.03
+    },
+    "all_live_confirmed": {
+     "rate_pct": 100.0,
+     "p50_s": 9.04,
+     "p95_s": 10.04
+    },
+    "per_device_confirmed_pct": {
+     "light.kitchen": 100.0,
+     "light.living": 100.0,
+     "thermo.kitchen": 100.0,
+     "thermo.study": 100.0,
+     "shade.living": 100.0,
+     "shade.bedroom": 0.0
+    },
+    "dropped_shade_reported_offline_pct": 100.0,
+    "lwt_detect_s": {
+     "p50": 15.02,
+     "p95": 15.03,
+     "missing": 0
+    },
+    "heartbeat_detect_s_computed": {
+     "p50": 109.99,
+     "p95": 110.0
+    },
+    "discovery_configs_seen_min": 7,
+    "acted_but_unconfirmed_total": 0,
+    "resends_to_live_devices": 0,
+    "resends_to_dropped_shade": 24,
+    "adapter_lost_in": 0,
+    "adapter_lost_out": 0,
+    "unsolicited_msgs_to_device_clients_per_trial": {
+     "min": 91,
+     "max": 91
+    },
+    "hub_restart": {
+     "full_picture_ms_p50_when_complete": 8.2,
+     "full_picture_ms_p95_when_complete": 8.6,
+     "all_7_states_pct": 100.0,
+     "dropped_seen_offline_pct": 100.0
+    },
+    "trial_rows": [
+     {
+      "seed": 3000,
+      "routine_closed_s": 15.03,
+      "all_live_confirmed_s": 10.03,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.48,
+       "light.living": 0.48,
+       "thermo.kitchen": 0.9,
+       "thermo.study": 0.75,
+       "shade.living": 10.03
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.03,
+      "heartbeat_detect_s": 110.0,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 0,
+       "in": 5,
+       "out": 22,
+       "unsolicited": 91
+      },
+      "restart": {
+       "wall_ms": 8.6,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 3001,
+      "routine_closed_s": 15.01,
+      "all_live_confirmed_s": 10.04,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.47,
+       "light.living": 0.47,
+       "thermo.kitchen": 0.47,
+       "thermo.study": 0.69,
+       "shade.living": 10.04
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.01,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 0,
+       "in": 5,
+       "out": 21,
+       "unsolicited": 91
+      },
+      "restart": {
+       "wall_ms": 8.2,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 3002,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 9.02,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.5,
+       "light.living": 0.5,
+       "thermo.kitchen": 0.69,
+       "thermo.study": 0.92,
+       "shade.living": 9.02
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 0,
+       "in": 5,
+       "out": 22,
+       "unsolicited": 91
+      },
+      "restart": {
+       "wall_ms": 8.2,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 3003,
+      "routine_closed_s": 15.03,
+      "all_live_confirmed_s": 7.39,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.43,
+       "light.living": 0.5,
+       "thermo.kitchen": 0.6,
+       "thermo.study": 0.88,
+       "shade.living": 7.39
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.03,
+      "heartbeat_detect_s": 110.0,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 0,
+       "in": 5,
+       "out": 19,
+       "unsolicited": 91
+      },
+      "restart": {
+       "wall_ms": 8.6,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 3004,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 6.82,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.48,
+       "light.living": 0.51,
+       "thermo.kitchen": 1.0,
+       "thermo.study": 0.89,
+       "shade.living": 6.82
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 0,
+       "in": 5,
+       "out": 22,
+       "unsolicited": 91
+      },
+      "restart": {
+       "wall_ms": 8.6,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 3005,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 9.05,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.49,
+       "light.living": 0.45,
+       "thermo.kitchen": 0.68,
+       "thermo.study": 0.68,
+       "shade.living": 9.05
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 110.0,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 0,
+       "in": 5,
+       "out": 21,
+       "unsolicited": 91
+      },
+      "restart": {
+       "wall_ms": 6.8,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 3006,
+      "routine_closed_s": 15.01,
+      "all_live_confirmed_s": 8.16,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.47,
+       "light.living": 0.48,
+       "thermo.kitchen": 0.61,
+       "thermo.study": 0.99,
+       "shade.living": 8.16
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.01,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 0,
+       "in": 5,
+       "out": 20,
+       "unsolicited": 91
+      },
+      "restart": {
+       "wall_ms": 8.0,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 3007,
+      "routine_closed_s": 15.01,
+      "all_live_confirmed_s": 9.51,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.5,
+       "light.living": 0.5,
+       "thermo.kitchen": 0.96,
+       "thermo.study": 0.5,
+       "shade.living": 9.51
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.01,
+      "heartbeat_detect_s": 109.98,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 0,
+       "in": 5,
+       "out": 22,
+       "unsolicited": 91
+      },
+      "restart": {
+       "wall_ms": 7.2,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     }
+    ]
+   },
+   "qos1_loss5": {
+    "qos": 1,
+    "loss": 0.05,
+    "trials": 8,
+    "routine_closed_s": {
+     "p50": 15.02,
+     "p95": 15.03
+    },
+    "all_live_confirmed": {
+     "rate_pct": 100.0,
+     "p50_s": 8.04,
+     "p95_s": 9.18
+    },
+    "per_device_confirmed_pct": {
+     "light.kitchen": 100.0,
+     "light.living": 100.0,
+     "thermo.kitchen": 100.0,
+     "thermo.study": 100.0,
+     "shade.living": 100.0,
+     "shade.bedroom": 0.0
+    },
+    "dropped_shade_reported_offline_pct": 100.0,
+    "lwt_detect_s": {
+     "p50": 15.02,
+     "p95": 15.03,
+     "missing": 0
+    },
+    "heartbeat_detect_s_computed": {
+     "p50": 109.99,
+     "p95": 110.0
+    },
+    "discovery_configs_seen_min": 7,
+    "acted_but_unconfirmed_total": 0,
+    "resends_to_live_devices": 5,
+    "resends_to_dropped_shade": 24,
+    "adapter_lost_in": 3,
+    "adapter_lost_out": 9,
+    "unsolicited_msgs_to_device_clients_per_trial": {
+     "min": 91,
+     "max": 182
+    },
+    "hub_restart": {
+     "full_picture_ms_p50_when_complete": 8.9,
+     "full_picture_ms_p95_when_complete": 11.09,
+     "all_7_states_pct": 100.0,
+     "dropped_seen_offline_pct": 100.0
+    },
+    "trial_rows": [
+     {
+      "seed": 4000,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 8.11,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.45,
+       "light.living": 0.44,
+       "thermo.kitchen": 0.49,
+       "thermo.study": 0.62,
+       "shade.living": 8.11
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 0,
+       "in": 5,
+       "out": 21,
+       "unsolicited": 91
+      },
+      "restart": {
+       "wall_ms": 7.2,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 4001,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 5.17,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.5,
+       "light.living": 0.45,
+       "thermo.kitchen": 0.5,
+       "thermo.study": 2.72,
+       "shade.living": 5.17
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 2,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 1,
+       "lost_out": 1,
+       "in": 6,
+       "out": 21,
+       "unsolicited": 182
+      },
+      "restart": {
+       "wall_ms": 9.2,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 4002,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 6.44,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.5,
+       "light.living": 0.45,
+       "thermo.kitchen": 0.54,
+       "thermo.study": 0.92,
+       "shade.living": 6.44
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 2,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 3,
+       "in": 6,
+       "out": 21,
+       "unsolicited": 182
+      },
+      "restart": {
+       "wall_ms": 12.1,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 4003,
+      "routine_closed_s": 15.03,
+      "all_live_confirmed_s": 8.25,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.43,
+       "light.living": 0.5,
+       "thermo.kitchen": 0.88,
+       "thermo.study": 0.84,
+       "shade.living": 8.25
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.03,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 1,
+       "in": 5,
+       "out": 23,
+       "unsolicited": 182
+      },
+      "restart": {
+       "wall_ms": 8.7,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 4004,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 9.68,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.47,
+       "light.living": 0.47,
+       "thermo.kitchen": 0.84,
+       "thermo.study": 2.52,
+       "shade.living": 9.68
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 2,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 1,
+       "lost_out": 0,
+       "in": 6,
+       "out": 23,
+       "unsolicited": 182
+      },
+      "restart": {
+       "wall_ms": 8.9,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 4005,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 8.19,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.49,
+       "light.living": 0.43,
+       "thermo.kitchen": 0.54,
+       "thermo.study": 6.77,
+       "shade.living": 8.19
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 3,
+       "in": 5,
+       "out": 20,
+       "unsolicited": 126
+      },
+      "restart": {
+       "wall_ms": 7.4,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 4006,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 5.24,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.45,
+       "light.living": 0.49,
+       "thermo.kitchen": 0.49,
+       "thermo.study": 0.85,
+       "shade.living": 5.24
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 2,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 1,
+       "in": 6,
+       "out": 22,
+       "unsolicited": 126
+      },
+      "restart": {
+       "wall_ms": 9.1,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 4007,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 7.98,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 2.49,
+       "light.living": 0.46,
+       "thermo.kitchen": 0.78,
+       "thermo.study": 1.02,
+       "shade.living": 7.98
+      },
+      "sends": {
+       "light.kitchen": 2,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 110.0,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 1,
+       "lost_out": 0,
+       "in": 6,
+       "out": 21,
+       "unsolicited": 126
+      },
+      "restart": {
+       "wall_ms": 8.9,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     }
+    ]
+   },
+   "qos1_loss20": {
+    "qos": 1,
+    "loss": 0.2,
+    "trials": 8,
+    "routine_closed_s": {
+     "p50": 23.41,
+     "p95": 30.0
+    },
+    "all_live_confirmed": {
+     "rate_pct": 75.0,
+     "p50_s": 21.37,
+     "p95_s": 27.1
+    },
+    "per_device_confirmed_pct": {
+     "light.kitchen": 100.0,
+     "light.living": 100.0,
+     "thermo.kitchen": 75.0,
+     "thermo.study": 100.0,
+     "shade.living": 100.0,
+     "shade.bedroom": 0.0
+    },
+    "dropped_shade_reported_offline_pct": 100.0,
+    "lwt_detect_s": {
+     "p50": 15.02,
+     "p95": 15.02,
+     "missing": 0
+    },
+    "heartbeat_detect_s_computed": {
+     "p50": 109.99,
+     "p95": 110.0
+    },
+    "discovery_configs_seen_min": 7,
+    "acted_but_unconfirmed_total": 2,
+    "resends_to_live_devices": 12,
+    "resends_to_dropped_shade": 24,
+    "adapter_lost_in": 10,
+    "adapter_lost_out": 40,
+    "unsolicited_msgs_to_device_clients_per_trial": {
+     "min": 133,
+     "max": 140
+    },
+    "hub_restart": {
+     "full_picture_ms_p50_when_complete": 9.85,
+     "full_picture_ms_p95_when_complete": 1145.83,
+     "all_7_states_pct": 100.0,
+     "dropped_seen_offline_pct": 100.0
+    },
+    "trial_rows": [
+     {
+      "seed": 5000,
+      "routine_closed_s": 20.12,
+      "all_live_confirmed_s": 20.12,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.51,
+       "light.living": 20.12,
+       "thermo.kitchen": 0.9,
+       "thermo.study": 0.51,
+       "shade.living": 5.18
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 3,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 2,
+       "lost_out": 5,
+       "in": 7,
+       "out": 23,
+       "unsolicited": 133
+      },
+      "restart": {
+       "wall_ms": 9.3,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 5001,
+      "routine_closed_s": 24.21,
+      "all_live_confirmed_s": 24.21,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.49,
+       "light.living": 0.48,
+       "thermo.kitchen": 24.21,
+       "thermo.study": 6.2,
+       "shade.living": 9.33
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 4,
+       "in": 5,
+       "out": 22,
+       "unsolicited": 133
+      },
+      "restart": {
+       "wall_ms": 12.1,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 5002,
+      "routine_closed_s": 15.01,
+      "all_live_confirmed_s": 6.59,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 6.59,
+       "light.living": 2.3,
+       "thermo.kitchen": 0.87,
+       "thermo.study": 0.59,
+       "shade.living": 6.46
+      },
+      "sends": {
+       "light.kitchen": 4,
+       "light.living": 2,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.01,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 4,
+       "lost_out": 4,
+       "in": 9,
+       "out": 23,
+       "unsolicited": 140
+      },
+      "restart": {
+       "wall_ms": 7.1,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 5003,
+      "routine_closed_s": 30.0,
+      "all_live_confirmed_s": null,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "not_confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.52,
+       "light.living": 0.49,
+       "thermo.study": 16.51,
+       "shade.living": 5.3
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 3,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.98,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 1,
+      "adapter": {
+       "lost_in": 1,
+       "lost_out": 6,
+       "in": 7,
+       "out": 23,
+       "unsolicited": 140
+      },
+      "restart": {
+       "wall_ms": 10.7,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 5004,
+      "routine_closed_s": 22.62,
+      "all_live_confirmed_s": 22.62,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.49,
+       "light.living": 0.49,
+       "thermo.kitchen": 0.6,
+       "thermo.study": 22.62,
+       "shade.living": 9.96
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 3,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.01,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 1,
+       "lost_out": 7,
+       "in": 7,
+       "out": 25,
+       "unsolicited": 140
+      },
+      "restart": {
+       "wall_ms": 8.7,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 5005,
+      "routine_closed_s": 28.06,
+      "all_live_confirmed_s": 28.06,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 2.41,
+       "light.living": 0.45,
+       "thermo.kitchen": 0.64,
+       "thermo.study": 0.48,
+       "shade.living": 28.06
+      },
+      "sends": {
+       "light.kitchen": 2,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 2,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 2,
+       "lost_out": 5,
+       "in": 7,
+       "out": 25,
+       "unsolicited": 140
+      },
+      "restart": {
+       "wall_ms": 9.3,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 5006,
+      "routine_closed_s": 30.0,
+      "all_live_confirmed_s": null,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "not_confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.48,
+       "light.living": 0.51,
+       "thermo.study": 0.93,
+       "shade.living": 9.37
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 110.0,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 1,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 6,
+       "in": 5,
+       "out": 25,
+       "unsolicited": 140
+      },
+      "restart": {
+       "wall_ms": 1756.3,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": false,
+      "discovery_configs_seen": 7
+     },
+     {
+      "seed": 5007,
+      "routine_closed_s": 15.02,
+      "all_live_confirmed_s": 6.79,
+      "outcomes": {
+       "light.kitchen": "confirmed",
+       "light.living": "confirmed",
+       "thermo.kitchen": "confirmed",
+       "thermo.study": "confirmed",
+       "shade.living": "confirmed",
+       "shade.bedroom": "offline"
+      },
+      "confirm_s": {
+       "light.kitchen": 0.44,
+       "light.living": 0.44,
+       "thermo.kitchen": 0.49,
+       "thermo.study": 0.53,
+       "shade.living": 6.79
+      },
+      "sends": {
+       "light.kitchen": 1,
+       "light.living": 1,
+       "thermo.kitchen": 1,
+       "thermo.study": 1,
+       "shade.living": 1,
+       "shade.bedroom": 4
+      },
+      "lwt_detect_s": 15.02,
+      "heartbeat_detect_s": 109.99,
+      "dropped_in_report_as_offline": true,
+      "acted_but_unconfirmed": 0,
+      "adapter": {
+       "lost_in": 0,
+       "lost_out": 3,
+       "in": 5,
+       "out": 21,
+       "unsolicited": 140
+      },
+      "restart": {
+       "wall_ms": 10.4,
+       "states": 7,
+       "availability": 7,
+       "dropped_seen_offline": true,
+       "dropped_retained_position": 100
+      },
+      "window_open": true,
+      "discovery_configs_seen": 7
+     }
+    ]
+   }
+  },
+  "C_offline_detection": {
+   "power": {
+    "n": 5,
+    "detect_home_s": [
+     15.03,
+     15.01,
+     15.02,
+     15.02,
+     15.01
+    ],
+    "p50_home_s": 15.02,
+    "max_home_s": 15.03,
+    "keepalive_home_s": 10.0
+   },
+   "crash": {
+    "n": 5,
+    "detect_home_s": [
+     0.01,
+     0.01,
+     0.01,
+     0.01,
+     0.01
+    ],
+    "p50_home_s": 0.01,
+    "max_home_s": 0.01,
+    "keepalive_home_s": 10.0
+   }
+  },
+  "D_qos_across_blip": {
+   "username_required": {
+    "qos0": {
+     "n": 3,
+     "command_delivered_after_reconnect": 0
+    },
+    "qos1": {
+     "n": 3,
+     "command_delivered_after_reconnect": 3
+    }
+   },
+   "anonymous_allowed": {
+    "qos0": {
+     "n": 3,
+     "command_delivered_after_reconnect": 0
+    },
+    "qos1": {
+     "n": 3,
+     "command_delivered_after_reconnect": 0
+    }
+   }
+  },
+  "E_broker_retained_check": {
+   "subscribed_to": "eprobe/own/cmd",
+   "received_topics": [
+    "eprobe/private/door"
+   ],
+   "unsolicited": 1
+  }
+ },
+ "limitations": [
+  "Loopback TCP on one 2-core machine: no Wi-Fi, Thread or Zigbee radio. TCP does not lose messages on a live connection, so loss was emulated at the adapter (before MQTT); QoS cannot recover those losses by design.",
+  "Time compression x10: device physics, heartbeats, keepalive and timeouts are scaled; transport and Python scheduling overhead is multiplied by 10 in home-second figures (see part A for the unscaled transport cost).",
+  "Keepalive 10 home s (paho minimum 1 s wall). Real devices often use 30-60 s; Last Will detection scales with keepalive.",
+  "Heartbeat detection is computed from the measured last message + 2 heartbeats, not waited for.",
+  "Matter: data model mapping only (cluster/attribute ids from the SDK-generated package); no Matter controller, no commissioning, no Thread. Home Assistant discovery payloads were not validated against a running Home Assistant.",
+  "8 trials per condition: p95 values are indicative.",
+  "i.i.d. loss; real radios lose packets in bursts."
+ ]
+}

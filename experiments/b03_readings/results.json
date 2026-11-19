@@ -1,0 +1,1743 @@
+{
+  "experiment": "b03_readings",
+  "date": "2026-11-19",
+  "method": "Seeded simulated week (virtual time) of the B01 twin (islab.twin.build_home) with faults injected through FaultInjector and scheduled sensor faults. Three hub views read the same bus at once: naive (latest arrival wins), timestamp (islab.policy.StateStore: dedupe by event id, order and freshness by device ts) and quality (islab.readings.ReadingQuality). Identical decision code runs on each view: kitchen heating every 60 s, overheat alert, leak shut-off and valve reopen, night light on motion, doorbell notice, 22:00 house check. An oracle (first link hook and first subscriber) labels every message; views never read it. A decision is on bad data if an input came from a lying sensor and differs from truth by more than 1 degC (or wrong leak state), was superseded by a newer honest reading already delivered, was truly older than the device max age (2.5 x heartbeat), or the decision was triggered by a duplicate event copy. Decisions are recorded, not executed (open loop).",
+  "params": {
+    "seeds": 10,
+    "days": 7,
+    "decision_tick_s": 60,
+    "temp_tolerance_c": 1.0,
+    "faults": {
+      "duplicates": "10% of state/ and event/ messages delivered twice (0.05-0.5 s later)",
+      "reordering": "0-30 s uniform jitter on state/window.kitchen; ~14 airings/day of 5-60 s",
+      "clock_drift": "temp.kitchen clock 2 s/hour behind the hub, all week (336 s at day 7)",
+      "spike": "day 0 ~14:00, one temp.kitchen report +15 degC",
+      "leak_oneshot": "day 2 ~03:00, one leak event, state stays dry; truly wet 2 h; person reads phone 07:10",
+      "stuck": "day 1 ~08:00, temp.kitchen stuck 12 h (same value, fresh timestamps)",
+      "dead_battery": "day 5 ~10:00, leak.sink last gasp then silence"
+    },
+    "legitimate_events": {
+      "real_leak": "day 1 ~10:00, 20 min, state wet + event, then dry",
+      "real_step": "day 3 ~12:00, +5 degC for 30 min (fast but real)",
+      "cooking": "daily 18:00, +3 degC over 3 min for 45 min"
+    },
+    "quality_layer": {
+      "max_age": "2.5 x device heartbeat (temp 150 s, thermostat 75 s, battery sensors 750 s)",
+      "skew": "rolling median of 15 (hub receive - device ts); alert above 60 s",
+      "rate_limit_temp_c_per_s": 0.05,
+      "range_temp_c": [
+        -30,
+        60
+      ],
+      "stuck": "identical values for 20 min (>= 15 reports)",
+      "disagreement": "temp.kitchen vs thermo.kitchen > 1.5 degC for 10 min",
+      "latch": "leak/smoke events clear only on device wet->dry or person confirmation"
+    }
+  },
+  "results": {
+    "naive": {
+      "decisions": {
+        "total": 102006,
+        "mean": 10200.6,
+        "min": 10193,
+        "max": 10208
+      },
+      "bad_decisions": {
+        "total": 6373,
+        "mean": 637.3,
+        "min": 607,
+        "max": 660
+      },
+      "bad_by_fault": {
+        "dead_battery": 20,
+        "duplicate": 139,
+        "leak_oneshot": 10,
+        "reorder": 162,
+        "spike": 14,
+        "stuck": 6028
+      },
+      "bad_by_decision": {
+        "close_valve": 5,
+        "daily_check": 20,
+        "heating": 6226,
+        "night_light": 70,
+        "overheat_alert": 10,
+        "reopen_valve": 10,
+        "tell_doorbell": 32
+      },
+      "notices": {
+        "total": 347,
+        "mean": 34.7,
+        "min": 33,
+        "max": 37
+      },
+      "false_alarms": {
+        "total": 47,
+        "mean": 4.7,
+        "min": 3,
+        "max": 7
+      },
+      "false_alarms_by_kind": {
+        "doorbell": 32,
+        "leak": 5,
+        "overheat": 10
+      },
+      "refused_ticks": {
+        "total": 0,
+        "mean": 0,
+        "min": 0,
+        "max": 0
+      },
+      "refused_by_reason": {},
+      "refusal_episodes": {
+        "total": 0,
+        "mean": 0,
+        "min": 0,
+        "max": 0
+      },
+      "refusal_episodes_told": {
+        "total": 0,
+        "mean": 0,
+        "min": 0,
+        "max": 0
+      },
+      "rejected_good_readings": {
+        "total": 0,
+        "mean": 0,
+        "min": 0,
+        "max": 0
+      },
+      "good_primary_refused_ticks": {
+        "total": 0,
+        "mean": 0,
+        "min": 0,
+        "max": 0
+      },
+      "leak_water_min_valve_open": {
+        "total": 1120.5,
+        "mean": 112.05,
+        "min": 110.1,
+        "max": 114.2
+      },
+      "valve_closed_while_dry_min": {
+        "total": 53.6,
+        "mean": 5.36,
+        "min": 5.0,
+        "max": 5.9
+      },
+      "detect_dead_battery_notice_s": {
+        "detected_in": "0/10",
+        "median": null,
+        "max": null
+      },
+      "detect_dead_battery_unusable_s": {
+        "detected_in": "0/10",
+        "median": null,
+        "max": null
+      },
+      "detect_stuck_s": {
+        "detected_in": "0/10",
+        "median": null,
+        "max": null
+      },
+      "detect_leak_oneshot_s": {
+        "detected_in": "0/10",
+        "median": null,
+        "max": null
+      },
+      "overheat_alerts": {
+        "total": 10,
+        "mean": 1,
+        "min": 1,
+        "max": 1
+      }
+    },
+    "timestamp": {
+      "decisions": {
+        "total": 101851,
+        "mean": 10185.1,
+        "min": 10178,
+        "max": 10191
+      },
+      "bad_decisions": {
+        "total": 6052,
+        "mean": 605.2,
+        "min": 584,
+        "max": 616
+      },
+      "bad_by_fault": {
+        "leak_oneshot": 10,
+        "spike": 14,
+        "stuck": 6028
+      },
+      "bad_by_decision": {
+        "heating": 6032,
+        "overheat_alert": 10,
+        "reopen_valve": 10
+      },
+      "notices": {
+        "total": 378,
+        "mean": 37.8,
+        "min": 37,
+        "max": 38
+      },
+      "false_alarms": {
+        "total": 20,
+        "mean": 2,
+        "min": 2,
+        "max": 2
+      },
+      "false_alarms_by_kind": {
+        "overheat": 10,
+        "stale": 10
+      },
+      "refused_ticks": {
+        "total": 48,
+        "mean": 4.8,
+        "min": 4,
+        "max": 5
+      },
+      "refused_by_reason": {
+        "cannot vouch for leak.sink, temp.kitchen": 20,
+        "cannot vouch for temp.kitchen": 28
+      },
+      "refusal_episodes": {
+        "total": 48,
+        "mean": 4.8,
+        "min": 4,
+        "max": 5
+      },
+      "refusal_episodes_told": {
+        "total": 48,
+        "mean": 4.8,
+        "min": 4,
+        "max": 5
+      },
+      "rejected_good_readings": {
+        "total": 0,
+        "mean": 0,
+        "min": 0,
+        "max": 0
+      },
+      "good_primary_refused_ticks": {
+        "total": 65851,
+        "mean": 6585.1,
+        "min": 6068,
+        "max": 7371
+      },
+      "leak_water_min_valve_open": {
+        "total": 1120.5,
+        "mean": 112.05,
+        "min": 110.1,
+        "max": 114.2
+      },
+      "valve_closed_while_dry_min": {
+        "total": 53.6,
+        "mean": 5.36,
+        "min": 5.0,
+        "max": 5.9
+      },
+      "detect_dead_battery_notice_s": {
+        "total": 7824.5,
+        "mean": 782.45,
+        "min": 755.4,
+        "max": 809.1
+      },
+      "detect_dead_battery_unusable_s": {
+        "total": 7824.5,
+        "mean": 782.45,
+        "min": 755.4,
+        "max": 809.1
+      },
+      "detect_stuck_s": {
+        "detected_in": "0/10",
+        "median": null,
+        "max": null
+      },
+      "detect_leak_oneshot_s": {
+        "detected_in": "0/10",
+        "median": null,
+        "max": null
+      },
+      "overheat_alerts": {
+        "total": 10,
+        "mean": 1,
+        "min": 1,
+        "max": 1
+      },
+      "ts_false_stale_t_h": {
+        "total": 582.6,
+        "mean": 58.26,
+        "min": 45.2,
+        "max": 66.9
+      }
+    },
+    "quality": {
+      "decisions": {
+        "total": 101869,
+        "mean": 10186.9,
+        "min": 10179,
+        "max": 10193
+      },
+      "bad_decisions": {
+        "total": 20,
+        "mean": 2,
+        "min": 2,
+        "max": 2
+      },
+      "bad_by_fault": {
+        "held_back": 20
+      },
+      "bad_by_decision": {
+        "heating": 20
+      },
+      "notices": {
+        "total": 380,
+        "mean": 38,
+        "min": 38,
+        "max": 38
+      },
+      "false_alarms": {
+        "total": 0,
+        "mean": 0,
+        "min": 0,
+        "max": 0
+      },
+      "false_alarms_by_kind": {},
+      "refused_ticks": {
+        "total": 2478,
+        "mean": 247.8,
+        "min": 223,
+        "max": 267
+      },
+      "refused_by_reason": {
+        "cannot vouch for leak.sink": 20,
+        "leak reading disputed": 2458
+      },
+      "refusal_episodes": {
+        "total": 30,
+        "mean": 3,
+        "min": 3,
+        "max": 3
+      },
+      "refusal_episodes_told": {
+        "total": 30,
+        "mean": 3,
+        "min": 3,
+        "max": 3
+      },
+      "rejected_good_readings": {
+        "total": 40,
+        "mean": 4,
+        "min": 4,
+        "max": 4
+      },
+      "good_primary_refused_ticks": {
+        "total": 0,
+        "mean": 0,
+        "min": 0,
+        "max": 0
+      },
+      "leak_water_min_valve_open": {
+        "total": 0.0,
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "valve_closed_while_dry_min": {
+        "total": 1336.2,
+        "mean": 133.62,
+        "min": 107.9,
+        "max": 152.5
+      },
+      "detect_dead_battery_notice_s": {
+        "total": 0.0,
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "detect_dead_battery_unusable_s": {
+        "total": 264.5,
+        "mean": 26.45,
+        "min": 8.5,
+        "max": 49.8
+      },
+      "detect_stuck_s": {
+        "total": 11497.1,
+        "mean": 1149.71,
+        "min": 1082.7,
+        "max": 1192.5
+      },
+      "detect_leak_oneshot_s": {
+        "total": 1432.5,
+        "mean": 143.25,
+        "min": 38.7,
+        "max": 257.1
+      },
+      "overheat_alerts": {
+        "total": 0,
+        "mean": 0,
+        "min": 0,
+        "max": 0
+      },
+      "layer_stats": {
+        "accepted": 1392591,
+        "duplicate": 139163,
+        "events": 2400,
+        "frozen_ts": 0,
+        "held_confirmed": 40,
+        "held_implausible": 50,
+        "held_rejected": 10,
+        "late_events": 0,
+        "out_of_order": 121,
+        "out_of_range": 0,
+        "unsourced": 0
+      },
+      "skew_estimate_end_s": {
+        "total": 3357.4,
+        "mean": 335.74,
+        "min": 335.74,
+        "max": 335.74
+      },
+      "skew_true_end_s": {
+        "total": 3360.0,
+        "mean": 336.0,
+        "min": 336.0,
+        "max": 336.0
+      },
+      "detect_skew_notice_t_h": {
+        "total": 301.0,
+        "mean": 30.1,
+        "min": 30.1,
+        "max": 30.1
+      }
+    },
+    "_world": {
+      "messages_published": 139511.2,
+      "deliveries": 153427.5,
+      "duplicate_copies": 13916.3,
+      "window_airings": 96.7,
+      "leak_events_truth": 2
+    }
+  },
+  "per_seed": [
+    {
+      "naive": {
+        "decisions": 10197,
+        "bad_decisions": 642,
+        "bad_by_fault": {
+          "duplicate": 16,
+          "spike": 1,
+          "stuck": 607,
+          "leak_oneshot": 1,
+          "reorder": 15,
+          "dead_battery": 2
+        },
+        "bad_by_decision": {
+          "night_light": 9,
+          "overheat_alert": 1,
+          "heating": 623,
+          "close_valve": 1,
+          "reopen_valve": 1,
+          "tell_doorbell": 5,
+          "daily_check": 2
+        },
+        "notices": 37,
+        "false_alarms": 7,
+        "false_alarms_by_kind": {
+          "overheat": 1,
+          "leak": 1,
+          "doorbell": 5
+        },
+        "refused_ticks": 0,
+        "refused_by_reason": {},
+        "refusal_episodes": 0,
+        "refusal_episodes_told": 0,
+        "rejected_good_readings": 0,
+        "good_primary_refused_ticks": 0,
+        "leak_water_min_valve_open": 110.1,
+        "valve_closed_while_dry_min": 5.6,
+        "detect_dead_battery_notice_s": null,
+        "detect_dead_battery_unusable_s": null,
+        "detect_stuck_s": null,
+        "detect_leak_oneshot_s": null,
+        "overheat_alerts": 1
+      },
+      "timestamp": {
+        "decisions": 10178,
+        "bad_decisions": 609,
+        "bad_by_fault": {
+          "spike": 1,
+          "stuck": 607,
+          "leak_oneshot": 1
+        },
+        "bad_by_decision": {
+          "overheat_alert": 1,
+          "heating": 607,
+          "reopen_valve": 1
+        },
+        "notices": 37,
+        "false_alarms": 2,
+        "false_alarms_by_kind": {
+          "overheat": 1,
+          "stale": 1
+        },
+        "refused_ticks": 4,
+        "refused_by_reason": {
+          "cannot vouch for temp.kitchen": 2,
+          "cannot vouch for leak.sink, temp.kitchen": 2
+        },
+        "refusal_episodes": 4,
+        "refusal_episodes_told": 4,
+        "rejected_good_readings": 0,
+        "good_primary_refused_ticks": 6538,
+        "leak_water_min_valve_open": 110.1,
+        "valve_closed_while_dry_min": 5.6,
+        "detect_dead_battery_notice_s": 759.4,
+        "detect_dead_battery_unusable_s": 759.4,
+        "detect_stuck_s": null,
+        "detect_leak_oneshot_s": null,
+        "overheat_alerts": 1,
+        "ts_false_stale_t_h": 59.0
+      },
+      "quality": {
+        "decisions": 10179,
+        "bad_decisions": 2,
+        "bad_by_fault": {
+          "held_back": 2
+        },
+        "bad_by_decision": {
+          "heating": 2
+        },
+        "notices": 38,
+        "false_alarms": 0,
+        "false_alarms_by_kind": {},
+        "refused_ticks": 262,
+        "refused_by_reason": {
+          "leak reading disputed": 260,
+          "cannot vouch for leak.sink": 2
+        },
+        "refusal_episodes": 3,
+        "refusal_episodes_told": 3,
+        "rejected_good_readings": 4,
+        "good_primary_refused_ticks": 0,
+        "leak_water_min_valve_open": 0.0,
+        "valve_closed_while_dry_min": 150.0,
+        "detect_dead_battery_notice_s": 0.0,
+        "detect_dead_battery_unusable_s": 39.4,
+        "detect_stuck_s": 1082.7,
+        "detect_leak_oneshot_s": 257.1,
+        "overheat_alerts": 0,
+        "layer_stats": {
+          "accepted": 139255,
+          "events": 240,
+          "late_events": 0,
+          "unsourced": 0,
+          "duplicate": 14042,
+          "out_of_order": 12,
+          "out_of_range": 0,
+          "held_implausible": 5,
+          "held_confirmed": 4,
+          "held_rejected": 1,
+          "frozen_ts": 0
+        },
+        "skew_estimate_end_s": 335.74,
+        "skew_true_end_s": 336.0,
+        "detect_skew_notice_t_h": 30.1
+      },
+      "_world": {
+        "messages_published": 139507,
+        "deliveries": 153549,
+        "duplicate_copies": 14042,
+        "window_airings": 97,
+        "leak_events_truth": 2
+      }
+    },
+    {
+      "naive": {
+        "decisions": 10205,
+        "bad_decisions": 638,
+        "bad_by_fault": {
+          "duplicate": 13,
+          "spike": 2,
+          "reorder": 12,
+          "stuck": 608,
+          "leak_oneshot": 1,
+          "dead_battery": 2
+        },
+        "bad_by_decision": {
+          "night_light": 8,
+          "overheat_alert": 1,
+          "heating": 624,
+          "reopen_valve": 1,
+          "tell_doorbell": 2,
+          "daily_check": 2
+        },
+        "notices": 33,
+        "false_alarms": 3,
+        "false_alarms_by_kind": {
+          "overheat": 1,
+          "doorbell": 2
+        },
+        "refused_ticks": 0,
+        "refused_by_reason": {},
+        "refusal_episodes": 0,
+        "refusal_episodes_told": 0,
+        "rejected_good_readings": 0,
+        "good_primary_refused_ticks": 0,
+        "leak_water_min_valve_open": 112.6,
+        "valve_closed_while_dry_min": 5.6,
+        "detect_dead_battery_notice_s": null,
+        "detect_dead_battery_unusable_s": null,
+        "detect_stuck_s": null,
+        "detect_leak_oneshot_s": null,
+        "overheat_alerts": 1
+      },
+      "timestamp": {
+        "decisions": 10190,
+        "bad_decisions": 611,
+        "bad_by_fault": {
+          "spike": 2,
+          "stuck": 608,
+          "leak_oneshot": 1
+        },
+        "bad_by_decision": {
+          "overheat_alert": 1,
+          "heating": 609,
+          "reopen_valve": 1
+        },
+        "notices": 38,
+        "false_alarms": 2,
+        "false_alarms_by_kind": {
+          "overheat": 1,
+          "stale": 1
+        },
+        "refused_ticks": 5,
+        "refused_by_reason": {
+          "cannot vouch for temp.kitchen": 3,
+          "cannot vouch for leak.sink, temp.kitchen": 2
+        },
+        "refusal_episodes": 5,
+        "refusal_episodes_told": 5,
+        "rejected_good_readings": 0,
+        "good_primary_refused_ticks": 7371,
+        "leak_water_min_valve_open": 112.6,
+        "valve_closed_while_dry_min": 5.6,
+        "detect_dead_battery_notice_s": 792.6,
+        "detect_dead_battery_unusable_s": 792.6,
+        "detect_stuck_s": null,
+        "detect_leak_oneshot_s": null,
+        "overheat_alerts": 1,
+        "ts_false_stale_t_h": 45.2
+      },
+      "quality": {
+        "decisions": 10192,
+        "bad_decisions": 2,
+        "bad_by_fault": {
+          "held_back": 2
+        },
+        "bad_by_decision": {
+          "heating": 2
+        },
+        "notices": 38,
+        "false_alarms": 0,
+        "false_alarms_by_kind": {},
+        "refused_ticks": 267,
+        "refused_by_reason": {
+          "leak reading disputed": 265,
+          "cannot vouch for leak.sink": 2
+        },
+        "refusal_episodes": 3,
+        "refusal_episodes_told": 3,
+        "rejected_good_readings": 4,
+        "good_primary_refused_ticks": 0,
+        "leak_water_min_valve_open": 0.0,
+        "valve_closed_while_dry_min": 152.5,
+        "detect_dead_battery_notice_s": 0.0,
+        "detect_dead_battery_unusable_s": 12.6,
+        "detect_stuck_s": 1147.0,
+        "detect_leak_oneshot_s": 96.0,
+        "overheat_alerts": 0,
+        "layer_stats": {
+          "accepted": 139250,
+          "events": 240,
+          "late_events": 0,
+          "unsourced": 0,
+          "duplicate": 13807,
+          "out_of_order": 13,
+          "out_of_range": 0,
+          "held_implausible": 5,
+          "held_confirmed": 4,
+          "held_rejected": 1,
+          "frozen_ts": 0
+        },
+        "skew_estimate_end_s": 335.74,
+        "skew_true_end_s": 336.0,
+        "detect_skew_notice_t_h": 30.1
+      },
+      "_world": {
+        "messages_published": 139503,
+        "deliveries": 153310,
+        "duplicate_copies": 13807,
+        "window_airings": 97,
+        "leak_events_truth": 2
+      }
+    },
+    {
+      "naive": {
+        "decisions": 10193,
+        "bad_decisions": 607,
+        "bad_by_fault": {
+          "duplicate": 7,
+          "spike": 1,
+          "reorder": 14,
+          "stuck": 582,
+          "leak_oneshot": 1,
+          "dead_battery": 2
+        },
+        "bad_by_decision": {
+          "night_light": 4,
+          "overheat_alert": 1,
+          "heating": 596,
+          "close_valve": 1,
+          "tell_doorbell": 2,
+          "reopen_valve": 1,
+          "daily_check": 2
+        },
+        "notices": 34,
+        "false_alarms": 4,
+        "false_alarms_by_kind": {
+          "overheat": 1,
+          "leak": 1,
+          "doorbell": 2
+        },
+        "refused_ticks": 0,
+        "refused_by_reason": {},
+        "refusal_episodes": 0,
+        "refusal_episodes_told": 0,
+        "rejected_good_readings": 0,
+        "good_primary_refused_ticks": 0,
+        "leak_water_min_valve_open": 112.1,
+        "valve_closed_while_dry_min": 5.3,
+        "detect_dead_battery_notice_s": null,
+        "detect_dead_battery_unusable_s": null,
+        "detect_stuck_s": null,
+        "detect_leak_oneshot_s": null,
+        "overheat_alerts": 1
+      },
+      "timestamp": {
+        "decisions": 10181,
+        "bad_decisions": 584,
+        "bad_by_fault": {
+          "spike": 1,
+          "stuck": 582,
+          "leak_oneshot": 1
+        },
+        "bad_by_decision": {
+          "overheat_alert": 1,
+          "heating": 582,
+          "reopen_valve": 1
+        },
+        "notices": 38,
+        "false_alarms": 2,
+        "false_alarms_by_kind": {
+          "overheat": 1,
+          "stale": 1
+        },
+        "refused_ticks": 5,
+        "refused_by_reason": {
+          "cannot vouch for temp.kitchen": 3,
+          "cannot vouch for leak.sink, temp.kitchen": 2
+        },
+        "refusal_episodes": 5,
+        "refusal_episodes_told": 5,
+        "rejected_good_readings": 0,
+        "good_primary_refused_ticks": 6407,
+        "leak_water_min_valve_open": 112.1,
+        "valve_closed_while_dry_min": 5.3,
+        "detect_dead_battery_notice_s": 755.4,
+        "detect_dead_battery_unusable_s": 755.4,
+        "detect_stuck_s": null,
+        "detect_leak_oneshot_s": null,
+        "overheat_alerts": 1,
+        "ts_false_stale_t_h": 61.2
+      },
+      "quality": {
+        "decisions": 10183,
+        "bad_decisions": 2,
+        "bad_by_fault": {
+          "held_back": 2
+        },
+        "bad_by_decision": {
+          "heating": 2
+        },
+        "notices": 38,
+        "false_alarms": 0,
+        "false_alarms_by_kind": {},
+        "refused_ticks": 249,
+        "refused_by_reason": {
+          "leak reading disputed": 247,
+          "cannot vouch for leak.sink": 2
+        },
+        "refusal_episodes": 3,
+        "refusal_episodes_told": 3,
+        "rejected_good_readings": 4,
+        "good_primary_refused_ticks": 0,
+        "leak_water_min_valve_open": 0.0,
+        "valve_closed_while_dry_min": 134.7,
+        "detect_dead_battery_notice_s": 0.0,
+        "detect_dead_battery_unusable_s": 35.4,
+        "detect_stuck_s": 1174.3,
+        "detect_leak_oneshot_s": 126.9,
+        "overheat_alerts": 0,
+        "layer_stats": {
+          "accepted": 139250,
+          "events": 240,
+          "late_events": 0,
+          "unsourced": 0,
+          "duplicate": 13690,
+          "out_of_order": 11,
+          "out_of_range": 0,
+          "held_implausible": 5,
+          "held_confirmed": 4,
+          "held_rejected": 1,
+          "frozen_ts": 0
+        },
+        "skew_estimate_end_s": 335.74,
+        "skew_true_end_s": 336.0,
+        "detect_skew_notice_t_h": 30.1
+      },
+      "_world": {
+        "messages_published": 139501,
+        "deliveries": 153191,
+        "duplicate_copies": 13690,
+        "window_airings": 95,
+        "leak_events_truth": 2
+      }
+    },
+    {
+      "naive": {
+        "decisions": 10194,
+        "bad_decisions": 642,
+        "bad_by_fault": {
+          "duplicate": 13,
+          "spike": 1,
+          "stuck": 605,
+          "leak_oneshot": 1,
+          "reorder": 20,
+          "dead_battery": 2
+        },
+        "bad_by_decision": {
+          "night_light": 5,
+          "heating": 630,
+          "overheat_alert": 1,
+          "tell_doorbell": 3,
+          "reopen_valve": 1,
+          "daily_check": 2
+        },
+        "notices": 34,
+        "false_alarms": 4,
+        "false_alarms_by_kind": {
+          "overheat": 1,
+          "doorbell": 3
+        },
+        "refused_ticks": 0,
+        "refused_by_reason": {},
+        "refusal_episodes": 0,
+        "refusal_episodes_told": 0,
+        "rejected_good_readings": 0,
+        "good_primary_refused_ticks": 0,
+        "leak_water_min_valve_open": 114.2,
+        "valve_closed_while_dry_min": 5.2,
+        "detect_dead_battery_notice_s": null,
+        "detect_dead_battery_unusable_s": null,
+        "detect_stuck_s": null,
+        "detect_leak_oneshot_s": null,
+        "overheat_alerts": 1
+      },
+      "timestamp": {
+        "decisions": 10182,
+        "bad_decisions": 607,
+        "bad_by_fault": {
+          "spike": 1,
+          "stuck": 605,
+          "leak_oneshot": 1
+        },
+        "bad_by_decision": {
+          "overheat_alert": 1,
+          "heating": 605,
+          "reopen_valve": 1
+        },
+        "notices": 37,
+        "false_alarms": 2,
+        "false_alarms_by_kind": {
+          "overheat": 1,
+          "stale": 1
+        },
+        "refused_ticks": 4,
+        "refused_by_reason": {
+          "cannot vouch for temp.kitchen": 2,
+          "cannot vouch for leak.sink, temp.kitchen": 2
+        },
+        "refusal_episodes": 4,
+        "refusal_episodes_told": 4,
+        "rejected_good_readings": 0,
+        "good_primary_refused_ticks": 6693,
+        "leak_water_min_valve_open": 114.2,
+        "valve_closed_while_dry_min": 5.2,
+        "detect_dead_battery_notice_s": 801.9,
+        "detect_dead_battery_unusable_s": 801.9,
+        "detect_stuck_s": null,
+        "detect_leak_oneshot_s": null,
+        "overheat_alerts": 1,
+        "ts_false_stale_t_h": 56.5
+      },
+      "quality": {
+        "decisions": 10183,
+        "bad_decisions": 2,
+        "bad_by_fault": {
+          "held_back": 2
+        },
+        "bad_by_decision": {
+          "heating": 2
+        },
+        "notices": 38,
+        "false_alarms": 0,
+        "false_alarms_by_kind": {},
+        "refused_ticks": 258,
+        "refused_by_reason": {
+          "leak reading disputed": 256,
+          "cannot vouch for leak.sink": 2
+        },
+        "refusal_episodes": 3,
+        "refusal_episodes_told": 3,
+        "rejected_good_readings": 4,
+        "good_primary_refused_ticks": 0,
+        "leak_water_min_valve_open": 0.0,
+        "valve_closed_while_dry_min": 141.5,
+        "detect_dead_battery_notice_s": 0.0,
+        "detect_dead_battery_unusable_s": 21.9,
+        "detect_stuck_s": 1152.2,
+        "detect_leak_oneshot_s": 38.7,
+        "overheat_alerts": 0,
+        "layer_stats": {
+          "accepted": 139265,
+          "events": 240,
+          "late_events": 0,
+          "unsourced": 0,
+          "duplicate": 13923,
+          "out_of_order": 9,
+          "out_of_range": 0,
+          "held_implausible": 5,
+          "held_confirmed": 4,
+          "held_rejected": 1,
+          "frozen_ts": 0
+        },
+        "skew_estimate_end_s": 335.74,
+        "skew_true_end_s": 336.0,
+        "detect_skew_notice_t_h": 30.1
+      },
+      "_world": {
+        "messages_published": 139514,
+        "deliveries": 153437,
+        "duplicate_copies": 13923,
+        "window_airings": 96,
+        "leak_events_truth": 2
+      }
+    },
+    {
+      "naive": {
+        "decisions": 10206,
+        "bad_decisions": 637,
+        "bad_by_fault": {
+          "duplicate": 17,
+          "reorder": 9,
+          "spike": 2,
+          "stuck": 606,
+          "leak_oneshot": 1,
+          "dead_battery": 2
+        },
+        "bad_by_decision": {
+          "tell_doorbell": 4,
+          "heating": 623,
+          "overheat_alert": 1,
+          "night_light": 6,
+          "reopen_valve": 1,
+          "daily_check": 2
+        },
+        "notices": 35,
+        "false_alarms": 5,
+        "false_alarms_by_kind": {
+          "doorbell": 4,
+          "overheat": 1
+        },
+        "refused_ticks": 0,
+        "refused_by_reason": {},
+        "refusal_episodes": 0,
+        "refusal_episodes_told": 0,
+        "rejected_good_readings": 0,
+        "good_primary_refused_ticks": 0,
+        "leak_water_min_valve_open": 111.6,
+        "valve_closed_while_dry_min": 5.1,
+        "detect_dead_battery_notice_s": null,
+        "detect_dead_battery_unusable_s": null,
+        "detect_stuck_s": null,
+        "detect_leak_oneshot_s": null,
+        "overheat_alerts": 1
+      },
+      "timestamp": {
+        "decisions": 10191,
+        "bad_decisions": 609,
+        "bad_by_fault": {
+          "spike": 2,
+          "stuck": 606,
+          "leak_oneshot": 1
+        },
+        "bad_by_decision": {
+          "overheat_alert": 1,
+          "heating": 607,
+          "reopen_valve": 1
+        },
+        "notices": 38,
+        "false_alarms": 2,
+        "false_alarms_by_kind": {
+          "overheat": 1,
+          "stale": 1
+        },
+        "refused_ticks": 5,
+        "refused_by_reason": {
+          "cannot vouch for temp.kitchen": 3,
+          "cannot vouch for leak.sink, temp.kitchen": 2
+        },
+        "refusal_episodes": 5,
+        "refusal_episodes_told": 5,
+        "rejected_good_readings": 0,
+        "good_primary_refused_ticks": 6135,
+        "leak_water_min_valve_open": 111.6,
+        "valve_closed_while_dry_min": 5.1,
+        "detect_dead_battery_notice_s": 809.1,
+        "detect_dead_battery_unusable_s": 809.1,
+        "detect_stuck_s": null,
+        "detect_leak_oneshot_s": null,
+        "overheat_alerts": 1,
+        "ts_false_stale_t_h": 65.8
+      },
+      "quality": {
+        "decisions": 10193,
+        "bad_decisions": 2,
+        "bad_by_fault": {
+          "held_back": 2
+        },
+        "bad_by_decision": {
+          "heating": 2
+        },
+        "notices": 38,
+        "false_alarms": 0,
+        "false_alarms_by_kind": {},
+        "refused_ticks": 223,
+        "refused_by_reason": {
+          "leak reading disputed": 221,
+          "cannot vouch for leak.sink": 2
+        },
+        "refusal_episodes": 3,
+        "refusal_episodes_told": 3,
+        "rejected_good_readings": 4,
+        "good_primary_refused_ticks": 0,
+        "leak_water_min_valve_open": 0.0,
+        "valve_closed_while_dry_min": 109.1,
+        "detect_dead_battery_notice_s": 0.0,
+        "detect_dead_battery_unusable_s": 29.1,
+        "detect_stuck_s": 1160.0,
+        "detect_leak_oneshot_s": 177.7,
+        "overheat_alerts": 0,
+        "layer_stats": {
+          "accepted": 139265,
+          "events": 240,
+          "late_events": 0,
+          "unsourced": 0,
+          "duplicate": 13803,
+          "out_of_order": 11,
+          "out_of_range": 0,
+          "held_implausible": 5,
+          "held_confirmed": 4,
+          "held_rejected": 1,
+          "frozen_ts": 0
+        },
+        "skew_estimate_end_s": 335.74,
+        "skew_true_end_s": 336.0,
+        "detect_skew_notice_t_h": 30.1
+      },
+      "_world": {
+        "messages_published": 139516,
+        "deliveries": 153319,
+        "duplicate_copies": 13803,
+        "window_airings": 98,
+        "leak_events_truth": 2
+      }
+    },
+    {
+      "naive": {
+        "decisions": 10198,
+        "bad_decisions": 643,
+        "bad_by_fault": {
+          "spike": 1,
+          "duplicate": 10,
+          "stuck": 611,
+          "leak_oneshot": 1,
+          "reorder": 18,
+          "dead_battery": 2
+        },
+        "bad_by_decision": {
+          "overheat_alert": 1,
+          "tell_doorbell": 4,
+          "heating": 629,
+          "night_light": 6,
+          "reopen_valve": 1,
+          "daily_check": 2
+        },
+        "notices": 35,
+        "false_alarms": 5,
+        "false_alarms_by_kind": {
+          "overheat": 1,
+          "doorbell": 4
+        },
+        "refused_ticks": 0,
+        "refused_by_reason": {},
+        "refusal_episodes": 0,
+        "refusal_episodes_told": 0,
+        "rejected_good_readings": 0,
+        "good_primary_refused_ticks": 0,
+        "leak_water_min_valve_open": 110.9,
+        "valve_closed_while_dry_min": 5.2,
+        "detect_dead_battery_notice_s": null,
+        "detect_dead_battery_unusable_s": null,
+        "detect_stuck_s": null,
+        "detect_leak_oneshot_s": null,
+        "overheat_alerts": 1
+      },
+      "timestamp": {
+        "decisions": 10183,
+        "bad_decisions": 613,
+        "bad_by_fault": {
+          "spike": 1,
+          "stuck": 611,
+          "leak_oneshot": 1
+        },
+        "bad_by_decision": {
+          "overheat_alert": 1,
+          "heating": 611,
+          "reopen_valve": 1
+        },
+        "notices": 38,
+        "false_alarms": 2,
+        "false_alarms_by_kind": {
+          "overheat": 1,
+          "stale": 1
+        },
+        "refused_ticks": 5,
+        "refused_by_reason": {
+          "cannot vouch for temp.kitchen": 3,
+          "cannot vouch for leak.sink, temp.kitchen": 2
+        },
+        "refusal_episodes": 5,
+        "refusal_episodes_told": 5,
+        "rejected_good_readings": 0,
+        "good_primary_refused_ticks": 6068,
+        "leak_water_min_valve_open": 110.9,
+        "valve_closed_while_dry_min": 5.2,
+        "detect_dead_battery_notice_s": 769.8,
+        "detect_dead_battery_unusable_s": 769.8,
+        "detect_stuck_s": null,
+        "detect_leak_oneshot_s": null,
+        "overheat_alerts": 1,
+        "ts_false_stale_t_h": 66.9
+      },
+      "quality": {
+        "decisions": 10185,
+        "bad_decisions": 2,
+        "bad_by_fault": {
+          "held_back": 2
+        },
+        "bad_by_decision": {
+          "heating": 2
+        },
+        "notices": 38,
+        "false_alarms": 0,
+        "false_alarms_by_kind": {},
+        "refused_ticks": 261,
+        "refused_by_reason": {
+          "leak reading disputed": 259,
+          "cannot vouch for leak.sink": 2
+        },
+        "refusal_episodes": 3,
+        "refusal_episodes_told": 3,
+        "rejected_good_readings": 4,
+        "good_primary_refused_ticks": 0,
+        "leak_water_min_valve_open": 0.0,
+        "valve_closed_while_dry_min": 147.8,
+        "detect_dead_battery_notice_s": 0.0,
+        "detect_dead_battery_unusable_s": 49.8,
+        "detect_stuck_s": 1192.5,
+        "detect_leak_oneshot_s": 224.3,
+        "overheat_alerts": 0,
+        "layer_stats": {
+          "accepted": 139270,
+          "events": 240,
+          "late_events": 0,
+          "unsourced": 0,
+          "duplicate": 13942,
+          "out_of_order": 13,
+          "out_of_range": 0,
+          "held_implausible": 5,
+          "held_confirmed": 4,
+          "held_rejected": 1,
+          "frozen_ts": 0
+        },
+        "skew_estimate_end_s": 335.74,
+        "skew_true_end_s": 336.0,
+        "detect_skew_notice_t_h": 30.1
+      },
+      "_world": {
+        "messages_published": 139523,
+        "deliveries": 153465,
+        "duplicate_copies": 13942,
+        "window_airings": 98,
+        "leak_events_truth": 2
+      }
+    },
+    {
+      "naive": {
+        "decisions": 10208,
+        "bad_decisions": 660,
+        "bad_by_fault": {
+          "reorder": 36,
+          "spike": 1,
+          "duplicate": 22,
+          "stuck": 598,
+          "leak_oneshot": 1,
+          "dead_battery": 2
+        },
+        "bad_by_decision": {
+          "heating": 641,
+          "overheat_alert": 1,
+          "night_light": 10,
+          "close_valve": 2,
+          "tell_doorbell": 3,
+          "reopen_valve": 1,
+          "daily_check": 2
+        },
+        "notices": 36,
+        "false_alarms": 6,
+        "false_alarms_by_kind": {
+          "overheat": 1,
+          "leak": 2,
+          "doorbell": 3
+        },
+        "refused_ticks": 0,
+        "refused_by_reason": {},
+        "refusal_episodes": 0,
+        "refusal_episodes_told": 0,
+        "rejected_good_readings": 0,
+        "good_primary_refused_ticks": 0,
+        "leak_water_min_valve_open": 113.6,
+        "valve_closed_while_dry_min": 5.0,
+        "detect_dead_battery_notice_s": null,
+        "detect_dead_battery_unusable_s": null,
+        "detect_stuck_s": null,
+        "detect_leak_oneshot_s": null,
+        "overheat_alerts": 1
+      },
+      "timestamp": {
+        "decisions": 10188,
+        "bad_decisions": 600,
+        "bad_by_fault": {
+          "spike": 1,
+          "stuck": 598,
+          "leak_oneshot": 1
+        },
+        "bad_by_decision": {
+          "overheat_alert": 1,
+          "heating": 598,
+          "reopen_valve": 1
+        },
+        "notices": 38,
+        "false_alarms": 2,
+        "false_alarms_by_kind": {
+          "overheat": 1,
+          "stale": 1
+        },
+        "refused_ticks": 5,
+        "refused_by_reason": {
+          "cannot vouch for temp.kitchen": 3,
+          "cannot vouch for leak.sink, temp.kitchen": 2
+        },
+        "refusal_episodes": 5,
+        "refusal_episodes_told": 5,
+        "rejected_good_readings": 0,
+        "good_primary_refused_ticks": 6101,
+        "leak_water_min_valve_open": 113.6,
+        "valve_closed_while_dry_min": 5.0,
+        "detect_dead_battery_notice_s": 790.5,
+        "detect_dead_battery_unusable_s": 790.5,
+        "detect_stuck_s": null,
+        "detect_leak_oneshot_s": null,
+        "overheat_alerts": 1,
+        "ts_false_stale_t_h": 66.3
+      },
+      "quality": {
+        "decisions": 10190,
+        "bad_decisions": 2,
+        "bad_by_fault": {
+          "held_back": 2
+        },
+        "bad_by_decision": {
+          "heating": 2
+        },
+        "notices": 38,
+        "false_alarms": 0,
+        "false_alarms_by_kind": {},
+        "refused_ticks": 224,
+        "refused_by_reason": {
+          "leak reading disputed": 222,
+          "cannot vouch for leak.sink": 2
+        },
+        "refusal_episodes": 3,
+        "refusal_episodes_told": 3,
+        "rejected_good_readings": 4,
+        "good_primary_refused_ticks": 0,
+        "leak_water_min_valve_open": 0.0,
+        "valve_closed_while_dry_min": 107.9,
+        "detect_dead_battery_notice_s": 0.0,
+        "detect_dead_battery_unusable_s": 10.5,
+        "detect_stuck_s": 1149.5,
+        "detect_leak_oneshot_s": 41.6,
+        "overheat_alerts": 0,
+        "layer_stats": {
+          "accepted": 139255,
+          "events": 240,
+          "late_events": 0,
+          "unsourced": 0,
+          "duplicate": 13765,
+          "out_of_order": 20,
+          "out_of_range": 0,
+          "held_implausible": 5,
+          "held_confirmed": 4,
+          "held_rejected": 1,
+          "frozen_ts": 0
+        },
+        "skew_estimate_end_s": 335.74,
+        "skew_true_end_s": 336.0,
+        "detect_skew_notice_t_h": 30.1
+      },
+      "_world": {
+        "messages_published": 139515,
+        "deliveries": 153280,
+        "duplicate_copies": 13765,
+        "window_airings": 96,
+        "leak_events_truth": 2
+      }
+    },
+    {
+      "naive": {
+        "decisions": 10202,
+        "bad_decisions": 631,
+        "bad_by_fault": {
+          "duplicate": 11,
+          "spike": 2,
+          "reorder": 19,
+          "stuck": 596,
+          "leak_oneshot": 1,
+          "dead_battery": 2
+        },
+        "bad_by_decision": {
+          "night_light": 8,
+          "overheat_alert": 1,
+          "heating": 617,
+          "reopen_valve": 1,
+          "tell_doorbell": 2,
+          "daily_check": 2
+        },
+        "notices": 33,
+        "false_alarms": 3,
+        "false_alarms_by_kind": {
+          "overheat": 1,
+          "doorbell": 2
+        },
+        "refused_ticks": 0,
+        "refused_by_reason": {},
+        "refusal_episodes": 0,
+        "refusal_episodes_told": 0,
+        "rejected_good_readings": 0,
+        "good_primary_refused_ticks": 0,
+        "leak_water_min_valve_open": 112.4,
+        "valve_closed_while_dry_min": 5.2,
+        "detect_dead_battery_notice_s": null,
+        "detect_dead_battery_unusable_s": null,
+        "detect_stuck_s": null,
+        "detect_leak_oneshot_s": null,
+        "overheat_alerts": 1
+      },
+      "timestamp": {
+        "decisions": 10187,
+        "bad_decisions": 599,
+        "bad_by_fault": {
+          "spike": 2,
+          "stuck": 596,
+          "leak_oneshot": 1
+        },
+        "bad_by_decision": {
+          "overheat_alert": 1,
+          "heating": 597,
+          "reopen_valve": 1
+        },
+        "notices": 38,
+        "false_alarms": 2,
+        "false_alarms_by_kind": {
+          "overheat": 1,
+          "stale": 1
+        },
+        "refused_ticks": 5,
+        "refused_by_reason": {
+          "cannot vouch for temp.kitchen": 3,
+          "cannot vouch for leak.sink, temp.kitchen": 2
+        },
+        "refusal_episodes": 5,
+        "refusal_episodes_told": 5,
+        "rejected_good_readings": 0,
+        "good_primary_refused_ticks": 7219,
+        "leak_water_min_valve_open": 112.4,
+        "valve_closed_while_dry_min": 5.2,
+        "detect_dead_battery_notice_s": 788.5,
+        "detect_dead_battery_unusable_s": 788.5,
+        "detect_stuck_s": null,
+        "detect_leak_oneshot_s": null,
+        "overheat_alerts": 1,
+        "ts_false_stale_t_h": 47.7
+      },
+      "quality": {
+        "decisions": 10189,
+        "bad_decisions": 2,
+        "bad_by_fault": {
+          "held_back": 2
+        },
+        "bad_by_decision": {
+          "heating": 2
+        },
+        "notices": 38,
+        "false_alarms": 0,
+        "false_alarms_by_kind": {},
+        "refused_ticks": 247,
+        "refused_by_reason": {
+          "leak reading disputed": 245,
+          "cannot vouch for leak.sink": 2
+        },
+        "refusal_episodes": 3,
+        "refusal_episodes_told": 3,
+        "rejected_good_readings": 4,
+        "good_primary_refused_ticks": 0,
+        "leak_water_min_valve_open": 0.0,
+        "valve_closed_while_dry_min": 132.3,
+        "detect_dead_battery_notice_s": 0.0,
+        "detect_dead_battery_unusable_s": 8.5,
+        "detect_stuck_s": 1140.8,
+        "detect_leak_oneshot_s": 112.5,
+        "overheat_alerts": 0,
+        "layer_stats": {
+          "accepted": 139258,
+          "events": 240,
+          "late_events": 0,
+          "unsourced": 0,
+          "duplicate": 13895,
+          "out_of_order": 11,
+          "out_of_range": 0,
+          "held_implausible": 5,
+          "held_confirmed": 4,
+          "held_rejected": 1,
+          "frozen_ts": 0
+        },
+        "skew_estimate_end_s": 335.74,
+        "skew_true_end_s": 336.0,
+        "detect_skew_notice_t_h": 30.1
+      },
+      "_world": {
+        "messages_published": 139509,
+        "deliveries": 153404,
+        "duplicate_copies": 13895,
+        "window_airings": 96,
+        "leak_events_truth": 2
+      }
+    },
+    {
+      "naive": {
+        "decisions": 10196,
+        "bad_decisions": 644,
+        "bad_by_fault": {
+          "spike": 2,
+          "duplicate": 18,
+          "reorder": 8,
+          "stuck": 613,
+          "leak_oneshot": 1,
+          "dead_battery": 2
+        },
+        "bad_by_decision": {
+          "overheat_alert": 1,
+          "heating": 630,
+          "tell_doorbell": 4,
+          "night_light": 6,
+          "reopen_valve": 1,
+          "daily_check": 2
+        },
+        "notices": 35,
+        "false_alarms": 5,
+        "false_alarms_by_kind": {
+          "overheat": 1,
+          "doorbell": 4
+        },
+        "refused_ticks": 0,
+        "refused_by_reason": {},
+        "refusal_episodes": 0,
+        "refusal_episodes_told": 0,
+        "rejected_good_readings": 0,
+        "good_primary_refused_ticks": 0,
+        "leak_water_min_valve_open": 112.6,
+        "valve_closed_while_dry_min": 5.5,
+        "detect_dead_battery_notice_s": null,
+        "detect_dead_battery_unusable_s": null,
+        "detect_stuck_s": null,
+        "detect_leak_oneshot_s": null,
+        "overheat_alerts": 1
+      },
+      "timestamp": {
+        "decisions": 10181,
+        "bad_decisions": 616,
+        "bad_by_fault": {
+          "spike": 2,
+          "stuck": 613,
+          "leak_oneshot": 1
+        },
+        "bad_by_decision": {
+          "overheat_alert": 1,
+          "heating": 614,
+          "reopen_valve": 1
+        },
+        "notices": 38,
+        "false_alarms": 2,
+        "false_alarms_by_kind": {
+          "overheat": 1,
+          "stale": 1
+        },
+        "refused_ticks": 5,
+        "refused_by_reason": {
+          "cannot vouch for temp.kitchen": 3,
+          "cannot vouch for leak.sink, temp.kitchen": 2
+        },
+        "refusal_episodes": 5,
+        "refusal_episodes_told": 5,
+        "rejected_good_readings": 0,
+        "good_primary_refused_ticks": 7025,
+        "leak_water_min_valve_open": 112.6,
+        "valve_closed_while_dry_min": 5.5,
+        "detect_dead_battery_notice_s": 758.3,
+        "detect_dead_battery_unusable_s": 758.3,
+        "detect_stuck_s": null,
+        "detect_leak_oneshot_s": null,
+        "overheat_alerts": 1,
+        "ts_false_stale_t_h": 50.9
+      },
+      "quality": {
+        "decisions": 10183,
+        "bad_decisions": 2,
+        "bad_by_fault": {
+          "held_back": 2
+        },
+        "bad_by_decision": {
+          "heating": 2
+        },
+        "notices": 38,
+        "false_alarms": 0,
+        "false_alarms_by_kind": {},
+        "refused_ticks": 226,
+        "refused_by_reason": {
+          "leak reading disputed": 224,
+          "cannot vouch for leak.sink": 2
+        },
+        "refusal_episodes": 3,
+        "refusal_episodes_told": 3,
+        "rejected_good_readings": 4,
+        "good_primary_refused_ticks": 0,
+        "leak_water_min_valve_open": 0.0,
+        "valve_closed_while_dry_min": 111.4,
+        "detect_dead_battery_notice_s": 0.0,
+        "detect_dead_battery_unusable_s": 38.3,
+        "detect_stuck_s": 1150.1,
+        "detect_leak_oneshot_s": 135.8,
+        "overheat_alerts": 0,
+        "layer_stats": {
+          "accepted": 139257,
+          "events": 240,
+          "late_events": 0,
+          "unsourced": 0,
+          "duplicate": 14056,
+          "out_of_order": 7,
+          "out_of_range": 0,
+          "held_implausible": 5,
+          "held_confirmed": 4,
+          "held_rejected": 1,
+          "frozen_ts": 0
+        },
+        "skew_estimate_end_s": 335.74,
+        "skew_true_end_s": 336.0,
+        "detect_skew_notice_t_h": 30.1
+      },
+      "_world": {
+        "messages_published": 139504,
+        "deliveries": 153560,
+        "duplicate_copies": 14056,
+        "window_airings": 96,
+        "leak_events_truth": 2
+      }
+    },
+    {
+      "naive": {
+        "decisions": 10207,
+        "bad_decisions": 629,
+        "bad_by_fault": {
+          "duplicate": 12,
+          "spike": 1,
+          "stuck": 602,
+          "reorder": 11,
+          "leak_oneshot": 1,
+          "dead_battery": 2
+        },
+        "bad_by_decision": {
+          "night_light": 8,
+          "overheat_alert": 1,
+          "heating": 613,
+          "close_valve": 1,
+          "tell_doorbell": 3,
+          "reopen_valve": 1,
+          "daily_check": 2
+        },
+        "notices": 35,
+        "false_alarms": 5,
+        "false_alarms_by_kind": {
+          "overheat": 1,
+          "leak": 1,
+          "doorbell": 3
+        },
+        "refused_ticks": 0,
+        "refused_by_reason": {},
+        "refusal_episodes": 0,
+        "refusal_episodes_told": 0,
+        "rejected_good_readings": 0,
+        "good_primary_refused_ticks": 0,
+        "leak_water_min_valve_open": 110.4,
+        "valve_closed_while_dry_min": 5.9,
+        "detect_dead_battery_notice_s": null,
+        "detect_dead_battery_unusable_s": null,
+        "detect_stuck_s": null,
+        "detect_leak_oneshot_s": null,
+        "overheat_alerts": 1
+      },
+      "timestamp": {
+        "decisions": 10190,
+        "bad_decisions": 604,
+        "bad_by_fault": {
+          "spike": 1,
+          "stuck": 602,
+          "leak_oneshot": 1
+        },
+        "bad_by_decision": {
+          "overheat_alert": 1,
+          "heating": 602,
+          "reopen_valve": 1
+        },
+        "notices": 38,
+        "false_alarms": 2,
+        "false_alarms_by_kind": {
+          "overheat": 1,
+          "stale": 1
+        },
+        "refused_ticks": 5,
+        "refused_by_reason": {
+          "cannot vouch for temp.kitchen": 3,
+          "cannot vouch for leak.sink, temp.kitchen": 2
+        },
+        "refusal_episodes": 5,
+        "refusal_episodes_told": 5,
+        "rejected_good_readings": 0,
+        "good_primary_refused_ticks": 6294,
+        "leak_water_min_valve_open": 110.4,
+        "valve_closed_while_dry_min": 5.9,
+        "detect_dead_battery_notice_s": 799.0,
+        "detect_dead_battery_unusable_s": 799.0,
+        "detect_stuck_s": null,
+        "detect_leak_oneshot_s": null,
+        "overheat_alerts": 1,
+        "ts_false_stale_t_h": 63.1
+      },
+      "quality": {
+        "decisions": 10192,
+        "bad_decisions": 2,
+        "bad_by_fault": {
+          "held_back": 2
+        },
+        "bad_by_decision": {
+          "heating": 2
+        },
+        "notices": 38,
+        "false_alarms": 0,
+        "false_alarms_by_kind": {},
+        "refused_ticks": 261,
+        "refused_by_reason": {
+          "leak reading disputed": 259,
+          "cannot vouch for leak.sink": 2
+        },
+        "refusal_episodes": 3,
+        "refusal_episodes_told": 3,
+        "rejected_good_readings": 4,
+        "good_primary_refused_ticks": 0,
+        "leak_water_min_valve_open": 0.0,
+        "valve_closed_while_dry_min": 149.0,
+        "detect_dead_battery_notice_s": 0.0,
+        "detect_dead_battery_unusable_s": 19.0,
+        "detect_stuck_s": 1148.0,
+        "detect_leak_oneshot_s": 221.9,
+        "overheat_alerts": 0,
+        "layer_stats": {
+          "accepted": 139266,
+          "events": 240,
+          "late_events": 0,
+          "unsourced": 0,
+          "duplicate": 14240,
+          "out_of_order": 14,
+          "out_of_range": 0,
+          "held_implausible": 5,
+          "held_confirmed": 4,
+          "held_rejected": 1,
+          "frozen_ts": 0
+        },
+        "skew_estimate_end_s": 335.74,
+        "skew_true_end_s": 336.0,
+        "detect_skew_notice_t_h": 30.1
+      },
+      "_world": {
+        "messages_published": 139520,
+        "deliveries": 153760,
+        "duplicate_copies": 14240,
+        "window_airings": 98,
+        "leak_events_truth": 2
+      }
+    }
+  ],
+  "limitations": [
+    "Simulation only; faults are scripted, one of each per week, at fixed times of day (+-30 min).",
+    "Open loop: decisions are recorded, not sent to devices; heating does not change the room.",
+    "Sensor resolution 0.01 degC with 0.05 degC noise makes stuck detection easy; a real 0.5 degC sensor in a stable room can repeat one value for hours and would need a longer window or a second source.",
+    "The rate limit would also hold a real fire's temperature rise for one report; smoke alarms, not temperature sensors, must carry fire detection.",
+    "Duplicate and reorder faults are i.i.d.; real radios lose and repeat in bursts.",
+    "The person's reply time is scripted (07:10); a person who never answers keeps the valve closed.",
+    "Thresholds were set by us before the run and not tuned per seed; other thresholds give other numbers."
+  ],
+  "wall_time_s": 115.6
+}
