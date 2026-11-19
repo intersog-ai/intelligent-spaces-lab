@@ -50,3 +50,7 @@ Checked: 2026-11-19. Primary sources used wherever one could be opened. Where on
 7. **Greengrass V1 support has already ended** (Oct 7, 2026). Use past tense.
 8. **MCP spec is 2026-07-28**, not 2025-06-18 or 2025-11-25, and it changes how version negotiation works.
 9. **Hailo-10H LLMs are 1-2B models at about 5-10 tokens/s.** Do not imply 4B+ models or fast chat on the AI HAT+ 2.
+
+
+---
+Part of the Intelligent Spaces Lab by [Intersog](https://www.intersog.com). Research in simulation, no guarantee.

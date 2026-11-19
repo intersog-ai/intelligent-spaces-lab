@@ -55,3 +55,7 @@ Shared preamble given to every build agent:
 ## 6. Integration: the five principle suites
 
 > Assemble one whole home from the four packages (twin, policy, voice, alarm), reuse their APIs, fix integration bugs minimally and comment them, never weaken a test. Script one household day from the video series (morning heating requests, a teenager asking to unlock, a leak at 09:12 closed by a local rule with no AI in the loop, a garage question at 17:15, a window and an override at 18:04, a courier and a phone approval at 18:51, "Good night" with an offline back lock at 22:40, an intrusion alarm at 02:14, smoke at 03:40, the internet down 12:00-14:00, a hostile device name, a device that phones home). Write the five principles as test suites over the run's trace, audit log and egress report. Run 50 seeds under no faults, light faults and heavy faults. Report failures as findings; do not hide them.
+
+
+---
+Part of the Intelligent Spaces Lab by [Intersog](https://www.intersog.com). Research in simulation, no guarantee.

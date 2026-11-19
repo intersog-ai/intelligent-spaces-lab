@@ -1,6 +1,6 @@
 # Building a trustworthy home assistant in a digital twin: method, results, limits
 
-Intelligent Spaces Lab, Build Track B01 · Intersog · November 19, 2026 · Apache-2.0
+Intelligent Spaces Lab, Build Track B01 · [Intersog](https://www.intersog.com) · November 19, 2026 · Apache-2.0
 
 > **No guarantee.** This is open research material. It was produced in a simulator, with synthetic voices and simulated devices, by AI agents under human direction. It is not a product, not a certified alarm system and not safety advice. Use it at your own risk and for your own benefit. Life-safety equipment must be listed and installed by qualified people.
 
@@ -123,3 +123,8 @@ python experiments/scorecard/run.py         # about 1 minute on 2 cores
 ```
 
 Facts checked against primary sources on Nov 19, 2026: `docs/facts-ledger.md`.
+
+
+## 8. Contact
+
+This research is published by Intersog. If you build devices, platforms or spaces like these, talk to our engineers: [www.intersog.com](https://www.intersog.com).

@@ -2,7 +2,7 @@
 
 A digital twin of a smart home for testing one claim: an AI home assistant can be trusted only if it is engineered that way. The language model proposes, code decides, devices confirm.
 
-This repo accompanies the *Intelligent Spaces* Build Track by Intersog. Episode B01 builds the twin and breaks it.
+This repo accompanies the *Intelligent Spaces* Build Track by [Intersog](https://www.intersog.com). Each episode has a folder in [`episodes/`](episodes/) with its description, findings, evidence and documents. Episode [B01](episodes/B01/) builds the twin and breaks it.
 
 > **Research material, no guarantee.** Everything here runs in simulation, with synthetic voices and simulated devices. It is not a product, not a certified alarm system and not safety advice. Use it at your own risk and for your own benefit. Life-safety equipment must be listed and installed by qualified people.
 
@@ -17,6 +17,7 @@ This repo accompanies the *Intelligent Spaces* Build Track by Intersog. Episode 
 | `islab/alarm` | SIA DC-09 encoder and decoder; alarm path to a simulated monitoring centre; local siren independent of the hub; egress gate with purpose tags; delete with receipts. |
 | `islab/suites` | The five principles as tests, plus ALARM and BUS checks, over one household day. |
 | `experiments/` | Seeded experiments, each with `run.py`, `results.json`, `notes.md`. |
+| `episodes/` | One folder per episode: description, findings with links to evidence, the commands that reproduce it, narration. |
 | `docs/` | `paper.md` (method, results, limits), `prompts.md` (the AI agent prompts that built this), `facts-ledger.md` (facts checked against primary sources), `architecture.svg`. |
 
 ## The five principles, as tests
@@ -53,6 +54,10 @@ Voice experiments need `pip install -r requirements-voice.txt` and your own audi
 - Under heavy faults, alarm delivery within 60 s went from 81.9% to 98.0% after the fixes in `experiments/scorecard/before_after.md`.
 
 Full numbers and limits: `docs/paper.md`.
+
+## Talk to us
+
+If you build devices, platforms or spaces like these, Intersog's engineers do this work: [www.intersog.com](https://www.intersog.com). Questions about the research: open an issue.
 
 ## License
 
