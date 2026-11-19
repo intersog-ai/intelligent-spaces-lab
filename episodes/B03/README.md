@@ -34,7 +34,7 @@ python experiments/b03_readings/run.py      # 10 seeds x 7 simulated days, about
 - [`islab/readings/`](../../islab/readings/): the reading-quality layer and the three hub views.
 - [`experiments/b03_readings/`](../../experiments/b03_readings/): `run.py`, `results.json` (every seed), `notes.md`.
 - [`script.txt`](script.txt): the narration, word for word.
-- Downloadable pack: `IS_B03_pack.zip` (release asset, same content as tag `b03`).
+- Downloadable pack: [`IS_B03_pack.zip`](https://github.com/intersog-ai/intelligent-spaces-lab/releases/tag/b03) (release asset, same content as tag `b03`).
 
 ## Talk to us
 

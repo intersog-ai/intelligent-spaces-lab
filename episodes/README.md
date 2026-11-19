@@ -5,9 +5,9 @@ Each Build Track episode has a folder here: a description, its findings with lin
 | Episode | Title | Season 1 pair | Tag | Status |
 |---|---|---|---|---|
 | [B01](B01/) | Build the twin, then break it | E01-E02 | `b01` | released |
-| [B02](B02/) | Connect without a vendor cloud | E03 | `b02` | built, not released |
-| [B03](B03/) | Readings you can trust | E04 | `b03` | built, not released |
-| [B04](B04/) | Sent is not closed | E05 | `b04` | built, not released |
+| [B02](B02/) | Connect without a vendor cloud | E03 | `b02` | released |
+| [B03](B03/) | Readings you can trust | E04 | `b03` | released |
+| [B04](B04/) | Sent is not closed | E05 | `b04` | released |
 | B05 | The voice pipeline | E06 | `b05` | planned |
 | B06 | Who is speaking | E06 | `b06` | planned |
 | B07 | The agent and the approval gate | E07 | `b07` | planned |

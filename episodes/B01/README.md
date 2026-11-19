@@ -35,7 +35,7 @@ python experiments/scorecard/run.py         # the Season 1 day, 50 seeds x 3 fau
 - [`docs/facts-ledger.md`](../../docs/facts-ledger.md): 33 facts checked against primary sources, Nov 19, 2026.
 - [`docs/architecture.svg`](../../docs/architecture.svg): reference architecture.
 - [`script.txt`](script.txt): the narration, word for word.
-- Downloadable pack: `IS_B01_pack.zip` (release asset, same content as tag `b01`).
+- Downloadable pack: [`IS_B01_pack.zip`](https://github.com/intersog-ai/intelligent-spaces-lab/releases/tag/b01) (release asset, same content as tag `b01`).
 
 ## Talk to us
 
