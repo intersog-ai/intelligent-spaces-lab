@@ -1,0 +1,1934 @@
+{
+ "experiment": "b10_fleet",
+ "date": "2026-11-19",
+ "method": "A: FullHouse day (islab/fleet/full.py) with every layer on, scored by islab.suites (unchanged), a route-aware P5 adapter and one check per layer; same seeds with the B01-only House; one run per integration fix with that fix off. B: bad update calibrated on the twin, then a staged rollout over simulated homes (islab/fleet/rollout.py). C: counts-only health report vs raw bundle through the B09 gate (islab/fleet/cloud.py); mapping table from docs/facts-ledger.md.",
+ "params": {
+  "seeds_per_mix": 6,
+  "mixes": [
+   "none",
+   "light",
+   "heavy"
+  ],
+  "bad_update_seeds_per_mix": 3,
+  "fleet_homes": 1000,
+  "fleet_seeds": 20,
+  "fleet_horizon_h": 336,
+  "fleet_plan": [
+   [
+    "canary",
+    0.01
+   ],
+   [
+    "ring1",
+    0.05
+   ],
+   [
+    "ring2",
+    0.2
+   ],
+   [
+    "ring3",
+    0.74
+   ]
+  ],
+  "soak_h": 24,
+  "halt_min_failing": 2,
+  "operator_delay_h": 24,
+  "check_every_h": 6,
+  "availability_assumptions": {
+   "always_online": 0.88,
+   "intermittent": 0.1,
+   "away": 0.02,
+   "p_drop_per_h": 0.02,
+   "spell_h_mean": 12.0
+  },
+  "b05_tier": "minipc_cpu (measured stages from experiments/b05_pipeline/measured.json)",
+  "b02_last_will_s": 15.0,
+  "bad_update": {
+   "manifests": {
+    "alarm_hub": {
+     "alarm": [
+      2000,
+      200
+     ]
+    }
+   }
+  }
+ },
+ "results": {
+  "full_test": {
+   "layers_on": "B02 connect (modelled in the loop), B03, B04, B05, B06, B07, B08, B09 + B01 twin",
+   "integrated": {
+    "none": {
+     "runs": 6,
+     "suites": {
+      "P1": 1.0,
+      "P2": 1.0,
+      "P3": 1.0,
+      "P4": 1.0,
+      "P5": 0.0,
+      "ALARM": 1.0,
+      "BUS": 1.0,
+      "P5r": 1.0
+     },
+     "layers": {
+      "B02": 1.0,
+      "B03": 1.0,
+      "B04": 1.0,
+      "B05": 1.0,
+      "B06": 1.0,
+      "B07": 1.0,
+      "B08": 1.0,
+      "B09": 1.0
+     },
+     "scenes": {
+      "arm_away": 1.0,
+      "intrusion": 1.0,
+      "smoke": 1.0,
+      "warmer_anna": 1.0,
+      "warmer_mark": 1.0,
+      "sam_unlock": 1.0,
+      "leak": 1.0,
+      "internet_down": 1.0,
+      "injection": 1.0,
+      "garage": 1.0,
+      "window": 1.0,
+      "courier": 1.0,
+      "clip_share": 1.0,
+      "good_night": 1.0,
+      "egress_summary": 1.0,
+      "camera_ask": 1.0
+     },
+     "alarm_delays_p50_p95_s": [
+      0.174,
+      0.244
+     ],
+     "unapproved_high_risk_total": 0,
+     "false_success_messages_total": 0,
+     "silent_failures_total": 0,
+     "alarm_delivery_rate_mean": 1.0,
+     "home_control_in_outage_mean": 1.0,
+     "b05_done_said": 42,
+     "b05_done_true": 42,
+     "b04_confirmed_close_s": [
+      5.0,
+      7.0,
+      5.0,
+      5.0,
+      5.0,
+      5.0
+     ],
+     "b08_cellular_in_outage_mean": 41.83,
+     "b09_short_answer_ok": 1.0,
+     "b09_background_share_mean": 0.9943,
+     "b03_issues_mean": 1.0,
+     "b02_matter_mismatches": 0,
+     "health_failing": 0.0,
+     "health_bytes_max": 265,
+     "p5_failure_reasons": [
+      "egress while the internet was down",
+      "egress without a known purpose",
+      "forbidden payload classes left the house"
+     ],
+     "p5r_failure_reasons": [],
+     "other_failures": {},
+     "scene_misses": {},
+     "courier_unlock_finals": [
+      "confirmed",
+      "confirmed",
+      "confirmed",
+      "confirmed",
+      "confirmed",
+      "confirmed"
+     ],
+     "front_lock_at_19_05": [
+      "locked",
+      "locked",
+      "locked",
+      "locked",
+      "locked",
+      "locked"
+     ],
+     "wall_s_mean": 6.92
+    },
+    "light": {
+     "runs": 6,
+     "suites": {
+      "P1": 1.0,
+      "P2": 1.0,
+      "P3": 1.0,
+      "P4": 1.0,
+      "P5": 0.0,
+      "ALARM": 1.0,
+      "BUS": 1.0,
+      "P5r": 1.0
+     },
+     "layers": {
+      "B02": 1.0,
+      "B03": 1.0,
+      "B04": 1.0,
+      "B05": 1.0,
+      "B06": 1.0,
+      "B07": 1.0,
+      "B08": 1.0,
+      "B09": 1.0
+     },
+     "scenes": {
+      "arm_away": 1.0,
+      "intrusion": 1.0,
+      "smoke": 1.0,
+      "warmer_anna": 1.0,
+      "warmer_mark": 1.0,
+      "sam_unlock": 1.0,
+      "leak": 1.0,
+      "internet_down": 1.0,
+      "injection": 1.0,
+      "garage": 0.8333,
+      "window": 1.0,
+      "courier": 1.0,
+      "clip_share": 1.0,
+      "good_night": 1.0,
+      "egress_summary": 1.0,
+      "camera_ask": 1.0
+     },
+     "alarm_delays_p50_p95_s": [
+      0.172,
+      0.218
+     ],
+     "unapproved_high_risk_total": 0,
+     "false_success_messages_total": 0,
+     "silent_failures_total": 0,
+     "alarm_delivery_rate_mean": 1.0,
+     "home_control_in_outage_mean": 1.0,
+     "b05_done_said": 42,
+     "b05_done_true": 42,
+     "b04_confirmed_close_s": [
+      8.0,
+      5.0,
+      6.0,
+      7.0,
+      8.0,
+      9.0
+     ],
+     "b08_cellular_in_outage_mean": 41.0,
+     "b09_short_answer_ok": 1.0,
+     "b09_background_share_mean": 0.9943,
+     "b03_issues_mean": 5.17,
+     "b02_matter_mismatches": 0,
+     "health_failing": 0.0,
+     "health_bytes_max": 265,
+     "p5_failure_reasons": [
+      "egress while the internet was down",
+      "egress without a known purpose",
+      "forbidden payload classes left the house"
+     ],
+     "p5r_failure_reasons": [],
+     "other_failures": {},
+     "scene_misses": {
+      "garage": [
+       0
+      ]
+     },
+     "courier_unlock_finals": [
+      "confirmed",
+      "confirmed",
+      "confirmed",
+      "confirmed",
+      "confirmed",
+      "confirmed"
+     ],
+     "front_lock_at_19_05": [
+      "locked",
+      "locked",
+      "locked",
+      "locked",
+      "locked",
+      "locked"
+     ],
+     "wall_s_mean": 7.19
+    },
+    "heavy": {
+     "runs": 6,
+     "suites": {
+      "P1": 1.0,
+      "P2": 1.0,
+      "P3": 1.0,
+      "P4": 1.0,
+      "P5": 0.0,
+      "ALARM": 1.0,
+      "BUS": 1.0,
+      "P5r": 1.0
+     },
+     "layers": {
+      "B02": 1.0,
+      "B03": 1.0,
+      "B04": 1.0,
+      "B05": 1.0,
+      "B06": 1.0,
+      "B07": 1.0,
+      "B08": 1.0,
+      "B09": 1.0
+     },
+     "scenes": {
+      "arm_away": 0.3333,
+      "intrusion": 1.0,
+      "smoke": 1.0,
+      "warmer_anna": 1.0,
+      "warmer_mark": 0.0,
+      "sam_unlock": 1.0,
+      "leak": 1.0,
+      "internet_down": 0.0,
+      "injection": 0.8333,
+      "garage": 0.6667,
+      "window": 1.0,
+      "courier": 0.3333,
+      "clip_share": 1.0,
+      "good_night": 0.3333,
+      "egress_summary": 1.0,
+      "camera_ask": 1.0
+     },
+     "alarm_delays_p50_p95_s": [
+      0.187,
+      5.629
+     ],
+     "unapproved_high_risk_total": 0,
+     "false_success_messages_total": 0,
+     "silent_failures_total": 0,
+     "alarm_delivery_rate_mean": 1.0,
+     "home_control_in_outage_mean": 0.5833,
+     "b05_done_said": 26,
+     "b05_done_true": 26,
+     "b04_confirmed_close_s": [
+      7.0,
+      7.0,
+      7.0,
+      15.963,
+      8.0,
+      15.394
+     ],
+     "b08_cellular_in_outage_mean": 41.0,
+     "b09_short_answer_ok": 1.0,
+     "b09_background_share_mean": 0.9939,
+     "b03_issues_mean": 409.83,
+     "b02_matter_mismatches": 0,
+     "health_failing": 0.0,
+     "health_bytes_max": 267,
+     "p5_failure_reasons": [
+      "egress while the internet was down",
+      "egress without a known purpose",
+      "forbidden payload classes left the house"
+     ],
+     "p5r_failure_reasons": [],
+     "other_failures": {},
+     "scene_misses": {
+      "arm_away": [
+       1,
+       3,
+       4,
+       5
+      ],
+      "warmer_mark": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       5
+      ],
+      "internet_down": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       5
+      ],
+      "injection": [
+       4
+      ],
+      "garage": [
+       0,
+       1
+      ],
+      "courier": [
+       0,
+       3,
+       4,
+       5
+      ],
+      "good_night": [
+       1,
+       2,
+       3,
+       4
+      ]
+     },
+     "courier_unlock_finals": [
+      "timed_out",
+      "confirmed",
+      "confirmed",
+      "timed_out",
+      null,
+      null
+     ],
+     "front_lock_at_19_05": [
+      "unlocked",
+      "locked",
+      "locked",
+      "unlocked",
+      "locked",
+      "locked"
+     ],
+     "wall_s_mean": 6.77
+    }
+   },
+   "b01_only_reference": {
+    "none": {
+     "runs": 6,
+     "suites": {
+      "P1": 1.0,
+      "P2": 1.0,
+      "P3": 1.0,
+      "P4": 1.0,
+      "P5": 1.0,
+      "ALARM": 1.0,
+      "BUS": 1.0
+     },
+     "scenes": {
+      "arm_away": 1.0,
+      "intrusion": 1.0,
+      "smoke": 1.0,
+      "warmer_anna": 1.0,
+      "warmer_mark": 1.0,
+      "sam_unlock": 1.0,
+      "leak": 1.0,
+      "internet_down": 1.0,
+      "injection": 1.0,
+      "garage": 1.0,
+      "window": 1.0,
+      "courier": 1.0,
+      "clip_share": 1.0,
+      "good_night": 1.0,
+      "egress_summary": 1.0
+     },
+     "alarm_delivery_rate_mean": 1.0,
+     "home_control_in_outage_mean": 1.0
+    },
+    "light": {
+     "runs": 6,
+     "suites": {
+      "P1": 1.0,
+      "P2": 1.0,
+      "P3": 1.0,
+      "P4": 1.0,
+      "P5": 1.0,
+      "ALARM": 1.0,
+      "BUS": 1.0
+     },
+     "scenes": {
+      "arm_away": 1.0,
+      "intrusion": 1.0,
+      "smoke": 1.0,
+      "warmer_anna": 1.0,
+      "warmer_mark": 1.0,
+      "sam_unlock": 1.0,
+      "leak": 1.0,
+      "internet_down": 0.8333,
+      "injection": 1.0,
+      "garage": 1.0,
+      "window": 1.0,
+      "courier": 1.0,
+      "clip_share": 1.0,
+      "good_night": 1.0,
+      "egress_summary": 1.0
+     },
+     "alarm_delivery_rate_mean": 1.0,
+     "home_control_in_outage_mean": 0.9583
+    },
+    "heavy": {
+     "runs": 6,
+     "suites": {
+      "P1": 1.0,
+      "P2": 1.0,
+      "P3": 1.0,
+      "P4": 1.0,
+      "P5": 1.0,
+      "ALARM": 1.0,
+      "BUS": 1.0
+     },
+     "scenes": {
+      "arm_away": 0.3333,
+      "intrusion": 1.0,
+      "smoke": 1.0,
+      "warmer_anna": 1.0,
+      "warmer_mark": 0.0,
+      "sam_unlock": 1.0,
+      "leak": 1.0,
+      "internet_down": 0.0,
+      "injection": 0.8333,
+      "garage": 0.5,
+      "window": 1.0,
+      "courier": 0.8333,
+      "clip_share": 1.0,
+      "good_night": 0.6667,
+      "egress_summary": 1.0
+     },
+     "alarm_delivery_rate_mean": 1.0,
+     "home_control_in_outage_mean": 0.4583
+    }
+   },
+   "fixes": {
+    "F1_signed_replies": "B07 accepts only signed phone replies; the B01 day's phones sent unsigned ones",
+    "F2_day_manifests": "B09 manifests did not declare the day's senders (backup, updater, camera observer)",
+    "F3_one_voice_path": "B05 republishes the transcript on voice/<sat>; the B01 hub handled it a second time",
+    "F4_house_phrases": "B05 grammar did not know the house phrases (good night, keep the heating on)",
+    "F5_route_aware_p5": "B01 P5 counts the B08 cellular alarm path and a consented clip as forbidden egress",
+    "F6_one_leak_owner": "the B01 house leak rule and the B04 controller both commanded the valve",
+    "F7_prompt_words": "the scripted people answer B01 prompt wording; B07 prompts word the same action differently",
+    "F8_deny_union": "B06 household.yaml replaced Sam's B01/B07 deny list (unlock, garage) instead of adding to it",
+    "F9_destination_first": "B08's clip-consent check ran before the destination check, so B09 never saw a phoning-home camera as undeclared and nobody was told",
+    "F10_thermostat_not_stuck": "B03 called a thermostat holding its setpoint 'stuck' and told the household"
+   },
+   "ablation": [
+    {
+     "fix": "F10_thermostat_not_stuck",
+     "what": "B03 called a thermostat holding its setpoint 'stuck' and told the household",
+     "seed": 0,
+     "mix": "none",
+     "suites_now_failing": [],
+     "P5r_now_failing": false,
+     "layers_now_failing": [],
+     "scenes_now_failing": [],
+     "evidence": {
+      "b03_issue_kinds": [
+       "stale",
+       "stuck"
+      ],
+      "b03_told": 4,
+      "with_fix_told": 0
+     }
+    },
+    {
+     "fix": "F1_signed_replies",
+     "what": "B07 accepts only signed phone replies; the B01 day's phones sent unsigned ones",
+     "seed": 0,
+     "mix": "none",
+     "suites_now_failing": [],
+     "P5r_now_failing": false,
+     "layers_now_failing": [
+      "B07"
+     ],
+     "scenes_now_failing": [
+      "arm_away",
+      "intrusion",
+      "garage",
+      "courier",
+      "clip_share",
+      "camera_ask"
+     ],
+     "evidence": {
+      "b07_reply_refusals": {
+       "bad_signature": 4
+      }
+     }
+    },
+    {
+     "fix": "F2_day_manifests",
+     "what": "B09 manifests did not declare the day's senders (backup, updater, camera observer)",
+     "seed": 0,
+     "mix": "none",
+     "suites_now_failing": [],
+     "P5r_now_failing": false,
+     "layers_now_failing": [
+      "B08"
+     ],
+     "scenes_now_failing": [
+      "camera_ask"
+     ],
+     "evidence": {
+      "b09_blocked_by_source": {
+       "backup": 1,
+       "camera.front": 6,
+       "camera_observer": 1,
+       "policy.engine": 1,
+       "updater": 1
+      },
+      "b09_quarantined": [
+       "backup",
+       "camera.front",
+       "camera_observer",
+       "policy.engine",
+       "updater"
+      ],
+      "clips_blocked": 2
+     }
+    },
+    {
+     "fix": "F3_one_voice_path",
+     "what": "B05 republishes the transcript on voice/<sat>; the B01 hub handled it a second time",
+     "seed": 0,
+     "mix": "none",
+     "suites_now_failing": [
+      "P4"
+     ],
+     "P5r_now_failing": false,
+     "layers_now_failing": [],
+     "scenes_now_failing": [],
+     "evidence": {
+      "hub_voice_second_handling": 10,
+      "hub_voice_second_decisions": 16,
+      "actions": 31,
+      "actions_with_fix": 19
+     }
+    },
+    {
+     "fix": "F4_house_phrases",
+     "what": "B05 grammar did not know the house phrases (good night, keep the heating on)",
+     "seed": 0,
+     "mix": "none",
+     "suites_now_failing": [],
+     "P5r_now_failing": false,
+     "layers_now_failing": [
+      "B05"
+     ],
+     "scenes_now_failing": [
+      "window",
+      "good_night"
+     ],
+     "evidence": {
+      "b05_not_understood": [
+       "Keep the heating on.",
+       "Good night."
+      ]
+     }
+    },
+    {
+     "fix": "F6_one_leak_owner",
+     "what": "the B01 house leak rule and the B04 controller both commanded the valve",
+     "seed": 0,
+     "mix": "none",
+     "suites_now_failing": [],
+     "P5r_now_failing": false,
+     "layers_now_failing": [],
+     "scenes_now_failing": [],
+     "evidence": {
+      "valve_close_cmds": 2,
+      "valve_cmd_sources": [
+       "policy.actions",
+       "safety.leak_valve"
+      ],
+      "leak_tells": 4,
+      "leak_tells_with_fix": 3
+     }
+    },
+    {
+     "fix": "F7_prompt_words",
+     "what": "the scripted people answer B01 prompt wording; B07 prompts word the same action differently",
+     "seed": 0,
+     "mix": "none",
+     "suites_now_failing": [],
+     "P5r_now_failing": false,
+     "layers_now_failing": [],
+     "scenes_now_failing": [
+      "courier",
+      "clip_share"
+     ],
+     "evidence": {
+      "b07_tickets": 4
+     }
+    },
+    {
+     "fix": "F8_deny_union",
+     "what": "B06 household.yaml replaced Sam's B01/B07 deny list (unlock, garage) instead of adding to it",
+     "seed": 0,
+     "mix": "none",
+     "suites_now_failing": [],
+     "P5r_now_failing": false,
+     "layers_now_failing": [],
+     "scenes_now_failing": [
+      "sam_unlock"
+     ],
+     "evidence": {
+      "sam_unlock_status": [
+       "awaiting_approval"
+      ],
+      "with_fix": [
+       "denied"
+      ]
+     }
+    },
+    {
+     "fix": "F9_destination_first",
+     "what": "B08's clip-consent check ran before the destination check, so B09 never saw a phoning-home camera as undeclared and nobody was told",
+     "seed": 0,
+     "mix": "none",
+     "suites_now_failing": [],
+     "P5r_now_failing": false,
+     "layers_now_failing": [],
+     "scenes_now_failing": [],
+     "evidence": {
+      "b09_notices": [],
+      "with_fix": [
+       {
+        "source": "camera.front",
+        "reason": "destination_not_allowlisted"
+       },
+       {
+        "source": "policy.engine",
+        "reason": "destination_not_allowlisted"
+       }
+      ],
+      "blocked_by_reason": {
+       "clip_needs_person_consent": 7
+      }
+     }
+    }
+   ],
+   "p5_adapter_note": "F5 is an adapter, not a runtime switch: P5 (unchanged) and P5r are both computed on every run",
+   "seed0_none_layers": {
+    "B02": {
+     "ha_discovery_configs": 6,
+     "matter_roundtrips": 10390,
+     "matter_mismatches": 0,
+     "last_will_offline": 1,
+     "last_will_told": 1,
+     "pass": true
+    },
+    "B03": {
+     "issues": 1,
+     "issue_kinds": [
+      "stale"
+     ],
+     "issues_told": 0,
+     "rejected_at_ingest": 0,
+     "rejected_by_reason": {
+      "duplicate": 0,
+      "out_of_order": 0,
+      "unsourced": 0,
+      "out_of_range": 0
+     },
+     "decisions_refused_on_quality": 0,
+     "pass": true
+    },
+    "B04": {
+     "state": "closed_confirmed",
+     "leak_detected_s_after_09_12": 0.01,
+     "confirmed_close_s_after_detect": 5.0,
+     "physically_closed_s_after_detect": 4.182,
+     "false_closed_claim": false,
+     "valve_close_cmds": 1,
+     "valve_cmd_sources": [
+      "safety.leak_valve"
+     ],
+     "escalated": false,
+     "pass": true
+    },
+    "B05": {
+     "utterances": 9,
+     "outcomes": {
+      "confirmed": 7,
+      "denied": 1,
+      "failed": 1
+     },
+     "done_said": 7,
+     "done_confirmed_before": 7,
+     "done_true_when_heard": 7,
+     "not_understood": [],
+     "pass": true
+    },
+    "B06": {
+     "utterances": 10,
+     "tiers": {
+      "named": 10,
+      "comfort": 0,
+      "guest": 0
+     },
+     "level3_without_phone_approval": 0,
+     "pass": true
+    },
+    "B07": {
+     "tickets": 4,
+     "reply_refusals": {
+      "unknown": 1
+     },
+     "execution_refusals": {},
+     "prompts": 7,
+     "denials": {},
+     "pass": true
+    },
+    "B08": {
+     "cellular_messages": 65,
+     "cellular_messages_in_outage": 42,
+     "cellular_alarm_events": 0,
+     "primary_failovers": 1,
+     "path_messages_told": 7,
+     "centre_incidents": 5,
+     "centre_repeats": 0,
+     "camera_asks": 1,
+     "camera_outcomes": [
+      "person_shared"
+     ],
+     "clips_shared": 1,
+     "clips_blocked": 1,
+     "pass": true
+    },
+    "B09": {
+     "ledger_rows": 1522,
+     "sent": 1394,
+     "bytes": 51137042,
+     "background_share_messages": 0.9943,
+     "blocked": 7,
+     "blocked_by_source": {
+      "camera.front": 6,
+      "policy.engine": 1
+     },
+     "blocked_by_reason": {
+      "destination_not_allowlisted": 2,
+      "source_quarantined": 5
+     },
+     "notices": [
+      {
+       "source": "camera.front",
+       "reason": "destination_not_allowlisted"
+      },
+      {
+       "source": "policy.engine",
+       "reason": "destination_not_allowlisted"
+      }
+     ],
+     "quarantined": [
+      "camera.front",
+      "policy.engine"
+     ],
+     "short_answer": "Two messages to a phone away from home, five alarm signals to the monitoring centre, and one camera clip with an alarm. In the background: one thousand three hundred seventy-six messages, the nightly encrypted backup, alarm-line check-ins, and update checks. Seven attempts to send elsewhere were blocked, from two devices. One hundred twenty messages were not sent because the internet was down.",
+     "short_answer_ok": true,
+     "bytes_add_up": true,
+     "pass": true
+    }
+   },
+   "seed0_none_health": {
+    "suites_failed": 0,
+    "silent_failures": 0,
+    "unapproved_high_risk": 0,
+    "alarms_not_acked": 0,
+    "alarm_msgs_blocked": 0,
+    "alarm_delivery_pct": 100,
+    "valve_escalations": 0,
+    "reading_issues": 1,
+    "egress_blocked": 7,
+    "egress_notices": 2,
+    "done_not_confirmed": 0,
+    "bus_errors": 0
+   }
+  },
+  "fleet": {
+   "calibration": {
+    "bad_update": "alarm_hub manifest daily count 2,000 -> 200 (config typo)",
+    "twin_days": 9,
+    "health_failing_share": 1.0,
+    "first_alarm_blocked_h_of_day": [
+     2.867,
+     2.983,
+     3.017,
+     3.217,
+     3.233,
+     3.233,
+     3.233,
+     3.233,
+     3.233
+    ],
+    "alarm_suite_pass_share_bad": 0.0,
+    "alarm_delivery_rate_bad_mean": 0.5,
+    "good_version_false_failing_share": 0.0,
+    "quiet_bad_update": "ASSUMED: 5% of homes affected, failure 0-24 h after install (uniform)"
+   },
+   "results": {
+    "good/all_at_once": {
+     "installed_new": {
+      "mean": 980.45,
+      "p50": 981,
+      "min": 971,
+      "max": 986
+     },
+     "installed_new_before_halt": {
+      "mean": 980.45,
+      "p50": 981,
+      "min": 971,
+      "max": 986
+     },
+     "installed_after_halt": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "homes_failing": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "halt_h": null,
+     "halt_after_first_failure_report_h": null,
+     "first_failing_report_h": null,
+     "on_new_at_end": {
+      "mean": 980.45,
+      "p50": 981,
+      "min": 971,
+      "max": 986
+     },
+     "on_old_at_end": {
+      "mean": 19.55,
+      "p50": 21,
+      "min": 14,
+      "max": 29
+     },
+     "never_updated": {
+      "mean": 19.55,
+      "p50": 21,
+      "min": 14,
+      "max": 29
+     },
+     "never_updated_away": {
+      "mean": 19.55,
+      "p50": 21,
+      "min": 14,
+      "max": 29
+     },
+     "on_new_at_end_offline_at_end": {
+      "mean": 19.1,
+      "p50": 18,
+      "min": 14,
+      "max": 27
+     },
+     "rings_opened": {
+      "mean": 1.0,
+      "p50": 1,
+      "min": 1,
+      "max": 1
+     },
+     "hours_to_95pct_on_new": {
+      "mean": 5.0,
+      "p50": 5,
+      "min": 5,
+      "max": 5
+     },
+     "halted_runs": 0,
+     "runs": 20
+    },
+    "good/rings_operator": {
+     "installed_new": {
+      "mean": 980.45,
+      "p50": 981,
+      "min": 971,
+      "max": 986
+     },
+     "installed_new_before_halt": {
+      "mean": 980.45,
+      "p50": 981,
+      "min": 971,
+      "max": 986
+     },
+     "installed_after_halt": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "homes_failing": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "halt_h": null,
+     "halt_after_first_failure_report_h": null,
+     "first_failing_report_h": null,
+     "on_new_at_end": {
+      "mean": 980.45,
+      "p50": 981,
+      "min": 971,
+      "max": 986
+     },
+     "on_old_at_end": {
+      "mean": 19.55,
+      "p50": 21,
+      "min": 14,
+      "max": 29
+     },
+     "never_updated": {
+      "mean": 19.55,
+      "p50": 21,
+      "min": 14,
+      "max": 29
+     },
+     "never_updated_away": {
+      "mean": 19.55,
+      "p50": 21,
+      "min": 14,
+      "max": 29
+     },
+     "on_new_at_end_offline_at_end": {
+      "mean": 19.1,
+      "p50": 18,
+      "min": 14,
+      "max": 27
+     },
+     "rings_opened": {
+      "mean": 4.0,
+      "p50": 4,
+      "min": 4,
+      "max": 4
+     },
+     "hours_to_95pct_on_new": {
+      "mean": 77.0,
+      "p50": 77,
+      "min": 77,
+      "max": 77
+     },
+     "halted_runs": 0,
+     "runs": 20
+    },
+    "good/rings_auto_halt": {
+     "installed_new": {
+      "mean": 980.45,
+      "p50": 981,
+      "min": 971,
+      "max": 986
+     },
+     "installed_new_before_halt": {
+      "mean": 980.45,
+      "p50": 981,
+      "min": 971,
+      "max": 986
+     },
+     "installed_after_halt": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "homes_failing": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "halt_h": null,
+     "halt_after_first_failure_report_h": null,
+     "first_failing_report_h": null,
+     "on_new_at_end": {
+      "mean": 980.45,
+      "p50": 981,
+      "min": 971,
+      "max": 986
+     },
+     "on_old_at_end": {
+      "mean": 19.55,
+      "p50": 21,
+      "min": 14,
+      "max": 29
+     },
+     "never_updated": {
+      "mean": 19.55,
+      "p50": 21,
+      "min": 14,
+      "max": 29
+     },
+     "never_updated_away": {
+      "mean": 19.55,
+      "p50": 21,
+      "min": 14,
+      "max": 29
+     },
+     "on_new_at_end_offline_at_end": {
+      "mean": 19.1,
+      "p50": 18,
+      "min": 14,
+      "max": 27
+     },
+     "rings_opened": {
+      "mean": 4.0,
+      "p50": 4,
+      "min": 4,
+      "max": 4
+     },
+     "hours_to_95pct_on_new": {
+      "mean": 77.0,
+      "p50": 77,
+      "min": 77,
+      "max": 77
+     },
+     "halted_runs": 0,
+     "runs": 20
+    },
+    "good/rings_auto_halt_maintenance": {
+     "installed_new": {
+      "mean": 980.45,
+      "p50": 981,
+      "min": 971,
+      "max": 986
+     },
+     "installed_new_before_halt": {
+      "mean": 980.45,
+      "p50": 981,
+      "min": 971,
+      "max": 986
+     },
+     "installed_after_halt": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "homes_failing": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "halt_h": null,
+     "halt_after_first_failure_report_h": null,
+     "first_failing_report_h": null,
+     "on_new_at_end": {
+      "mean": 980.45,
+      "p50": 981,
+      "min": 971,
+      "max": 986
+     },
+     "on_old_at_end": {
+      "mean": 19.55,
+      "p50": 21,
+      "min": 14,
+      "max": 29
+     },
+     "never_updated": {
+      "mean": 19.55,
+      "p50": 21,
+      "min": 14,
+      "max": 29
+     },
+     "never_updated_away": {
+      "mean": 19.55,
+      "p50": 21,
+      "min": 14,
+      "max": 29
+     },
+     "on_new_at_end_offline_at_end": {
+      "mean": 19.1,
+      "p50": 18,
+      "min": 14,
+      "max": 27
+     },
+     "rings_opened": {
+      "mean": 4.0,
+      "p50": 4,
+      "min": 4,
+      "max": 4
+     },
+     "hours_to_95pct_on_new": {
+      "mean": 99.0,
+      "p50": 99,
+      "min": 99,
+      "max": 99
+     },
+     "halted_runs": 0,
+     "runs": 20
+    },
+    "bad_loud/all_at_once": {
+     "installed_new": {
+      "mean": 979.0,
+      "p50": 980,
+      "min": 969,
+      "max": 985
+     },
+     "installed_new_before_halt": {
+      "mean": 979.0,
+      "p50": 980,
+      "min": 969,
+      "max": 985
+     },
+     "installed_after_halt": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "homes_failing": {
+      "mean": 979.0,
+      "p50": 980,
+      "min": 969,
+      "max": 985
+     },
+     "halt_h": {
+      "mean": 27.0,
+      "p50": 27,
+      "min": 27,
+      "max": 27
+     },
+     "halt_after_first_failure_report_h": {
+      "mean": 24.0,
+      "p50": 24,
+      "min": 24,
+      "max": 24
+     },
+     "first_failing_report_h": {
+      "mean": 3.0,
+      "p50": 3,
+      "min": 3,
+      "max": 3
+     },
+     "on_new_at_end": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "on_old_at_end": {
+      "mean": 1000.0,
+      "p50": 1000,
+      "min": 1000,
+      "max": 1000
+     },
+     "never_updated": {
+      "mean": 21.0,
+      "p50": 22,
+      "min": 15,
+      "max": 31
+     },
+     "never_updated_away": {
+      "mean": 19.55,
+      "p50": 21,
+      "min": 14,
+      "max": 29
+     },
+     "on_new_at_end_offline_at_end": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "rings_opened": {
+      "mean": 1.0,
+      "p50": 1,
+      "min": 1,
+      "max": 1
+     },
+     "hours_to_95pct_on_new": null,
+     "halted_runs": 20,
+     "runs": 20
+    },
+    "bad_loud/rings_operator": {
+     "installed_new": {
+      "mean": 43.75,
+      "p50": 43,
+      "min": 33,
+      "max": 56
+     },
+     "installed_new_before_halt": {
+      "mean": 43.75,
+      "p50": 43,
+      "min": 33,
+      "max": 56
+     },
+     "installed_after_halt": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "homes_failing": {
+      "mean": 43.75,
+      "p50": 43,
+      "min": 33,
+      "max": 56
+     },
+     "halt_h": {
+      "mean": 27.2,
+      "p50": 27,
+      "min": 27,
+      "max": 28
+     },
+     "halt_after_first_failure_report_h": {
+      "mean": 24.0,
+      "p50": 24,
+      "min": 24,
+      "max": 24
+     },
+     "first_failing_report_h": {
+      "mean": 3.2,
+      "p50": 3,
+      "min": 3,
+      "max": 4
+     },
+     "on_new_at_end": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "on_old_at_end": {
+      "mean": 1000.0,
+      "p50": 1000,
+      "min": 1000,
+      "max": 1000
+     },
+     "never_updated": {
+      "mean": 956.25,
+      "p50": 957,
+      "min": 944,
+      "max": 967
+     },
+     "never_updated_away": {
+      "mean": 19.55,
+      "p50": 21,
+      "min": 14,
+      "max": 29
+     },
+     "on_new_at_end_offline_at_end": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "rings_opened": {
+      "mean": 2.0,
+      "p50": 2,
+      "min": 2,
+      "max": 2
+     },
+     "hours_to_95pct_on_new": null,
+     "halted_runs": 20,
+     "runs": 20
+    },
+    "bad_loud/rings_auto_halt": {
+     "installed_new": {
+      "mean": 7.45,
+      "p50": 7,
+      "min": 5,
+      "max": 10
+     },
+     "installed_new_before_halt": {
+      "mean": 7.45,
+      "p50": 7,
+      "min": 5,
+      "max": 10
+     },
+     "installed_after_halt": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "homes_failing": {
+      "mean": 7.45,
+      "p50": 7,
+      "min": 5,
+      "max": 10
+     },
+     "halt_h": {
+      "mean": 3.75,
+      "p50": 4,
+      "min": 3,
+      "max": 4
+     },
+     "halt_after_first_failure_report_h": {
+      "mean": 0.55,
+      "p50": 1,
+      "min": 0,
+      "max": 1
+     },
+     "first_failing_report_h": {
+      "mean": 3.2,
+      "p50": 3,
+      "min": 3,
+      "max": 4
+     },
+     "on_new_at_end": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "on_old_at_end": {
+      "mean": 1000.0,
+      "p50": 1000,
+      "min": 1000,
+      "max": 1000
+     },
+     "never_updated": {
+      "mean": 992.55,
+      "p50": 993,
+      "min": 990,
+      "max": 995
+     },
+     "never_updated_away": {
+      "mean": 19.55,
+      "p50": 21,
+      "min": 14,
+      "max": 29
+     },
+     "on_new_at_end_offline_at_end": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "rings_opened": {
+      "mean": 1.0,
+      "p50": 1,
+      "min": 1,
+      "max": 1
+     },
+     "hours_to_95pct_on_new": null,
+     "halted_runs": 20,
+     "runs": 20
+    },
+    "bad_loud/rings_auto_halt_maintenance": {
+     "installed_new": {
+      "mean": 7.85,
+      "p50": 8,
+      "min": 5,
+      "max": 10
+     },
+     "installed_new_before_halt": {
+      "mean": 6.1,
+      "p50": 6,
+      "min": 4,
+      "max": 10
+     },
+     "installed_after_halt": {
+      "mean": 1.75,
+      "p50": 2,
+      "min": 0,
+      "max": 5
+     },
+     "homes_failing": {
+      "mean": 7.85,
+      "p50": 8,
+      "min": 5,
+      "max": 10
+     },
+     "halt_h": {
+      "mean": 4.0,
+      "p50": 4,
+      "min": 4,
+      "max": 4
+     },
+     "halt_after_first_failure_report_h": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "first_failing_report_h": {
+      "mean": 4.0,
+      "p50": 4,
+      "min": 4,
+      "max": 4
+     },
+     "on_new_at_end": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "on_old_at_end": {
+      "mean": 1000.0,
+      "p50": 1000,
+      "min": 1000,
+      "max": 1000
+     },
+     "never_updated": {
+      "mean": 992.15,
+      "p50": 992,
+      "min": 990,
+      "max": 995
+     },
+     "never_updated_away": {
+      "mean": 19.55,
+      "p50": 21,
+      "min": 14,
+      "max": 29
+     },
+     "on_new_at_end_offline_at_end": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "rings_opened": {
+      "mean": 1.0,
+      "p50": 1,
+      "min": 1,
+      "max": 1
+     },
+     "hours_to_95pct_on_new": null,
+     "halted_runs": 20,
+     "runs": 20
+    },
+    "bad_quiet/all_at_once": {
+     "installed_new": {
+      "mean": 978.95,
+      "p50": 979,
+      "min": 971,
+      "max": 985
+     },
+     "installed_new_before_halt": {
+      "mean": 978.95,
+      "p50": 979,
+      "min": 971,
+      "max": 985
+     },
+     "installed_after_halt": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "homes_failing": {
+      "mean": 48.85,
+      "p50": 50,
+      "min": 39,
+      "max": 62
+     },
+     "halt_h": {
+      "mean": 25.9,
+      "p50": 26,
+      "min": 25,
+      "max": 28
+     },
+     "halt_after_first_failure_report_h": {
+      "mean": 24.0,
+      "p50": 24,
+      "min": 24,
+      "max": 24
+     },
+     "first_failing_report_h": {
+      "mean": 1.9,
+      "p50": 2,
+      "min": 1,
+      "max": 4
+     },
+     "on_new_at_end": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "on_old_at_end": {
+      "mean": 1000.0,
+      "p50": 1000,
+      "min": 1000,
+      "max": 1000
+     },
+     "never_updated": {
+      "mean": 21.05,
+      "p50": 22,
+      "min": 15,
+      "max": 29
+     },
+     "never_updated_away": {
+      "mean": 19.55,
+      "p50": 21,
+      "min": 14,
+      "max": 29
+     },
+     "on_new_at_end_offline_at_end": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "rings_opened": {
+      "mean": 1.0,
+      "p50": 1,
+      "min": 1,
+      "max": 1
+     },
+     "hours_to_95pct_on_new": null,
+     "halted_runs": 20,
+     "runs": 20
+    },
+    "bad_quiet/rings_operator": {
+     "installed_new": {
+      "mean": 318.6,
+      "p50": 253,
+      "min": 58,
+      "max": 983
+     },
+     "installed_new_before_halt": {
+      "mean": 318.6,
+      "p50": 253,
+      "min": 58,
+      "max": 983
+     },
+     "installed_after_halt": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "homes_failing": {
+      "mean": 15.85,
+      "p50": 12,
+      "min": 1,
+      "max": 46
+     },
+     "halt_h": {
+      "mean": 58.85,
+      "p50": 57,
+      "min": 33,
+      "max": 85
+     },
+     "halt_after_first_failure_report_h": {
+      "mean": 24.0,
+      "p50": 24,
+      "min": 24,
+      "max": 24
+     },
+     "first_failing_report_h": {
+      "mean": 34.85,
+      "p50": 33,
+      "min": 9,
+      "max": 61
+     },
+     "on_new_at_end": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "on_old_at_end": {
+      "mean": 1000.0,
+      "p50": 1000,
+      "min": 1000,
+      "max": 1000
+     },
+     "never_updated": {
+      "mean": 681.4,
+      "p50": 748,
+      "min": 17,
+      "max": 942
+     },
+     "never_updated_away": {
+      "mean": 19.55,
+      "p50": 21,
+      "min": 14,
+      "max": 29
+     },
+     "on_new_at_end_offline_at_end": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "rings_opened": {
+      "mean": 3.1,
+      "p50": 3,
+      "min": 2,
+      "max": 4
+     },
+     "hours_to_95pct_on_new": null,
+     "halted_runs": 20,
+     "runs": 20
+    },
+    "bad_quiet/rings_auto_halt": {
+     "installed_new": {
+      "mean": 142.05,
+      "p50": 148,
+      "min": 57,
+      "max": 255
+     },
+     "installed_new_before_halt": {
+      "mean": 142.05,
+      "p50": 148,
+      "min": 57,
+      "max": 255
+     },
+     "installed_after_halt": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "homes_failing": {
+      "mean": 6.85,
+      "p50": 6,
+      "min": 2,
+      "max": 18
+     },
+     "halt_h": {
+      "mean": 46.9,
+      "p50": 50,
+      "min": 32,
+      "max": 65
+     },
+     "halt_after_first_failure_report_h": {
+      "mean": 12.05,
+      "p50": 11,
+      "min": 0,
+      "max": 47
+     },
+     "first_failing_report_h": {
+      "mean": 34.85,
+      "p50": 33,
+      "min": 9,
+      "max": 61
+     },
+     "on_new_at_end": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "on_old_at_end": {
+      "mean": 1000.0,
+      "p50": 1000,
+      "min": 1000,
+      "max": 1000
+     },
+     "never_updated": {
+      "mean": 857.95,
+      "p50": 940,
+      "min": 745,
+      "max": 943
+     },
+     "never_updated_away": {
+      "mean": 19.55,
+      "p50": 21,
+      "min": 14,
+      "max": 29
+     },
+     "on_new_at_end_offline_at_end": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "rings_opened": {
+      "mean": 2.5,
+      "p50": 3,
+      "min": 2,
+      "max": 3
+     },
+     "hours_to_95pct_on_new": null,
+     "halted_runs": 20,
+     "runs": 20
+    },
+    "bad_quiet/rings_auto_halt_maintenance": {
+     "installed_new": {
+      "mean": 176.55,
+      "p50": 248,
+      "min": 57,
+      "max": 255
+     },
+     "installed_new_before_halt": {
+      "mean": 128.55,
+      "p50": 177,
+      "min": 39,
+      "max": 196
+     },
+     "installed_after_halt": {
+      "mean": 48.0,
+      "p50": 57,
+      "min": 0,
+      "max": 88
+     },
+     "homes_failing": {
+      "mean": 8.75,
+      "p50": 9,
+      "min": 2,
+      "max": 19
+     },
+     "halt_h": {
+      "mean": 51.0,
+      "p50": 53,
+      "min": 32,
+      "max": 67
+     },
+     "halt_after_first_failure_report_h": {
+      "mean": 13.2,
+      "p50": 13,
+      "min": 2,
+      "max": 49
+     },
+     "first_failing_report_h": {
+      "mean": 37.8,
+      "p50": 38,
+      "min": 10,
+      "max": 64
+     },
+     "on_new_at_end": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "on_old_at_end": {
+      "mean": 1000.0,
+      "p50": 1000,
+      "min": 1000,
+      "max": 1000
+     },
+     "never_updated": {
+      "mean": 823.45,
+      "p50": 752,
+      "min": 745,
+      "max": 943
+     },
+     "never_updated_away": {
+      "mean": 19.55,
+      "p50": 21,
+      "min": 14,
+      "max": 29
+     },
+     "on_new_at_end_offline_at_end": {
+      "mean": 0.0,
+      "p50": 0,
+      "min": 0,
+      "max": 0
+     },
+     "rings_opened": {
+      "mean": 2.7,
+      "p50": 3,
+      "min": 2,
+      "max": 3
+     },
+     "hours_to_95pct_on_new": null,
+     "halted_runs": 20,
+     "runs": 20
+    }
+   }
+  },
+  "cloud": {
+   "seed0_none": {
+    "health_report": {
+     "v": "v1",
+     "c": {
+      "suites_failed": 0,
+      "silent_failures": 0,
+      "unapproved_high_risk": 0,
+      "alarms_not_acked": 0,
+      "alarm_msgs_blocked": 0,
+      "alarm_delivery_pct": 100,
+      "valve_escalations": 0,
+      "reading_issues": 1,
+      "egress_blocked": 7,
+      "egress_notices": 2,
+      "done_not_confirmed": 0,
+      "bus_errors": 0
+     }
+    },
+    "health_bytes": 265,
+    "raw_bundle": {
+     "bytes": {
+      "raw_trace": 3583016,
+      "audit_log": 42907,
+      "egress_ledger": 466432,
+      "safety_journal": 2361
+     },
+     "total_bytes": 4094716,
+     "personal_content": {
+      "requests_in_peoples_words": 14,
+      "messages_to_people_verbatim": 49,
+      "trace_records_naming_a_person": 58,
+      "trace_records": 31759
+     }
+    },
+    "plane_gate": {
+     "health_report": {
+      "bytes": 265,
+      "sent": true
+     },
+     "raw": {
+      "raw_trace": {
+       "bytes": 3583016,
+       "sent": false,
+       "reason": "over_declared_message_size"
+      },
+      "audit_log": {
+       "bytes": 42907,
+       "sent": false,
+       "reason": "over_declared_message_size"
+      },
+      "egress_ledger": {
+       "bytes": 466432,
+       "sent": false,
+       "reason": "over_declared_message_size"
+      },
+      "safety_journal": {
+       "bytes": 2361,
+       "sent": false,
+       "reason": "over_declared_message_size"
+      }
+     },
+     "oversized_health_report_sent": false,
+     "oversized_reason": "over_declared_message_size",
+     "health_report_with_extra_field_sent": false,
+     "extra_field_reason": "health_report_carries_extra_fields",
+     "household_notices": [
+      "over_declared_message_size",
+      "over_declared_message_size",
+      "over_declared_message_size",
+      "over_declared_message_size",
+      "over_declared_message_size"
+     ]
+    }
+   },
+   "mapping": [
+    {
+     "stack": "AWS IoT Greengrass V2",
+     "status_from_ledger": "Greengrass V1 support ended Oct 7, 2026; V2 is the migration target (ledger 8a)",
+     "home_hub": "policy engine and approval gate (B01, B07), action tracker (B01-B05), leak state machine (B04), reading quality (B03), voice pipeline (B05), trust policy (B06), alarm hub with both paths (B08), egress gate and ledger (B09), packaged as software for the hub",
+     "cloud_plane": "update packages, rings and halt rule; counts-only health reports (fleet_health)",
+     "never_in_cloud": "decisions, approvals, raw traces, audio, clips (except a consented clip to the monitoring centre, which is not the plane)",
+     "not_verified_here": "Greengrass V2 deployment, rollout and abort features"
+    },
+    {
+     "stack": "Azure IoT Hub + DPS + Azure Device Registry",
+     "status_from_ledger": "Azure IoT Central retires Sep 20, 2029; Microsoft recommends IoT Hub, DPS and Azure Device Registry (ledger 8b)",
+     "home_hub": "policy engine and approval gate (B01, B07), action tracker (B01-B05), leak state machine (B04), reading quality (B03), voice pipeline (B05), trust policy (B06), alarm hub with both paths (B08), egress gate and ledger (B09)",
+     "cloud_plane": "device identity and provisioning, update rings and halt rule, counts-only health reports",
+     "never_in_cloud": "same as above",
+     "not_verified_here": "IoT Hub update and configuration features, DPS details"
+    },
+    {
+     "stack": "Self-hosted MQTT broker + Home Assistant fleet",
+     "status_from_ledger": "no vendor dates; B02 measured a local broker (amqtt 0.12.2) and HA discovery payloads in this repo",
+     "home_hub": "policy engine and approval gate (B01, B07), action tracker (B01-B05), leak state machine (B04), reading quality (B03), voice pipeline (B05), trust policy (B06), alarm hub with both paths (B08), egress gate and ledger (B09); local MQTT broker per home (B02)",
+     "cloud_plane": "an operator-run update server and health collector speaking the same fleet_health purpose; no third-party cloud",
+     "never_in_cloud": "same as above",
+     "not_verified_here": "any HA multi-home management tooling (none assumed)"
+    },
+    {
+     "stack": "Google Cloud IoT Core",
+     "status_from_ledger": "retired Aug 16, 2023 (ledger 8c)",
+     "home_hub": "-",
+     "cloud_plane": "not an option",
+     "never_in_cloud": "-",
+     "not_verified_here": "-"
+    }
+   ],
+   "plane_rules": {
+    "purpose": "fleet_health",
+    "class": "health_counts",
+    "max_bytes": 1024,
+    "per_day": 24,
+    "host": "fleet.plane.example"
+   }
+  },
+  "runtime_s": {
+   "twin_runs": 171.5,
+   "total": 178.3,
+   "runs": 54
+  }
+ },
+ "limitations": [
+  "Everything ran in simulation. The B02 MQTT broker is not in the day loop (it runs on wall time); B02 enters as its Matter data-model round trip, HA discovery configs and the measured 15 s Last Will, modelled.",
+  "Seeds per fault mix were reduced to keep the run under about 3 minutes on 2 shared cores.",
+  "The fleet is a lightweight model: availability, ring sizes, soak, halt threshold, operator delay and the quiet bad update are assumptions. Only the loud bad update's effect on a home's health report and the good version's false-failing share come from twin days.",
+  "Voices in the day are the bundled household embeddings; B05 stage times are the mini PC tier (measured on this CPU, scaled where marked in B05). No LLM was run.",
+  "No real cloud was used. Product features beyond docs/facts-ledger.md rows 8a-8c were not verified (documentation pages could not be opened from this machine)."
+ ]
+}

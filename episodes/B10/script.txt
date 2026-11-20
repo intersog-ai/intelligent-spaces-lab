@@ -1,0 +1,27 @@
+Intersog presents. Intelligent Spaces. Build Track, episode ten. Fleet, cloud and the full test.
+
+This is the last episode of the Build Track. Everything you will see ran in a digital twin of the season one home. The code and data are free. It is provided as is.
+
+Over nine episodes we built the home one layer at a time. Devices that must confirm, not just acknowledge. Readings that are checked before they count. A water valve that is closed only when the flow stops. A voice pipeline that says done only when it is true.
+
+Then trust. A voice is not a key. An approval is signed, used once, and tied to one exact action. Alarms get a second way out. And a ledger records every byte that leaves the house.
+
+Today we switched every layer on at once, on the same household day. Eighteen days, under no, light and heavy faults. The safety suites passed on all eighteen. Zero unapproved risky actions. Zero false done messages. Zero silent failures. Every alarm reached the monitoring centre within a minute.
+
+But first, the layers broke each other. We found ten bugs that lived between them. The voice pipeline and the old hub both answered the same sentence, so commands ran twice. A household file quietly removed the rule that stops the teenager unlocking the door. A camera phoning home was blocked, but nobody was told. Each one got one fix.
+
+And one test from episode one now fails every day. It says nothing may leave while the internet is down. The new cellular alarm path does exactly that, by design. The test was right about its own rule. It needs to learn the new facts.
+
+Now the home is one of a thousand. We shipped a bad update: one typo that lets the alarm hub send two hundred messages a day instead of two thousand. In the twin, it blocked the alarm path about three hours after midnight, every day. The smoke alarm at three forty was lost.
+
+Sent to every home at once, nine hundred seventy nine homes installed it before anyone stopped it. With rings and a human halt, about forty four. With rings and an automatic halt, about seven, never more than ten. It stopped within four hours.
+
+A quieter bad update, one that hurts five percent of homes, passed the ten-home canary every time. A hundred and forty two homes got it before the halt. And homes that install in a night window kept installing after the halt. Forty eight of them.
+
+What did the cloud need to see? A health report of twelve counts. Two hundred sixty five bytes. No names, no words, no readings. The raw bundle was four megabytes, with people's own words in it. The rules from episode nine refused it.
+
+Some things are still open. Under heavy faults, a door that really unlocked but never confirmed was never locked again. It stayed unlocked into the evening in two of six heavy days. Push messages to people away still need the internet. And no language model was run anywhere in this track.
+
+The complete research is now one file and one download. Ten episodes, every table, every limit, every open issue, the facts we checked, and the prompts that built it. It is called intelligent spaces research, in the docs folder.
+
+Layers that each pass alone must be tested together, and a fleet must be able to stop itself. If you build devices, platforms or spaces like these, Intersog's engineers do this work.

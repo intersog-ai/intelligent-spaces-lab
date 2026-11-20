@@ -13,7 +13,7 @@ Each Build Track episode has a folder here: a description, its findings with lin
 | [B07](B07/) | The agent and the approval gate | E07 | `b07` | built, not released |
 | [B08](B08/) | Cameras and the alarm path | E08 | `b08` | built, not released |
 | [B09](B09/) | What leaves the house | E09 | `b09` | built, not released |
-| B10 | Fleet, cloud and the full test: the complete research library | E10 | `b10` | planned |
+| [B10](B10/) | Fleet, cloud and the full test: the complete research library | E10 | `b10` | built, not released |
 
 B10 closes the track with the complete research library: every paper, dataset, prompt, fact ledger and scorecard from B01 to B10 in one release.
 

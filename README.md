@@ -2,6 +2,8 @@
 
 A digital twin of a smart home for testing one claim: an AI home assistant can be trusted only if it is engineered that way. The language model proposes, code decides, devices confirm.
 
+**Start here: [`docs/intelligent-spaces-research.md`](docs/intelligent-spaces-research.md), the complete Build Track research, B01 to B10, in one file.** It has the summary of findings, the architecture, one chapter per episode, everything that is still open, the facts ledger and the prompts.
+
 This repo accompanies the *Intelligent Spaces* Build Track by [Intersog](https://www.intersog.com). Each episode has a folder in [`episodes/`](episodes/) with its description, findings, evidence and documents. Episode [B01](episodes/B01/) builds the twin and breaks it.
 
 > **Research material, provided as is.** Everything here runs in simulation, with synthetic voices and simulated devices. It is not a product, not a certified alarm system and not safety advice. Use it at your own risk and for your own benefit. Life-safety equipment must be listed and installed by qualified people.
@@ -16,9 +18,11 @@ This repo accompanies the *Intelligent Spaces* Build Track by [Intersog](https:/
 | `islab/voice` | Speaker identification (GE2E via Resemblyzer); voice pipeline latency model. |
 | `islab/alarm` | SIA DC-09 encoder and decoder; alarm path to a simulated monitoring centre; local siren independent of the hub; egress gate with purpose tags; delete with receipts. |
 | `islab/suites` | The five principles as tests, plus ALARM and BUS checks, over one household day. |
+| `islab/connect` ... `islab/privacy2` | One package per episode, B02-B09: local MQTT, reading quality, the leak valve, the voice pipeline, identity, the approval gate, cameras and the second alarm path, the egress ledger. |
+| `islab/fleet` | B10: the full test with every layer on, a fleet rollout model, the cloud plane rules. |
 | `experiments/` | Seeded experiments, each with `run.py`, `results.json`, `notes.md`. |
 | `episodes/` | One folder per episode: description, findings with links to evidence, the commands that reproduce it, narration. |
-| `docs/` | `paper.md` (method, results, limits), `prompts.md` (the AI agent prompts that built this), `facts-ledger.md` (facts checked against primary sources), `architecture.svg`. |
+| `docs/` | `intelligent-spaces-research.md` (the complete research, canonical reading copy), one paper per episode (`paper.md`, `paper_b02.md` ... `paper_b10.md`), `prompts.md`, `facts-ledger.md`, `architecture.svg`. See [`docs/README.md`](docs/README.md). |
 
 ## The five principles, as tests
 
@@ -32,11 +36,12 @@ This repo accompanies the *Intelligent Spaces* Build Track by [Intersog](https:/
 
 ```
 pip install -r requirements.txt
-pytest -q                                   # 119 tests; voice tests skip without audio
+pytest -q                                   # voice tests skip without audio
 python experiments/scorecard/run.py         # the household day, 50 seeds x 3 fault mixes
 python experiments/agent_gate/run.py        # 1,000 adversarial proposals through the gate
 python experiments/twin_faults/run.py       # why an ack is not a result
 python experiments/alarm_path/run.py        # alarm delivery and pysiaalarm interoperability
+python experiments/b10_fleet/run.py         # every layer at once, the fleet, the cloud plane
 ```
 
 Voice experiments need `pip install -r requirements-voice.txt` and your own audio in `./audio` (set `ISLAB_VO`). The Season 1 voices are not distributed.
@@ -54,6 +59,14 @@ Voice experiments need `pip install -r requirements-voice.txt` and your own audi
 - Under heavy faults, alarm delivery within 60 s went from 81.9% to 98.0% after the fixes in `experiments/scorecard/before_after.md`.
 
 Full numbers and limits: `docs/paper.md`.
+
+## Key results (B10, the full test)
+
+- Every layer from B02 to B09 switched on in one home: the safety and trust suites passed 18 of 18 days under no, light and heavy faults; 0 unapproved level-3 actions; 100% of alarms at the centre within 60 s.
+- 10 interaction bugs between layers, one fix each; 3 of them changed what the home did.
+- 1,000 simulated homes, a bad update: 979 homes got it all at once, 7.5 with rings and an automatic halt.
+
+Everything, B01 to B10: [`docs/intelligent-spaces-research.md`](docs/intelligent-spaces-research.md).
 
 ## Talk to us
 
