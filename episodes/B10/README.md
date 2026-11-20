@@ -24,7 +24,7 @@ Video: [CHECK: YouTube URL] · synthetic narration · research in simulation, pr
 ## Proving core: what reproduces this episode
 
 ```
-git checkout b10
+git checkout v1.0
 pip install -r requirements.txt
 pytest -q tests/test_b10_fleet.py            # full day, each fix, fast bus, gate order, plane rules, rollout
 python experiments/b10_fleet/run.py         # full test, fleet, cloud; about 2-3 minutes on 2 cores
@@ -39,7 +39,7 @@ python experiments/b10_fleet/run.py         # full test, fleet, cloud; about 2-3
 - [`islab/fleet/`](../../islab/fleet/): the full house, the checks, the rollout model, the cloud plane rules and mapping.
 - [`script.txt`](script.txt): the narration, word for word.
 - [`visuals.md`](visuals.md): one moving visual per paragraph.
-- Downloadable pack: `IS_B10_pack.zip` (release asset, same content as tag `b10`).
+- Downloadable: the complete research file and pack, release [`v1.0`](https://github.com/intersog-ai/intelligent-spaces-lab/releases/tag/v1.0) (`intelligent-spaces-research.pdf`, `IS_series_pack.zip`).
 
 ## Talk to us
 

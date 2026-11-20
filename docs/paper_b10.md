@@ -152,7 +152,7 @@ In every column, decisions, approvals, raw traces, audio and clips stay out of t
 ## 8. Reproduce
 
 ```
-git checkout b10
+git checkout v1.0
 pip install -r requirements.txt
 pytest -q tests/test_b10_fleet.py
 python experiments/b10_fleet/run.py         # about 2-3 minutes on 2 cores

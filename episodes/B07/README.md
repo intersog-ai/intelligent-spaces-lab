@@ -23,7 +23,7 @@ Video: [CHECK: YouTube URL] · synthetic narration · research in simulation, pr
 ## Proving core: what reproduces this episode
 
 ```
-git checkout b07
+git checkout v1.0
 pip install -r requirements.txt
 pytest -q tests/test_b07_approval.py         # tickets, gate, rules, injection double, checker
 python experiments/b07_approval/run.py      # attacks, away, a month x 5 designs, injection; about 2-3 minutes
@@ -37,7 +37,7 @@ python experiments/b07_approval/run.py      # attacks, away, a month x 5 designs
 - [`islab/approval/`](../../islab/approval/): the gated engine, approval tickets, standing rules, phone and person doubles, agent doubles, independent checker.
 - [`script.txt`](script.txt): the narration, word for word.
 - [`visuals.md`](visuals.md): scene plan.
-- Downloadable pack: [`IS_B07_pack.zip`](https://github.com/intersog-ai/intelligent-spaces-lab/releases/tag/b07) (release asset, same content as tag `b07`).
+- Downloadable: the complete research file and pack, release [`v1.0`](https://github.com/intersog-ai/intelligent-spaces-lab/releases/tag/v1.0) (`intelligent-spaces-research.pdf`, `IS_series_pack.zip`).
 
 ## Talk to us
 

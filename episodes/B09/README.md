@@ -24,7 +24,7 @@ Video: [CHECK: YouTube URL] · synthetic narration · research in simulation, pr
 ## Proving core: what reproduces this episode
 
 ```
-git checkout b09
+git checkout v1.0
 pip install -r requirements.txt
 pytest -q tests/test_b09_egress.py           # ledger, answer coverage, manifests, consent, hidden copies, backups
 python experiments/b09_egress/run.py        # 5 parts, about 30 seconds
@@ -38,7 +38,7 @@ python experiments/b09_egress/run.py        # 5 parts, about 30 seconds
 - [`islab/privacy2/`](../../islab/privacy2/): the ledger gate, the three-level answer, the phone-home device and voice router, shared-data deletion.
 - [`script.txt`](script.txt): the narration, word for word.
 - [`visuals.md`](visuals.md): one moving visual per paragraph.
-- Downloadable pack: [`IS_B09_pack.zip`](https://github.com/intersog-ai/intelligent-spaces-lab/releases/tag/b09) (release asset, same content as tag `b09`).
+- Downloadable: the complete research file and pack, release [`v1.0`](https://github.com/intersog-ai/intelligent-spaces-lab/releases/tag/v1.0) (`intelligent-spaces-research.pdf`, `IS_series_pack.zip`).
 
 ## Talk to us
 

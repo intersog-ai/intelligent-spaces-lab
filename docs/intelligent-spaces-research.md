@@ -455,7 +455,7 @@ With a TV underneath at 0 dB, the wake word was detected 48.8% of the time and W
 ### Reproduce
 
 ```
-git checkout b05
+git checkout v1.0
 python experiments/b05_pipeline/run.py
 ```
 
@@ -520,7 +520,7 @@ Level 3 always needs a phone approval. A one-class liveness check is fitted on t
 ### Reproduce
 
 ```
-git checkout b06
+git checkout v1.0
 python experiments/b06_identity/run.py     # needs the series voices (ISLAB_VO)
 ```
 
@@ -589,7 +589,7 @@ Injected level-3 calls reaching a phone: 11-17 per 300 with the B01-style engine
 ### Reproduce
 
 ```
-git checkout b07
+git checkout v1.0
 python experiments/b07_approval/run.py
 ```
 
@@ -648,7 +648,7 @@ Cellular cost on a normal day was 10,587 bytes, or USD 0.01 at the assumed tarif
 ### Reproduce
 
 ```
-git checkout b08
+git checkout v1.0
 python experiments/b08_security/run.py
 ```
 
@@ -724,7 +724,7 @@ What does a full-day ledger of every byte out look like? Can the daily answer be
 ### Reproduce
 
 ```
-git checkout b09
+git checkout v1.0
 python experiments/b09_egress/run.py
 ```
 
@@ -834,7 +834,7 @@ Product features of these stacks were not verified in this study.
 ### Reproduce
 
 ```
-git checkout b10
+git checkout v1.0
 python experiments/b10_fleet/run.py         # about 2-3 minutes on 2 cores
 ```
 

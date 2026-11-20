@@ -24,7 +24,7 @@ Video: [CHECK: YouTube URL] · synthetic narration · research in simulation, pr
 ## Proving core: what reproduces this episode
 
 ```
-git checkout b08
+git checkout v1.0
 pip install -r requirements.txt
 pytest -q tests/test_b08_security.py         # cellular model, dual path, dedupe, consent, asks
 python experiments/b08_security/run.py      # alarms, cellular days, camera weeks, about 2-4 minutes
@@ -38,7 +38,7 @@ python experiments/b08_security/run.py      # alarms, cellular days, camera week
 - [`islab/security/`](../../islab/security/): the cellular model, dual-path hub and receiver, camera observer.
 - [`script.txt`](script.txt): the narration, word for word.
 - [`visuals.md`](visuals.md): scene by scene visuals for the video.
-- Downloadable pack: [`IS_B08_pack.zip`](https://github.com/intersog-ai/intelligent-spaces-lab/releases/tag/b08) (release asset, same content as tag `b08`).
+- Downloadable: the complete research file and pack, release [`v1.0`](https://github.com/intersog-ai/intelligent-spaces-lab/releases/tag/v1.0) (`intelligent-spaces-research.pdf`, `IS_series_pack.zip`).
 
 ## Talk to us
 

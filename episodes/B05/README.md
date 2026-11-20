@@ -24,7 +24,7 @@ Video: [CHECK: YouTube URL] · synthetic narration · research in simulation, pr
 ## Proving core: what reproduces this episode
 
 ```
-git checkout b05
+git checkout v1.0
 pip install -r requirements.txt -r requirements-voice.txt
 pytest -q tests/test_b05_pipeline.py          # grammar, tiers, pipeline on the twin, results checks
 python experiments/b05_pipeline/run.py        # 400 sessions x 4 tiers + baseline, about 20 s (reads measured.json)
@@ -41,7 +41,7 @@ ISLAB_VO=./audio ISLAB_MODELS=./models python experiments/b05_pipeline/measure.p
 - [`islab/pipeline/`](../../islab/pipeline/): the pipeline, grammar, LLM stub, tiers and real-audio adapters.
 - [`script.txt`](script.txt): the narration, word for word.
 - [`visuals.md`](visuals.md): scene by scene.
-- Downloadable pack: `IS_B05_pack.zip` (release asset, same content as tag `b05`).
+- Downloadable: the complete research file and pack, release [`v1.0`](https://github.com/intersog-ai/intelligent-spaces-lab/releases/tag/v1.0) (`intelligent-spaces-research.pdf`, `IS_series_pack.zip`).
 
 ## Talk to us
 

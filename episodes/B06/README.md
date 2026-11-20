@@ -24,7 +24,7 @@ Video: [CHECK: YouTube URL] · synthetic narration · research in simulation, pr
 ## Proving core: what reproduces this episode
 
 ```
-git checkout b06
+git checkout v1.0
 pip install -r requirements.txt -r requirements-voice.txt
 pytest -q tests/test_b06_identity.py         # trust policy, liveness, identity home, results invariants
 ISLAB_VO=/path/to/voice-over python experiments/b06_identity/run.py   # about 2-3 minutes
@@ -38,7 +38,7 @@ ISLAB_VO=/path/to/voice-over python experiments/b06_identity/run.py   # about 2-
 - [`islab/identity/`](../../islab/identity/): trust policy, household settings, liveness checks, identity home.
 - [`script.txt`](script.txt): the narration, word for word.
 - [`visuals.md`](visuals.md): scene plan.
-- Downloadable pack: `IS_B06_pack.zip` (release asset, same content as tag `b06`).
+- Downloadable: the complete research file and pack, release [`v1.0`](https://github.com/intersog-ai/intelligent-spaces-lab/releases/tag/v1.0) (`intelligent-spaces-research.pdf`, `IS_series_pack.zip`).
 
 ## Talk to us
 
