@@ -1,0 +1,47 @@
+{
+ "_doc": "B05 hub tiers for the staged voice pipeline, milliseconds. Built on islab/voice/latency_config.json (B01) without editing it: 'common' stages not listed here come from B01. A stage is either absolute {p50, p95, source} or {scale_measured: f, source} = this CPU's measured p50/p95 times f. 'this_cpu' stages are filled at run time from experiments/b05_pipeline/measured.json. Every 'assumption' is NOT measured: no Raspberry Pi 5, mini PC or GPU was available to us, and no LLM weights could be downloaded (huggingface.co blocked).",
+ "measured_stages": ["wake_detect", "vad_endpoint", "stt", "tts_first_audio", "intent_rules", "policy"],
+ "tiers": {
+  "pi5_cpu": {
+   "label": "Raspberry Pi 5 class box (4x Cortex-A76 2.4 GHz, 8 GB), CPU only",
+   "cpu_note": "assumption: CPU-bound stages run 2.5x slower than on our measured 2 vCPU x86 box (per-thread A76 vs cloud x86)",
+   "wake_detect":     {"scale_measured": 1.0, "source": "assumption: detection delay is set by the model's window, not compute (compute RTF here 0.03; x2.5 still real time)"},
+   "vad_endpoint":    {"scale_measured": 1.0, "source": "assumption: endpoint delay is the hangover setting, not compute"},
+   "stt":             {"scale_measured": 2.5, "source": "assumption: measured CPU STT final lag x2.5"},
+   "tts_first_audio": {"scale_measured": 2.5, "source": "assumption: measured Piper low first-sentence time x2.5"},
+   "intent_rules":    {"scale_measured": 2.5, "source": "assumption: measured grammar time x2.5"},
+   "policy":          {"scale_measured": 2.5, "source": "assumption: measured policy-engine time x2.5"},
+   "llm_ttft":        {"p50": 1500, "p95": 3000, "source": "assumption: 1B-class Q4 LLM on Pi 5 CPU, cached system prompt"},
+   "llm_tok_per_s":   {"p50": 7, "p95": 5, "source": "assumption: decode throughput (p95 = slow tail)"}
+  },
+  "minipc_cpu": {
+   "label": "x86 mini PC (4-8 cores, e.g. N100 to Ryzen 7 class, 16 GB), CPU only",
+   "cpu_note": "assumption: CPU-bound stages run like our measured 2 vCPU box (scale 1.0)",
+   "wake_detect":     {"scale_measured": 1.0, "source": "assumption: same as measured"},
+   "vad_endpoint":    {"scale_measured": 1.0, "source": "assumption: hangover-bound, same as measured"},
+   "stt":             {"scale_measured": 1.0, "source": "assumption: same as measured CPU STT"},
+   "tts_first_audio": {"scale_measured": 1.0, "source": "assumption: same as measured Piper low"},
+   "intent_rules":    {"scale_measured": 1.0, "source": "assumption: same as measured"},
+   "policy":          {"scale_measured": 1.0, "source": "assumption: same as measured"},
+   "llm_ttft":        {"p50": 800, "p95": 1600, "source": "assumption: 1-3B Q4 LLM on mini PC CPU, cached system prompt"},
+   "llm_tok_per_s":   {"p50": 14, "p95": 9, "source": "assumption"}
+  },
+  "minipc_gpu": {
+   "label": "x86 mini PC + local 12 GB GPU",
+   "cpu_note": "assumption: wake word, VAD, grammar and policy on CPU as measured; STT, TTS and LLM on the GPU (B01 x86_gpu12gb assumptions)",
+   "wake_detect":     {"scale_measured": 1.0, "source": "assumption: same as measured"},
+   "vad_endpoint":    {"scale_measured": 1.0, "source": "assumption: hangover-bound, same as measured"},
+   "stt":             {"p50": 60, "p95": 120, "source": "assumption: Whisper small/turbo class on GPU, decode after endpoint, short command"},
+   "tts_first_audio": {"p50": 70, "p95": 150, "source": "assumption (B01 x86_gpu12gb): neural TTS on GPU, first sentence"},
+   "intent_rules":    {"scale_measured": 1.0, "source": "assumption: same as measured"},
+   "policy":          {"scale_measured": 1.0, "source": "assumption: same as measured"},
+   "llm_ttft":        {"p50": 150, "p95": 350, "source": "assumption (B01 x86_gpu12gb): 7-8B Q4 fully on GPU, cached system prompt"},
+   "llm_tok_per_s":   {"p50": 60, "p95": 45, "source": "assumption (B01 x86_gpu12gb)"}
+  }
+ },
+ "this_cpu": {
+  "label": "This machine: 2 vCPU x86 cloud VM, no GPU (measured stages from measured.json)",
+  "llm_ttft":        {"p50": 2500, "p95": 5000, "source": "assumption (B01 devbox): no LLM weights obtainable offline"},
+  "llm_tok_per_s":   {"p50": 8, "p95": 5, "source": "assumption (B01 devbox)"}
+ }
+}

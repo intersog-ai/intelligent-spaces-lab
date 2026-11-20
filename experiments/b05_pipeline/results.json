@@ -1,0 +1,1130 @@
+{
+ "experiment": "b05_pipeline",
+ "date": "2026-11-19",
+ "method": "Audio (measure.py -> measured.json): real local components on this 2 vCPU x86 VM: openWakeWord hey_jarvis, silero-vad (300 ms hangover) and webrtcvad, sherpa-onnx Whisper tiny.en and streaming zipformer, Piper low voices. Test audio: 25 commands x 3 Piper voices + 5 Season 1 household lines, each after a synthetic 'Hey Jarvis', in three conditions (clean; series narration through a TV-speaker EQ at 10 dB and 0 dB below the command); 6 commands split by a 0.3-0.9 s pause, endpointed at 300/500/800 ms hangover; 8.7 min of narration, assistant voices and music through the TV EQ for wake-word false accepts; 12 cases of the TV itself saying the wake word. Transcripts are re-scored by the B05 grammar in run.py. Twin (run.py): per tier, N seeded sessions on a fresh B01 twin; three utterances 25 s apart drawn from the measured clips (their transcript, wake result and endpoint delay), the cut-off set and the TV-wake set; stage times drawn from the tier table (this CPU measured; other tiers labelled assumptions); B01 PolicyEngine and ActionTracker decide and confirm; ground truth = the twin device's physical state when 'Done' is heard. Time to first audio = end of the person's speech to the first reply audio (question, hold line, answer or 'Done'); the earcon after the wake word is reported apart.",
+ "params": {
+  "sessions_per_tier": 400,
+  "utterances_per_session": 3,
+  "condition_mix": {
+   "clean": 0.7,
+   "tv_10db": 0.25,
+   "tv_0db": 0.05
+  },
+  "p_cutoff_clip": 0.1,
+  "p_tv_wake": 0.05,
+  "faults_per_session": {
+   "stuck": 0.08,
+   "offline": 0.04,
+   "state_lost": 0.04
+  },
+  "deployed_hangover_ms": 300,
+  "hold_s": 1.5,
+  "stt_engine_in_twin": "whisper",
+  "tiers": {
+   "this_cpu": "This machine: 2 vCPU x86 cloud VM, no GPU (measured stages from measured.json)",
+   "pi5_cpu": "Raspberry Pi 5 class box (4x Cortex-A76 2.4 GHz, 8 GB), CPU only",
+   "minipc_cpu": "x86 mini PC (4-8 cores, e.g. N100 to Ryzen 7 class, 16 GB), CPU only",
+   "minipc_gpu": "x86 mini PC + local 12 GB GPU"
+  },
+  "measured_stages_this_cpu": {
+   "wake_detect": {
+    "p50": 40.0,
+    "p95": 60.0,
+    "source": "measured: openWakeWord hey_jarvis, delay from end of wake phrase to activation, clean clips, n=80"
+   },
+   "vad_endpoint": {
+    "p50": 412.0,
+    "p95": 464.0,
+    "source": "measured: silero-vad, 300 ms hangover, end of command to end-of-speech event, clean clips not cut, n=80"
+   },
+   "stt": {
+    "p50": 396.35,
+    "p95": 654.37,
+    "source": "measured: whisper (Whisper tiny.en int8, 2 threads, decode after endpoint), clean clips, n=80"
+   },
+   "tts_first_audio": {
+    "p50": 360.09,
+    "p95": 893.77,
+    "source": "measured: Piper en_US-amy-low first sentence, 2 threads, n=18"
+   },
+   "intent_rules": {
+    "p50": 0.02,
+    "p95": 0.04,
+    "source": "measured: B05 grammar parse, n=500"
+   },
+   "policy": {
+    "p50": 0.03,
+    "p95": 0.09,
+    "source": "measured: B01 PolicyEngine.propose wall time for level-1 voice calls, n=200"
+   }
+  },
+  "blocked": {
+   "vosk": "ProxyError: HTTPSConnectionPool(host='alphacephei.com', port=443): Max retries exceeded with url: /vosk/models/model-list.json (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed",
+   "faster_whisper": "ProxyError: 403 Forbidden (agent proxy: no rule or network setting allows this host)"
+  },
+  "machine": {
+   "cpu": "x86_64",
+   "cpus": 2,
+   "python": "3.13.18"
+  },
+  "measure_wall_s": 585.3
+ },
+ "results": {
+  "audio": {
+   "stt_on_named_commands": {
+    "whisper": {
+     "clean": {
+      "n": 57,
+      "correct": 93.0,
+      "wrong_device": 0.0,
+      "wrong_value": 1.8,
+      "asked": 1.8,
+      "not_understood": 3.5
+     },
+     "tv_10db": {
+      "n": 57,
+      "correct": 50.9,
+      "wrong_device": 3.5,
+      "wrong_value": 3.5,
+      "asked": 3.5,
+      "not_understood": 38.6
+     },
+     "tv_0db": {
+      "n": 57,
+      "correct": 14.0,
+      "wrong_device": 5.3,
+      "wrong_value": 1.8,
+      "asked": 10.5,
+      "not_understood": 68.4
+     }
+    },
+    "zipformer": {
+     "clean": {
+      "n": 57,
+      "correct": 42.1,
+      "wrong_device": 1.8,
+      "wrong_value": 5.3,
+      "asked": 10.5,
+      "not_understood": 40.4
+     },
+     "tv_10db": {
+      "n": 57,
+      "correct": 28.1,
+      "wrong_device": 7.0,
+      "wrong_value": 3.5,
+      "asked": 10.5,
+      "not_understood": 50.9
+     },
+     "tv_0db": {
+      "n": 57,
+      "correct": 15.8,
+      "wrong_device": 0.0,
+      "wrong_value": 0.0,
+      "asked": 10.5,
+      "not_understood": 73.7
+     }
+    }
+   },
+   "wake": {
+    "clean": {
+     "n": 80,
+     "detected_pct": 100.0
+    },
+    "tv_10db": {
+     "n": 80,
+     "detected_pct": 92.5
+    },
+    "tv_0db": {
+     "n": 80,
+     "detected_pct": 48.8
+    }
+   },
+   "endpoint": {
+    "clean": {
+     "n": 80,
+     "cut_pct": 0.0,
+     "listen_cap_hit_pct": 0.0,
+     "silero_after_end_ms_p50": 412,
+     "silero_after_end_ms_p95": 464,
+     "webrtc_after_end_ms_p50": 400,
+     "webrtc_after_end_ms_p95": 420,
+     "webrtc_listen_cap_hit_pct": 0.0
+    },
+    "tv_10db": {
+     "n": 80,
+     "cut_pct": 0.0,
+     "listen_cap_hit_pct": 5.0,
+     "silero_after_end_ms_p50": 2124,
+     "silero_after_end_ms_p95": 5860,
+     "webrtc_after_end_ms_p50": 1830,
+     "webrtc_after_end_ms_p95": 4950,
+     "webrtc_listen_cap_hit_pct": 2.5
+    },
+    "tv_0db": {
+     "n": 80,
+     "cut_pct": 0.0,
+     "listen_cap_hit_pct": 3.8,
+     "silero_after_end_ms_p50": 2364,
+     "silero_after_end_ms_p95": 5044,
+     "webrtc_after_end_ms_p50": 2480,
+     "webrtc_after_end_ms_p95": 5290,
+     "webrtc_listen_cap_hit_pct": 3.8
+    }
+   },
+   "stt_action_errors_whisper": [
+    {
+     "condition": "clean",
+     "said": "unlock the front door",
+     "heard": "and lock the front door.",
+     "score": "wrong_value"
+    },
+    {
+     "condition": "tv_10db",
+     "said": "set the kitchen light to fifty percent",
+     "heard": "set the kitchen light to 50%. a professional monitoring service can verify the alarm and s",
+     "score": "wrong_value"
+    },
+    {
+     "condition": "tv_10db",
+     "said": "is the back door locked",
+     "heard": "it's the back door lock by voice in the app all with the switch on the wall",
+     "score": "wrong_value"
+    },
+    {
+     "condition": "tv_10db",
+     "said": "set the study to nineteen degrees",
+     "heard": "set with a stud into 90 degrees.",
+     "score": "wrong_device"
+    },
+    {
+     "condition": "tv_10db",
+     "said": "set the study thermostat to twenty degrees",
+     "heard": "set the steady thermostat to 20 degrees.",
+     "score": "wrong_device"
+    },
+    {
+     "condition": "tv_0db",
+     "said": "set the kitchen light to fifty percent",
+     "heard": "\"smart the digital light to 54/7\"",
+     "score": "wrong_value"
+    },
+    {
+     "condition": "tv_0db",
+     "said": "turn off the main water valve",
+     "heard": "and send you a dress, the sensor, the time and a camera clip directly to the 911 centre.",
+     "score": "wrong_device"
+    },
+    {
+     "condition": "tv_0db",
+     "said": "set the study thermostat to twenty degrees",
+     "heard": "the hunch studies are being added to 20 degrees and you stay in charge.",
+     "score": "wrong_device"
+    },
+    {
+     "condition": "tv_0db",
+     "said": "set the study to nineteen degrees",
+     "heard": "to 90 degrees.",
+     "score": "wrong_device"
+    }
+   ],
+   "cutoffs": {
+    "cut_pct_by_hangover_and_pause": {
+     "300": {
+      "0.3": 0.0,
+      "0.5": 100.0,
+      "0.7": 100.0,
+      "0.9": 100.0
+     },
+     "500": {
+      "0.3": 0.0,
+      "0.5": 5.6,
+      "0.7": 100.0,
+      "0.9": 100.0
+     },
+     "800": {
+      "0.3": 0.0,
+      "0.5": 0.0,
+      "0.7": 0.0,
+      "0.9": 94.4
+     }
+    },
+    "outcomes_of_cut_commands": {
+     "300": {
+      "n_cut": 54,
+      "plain_endpoint": {
+       "asked": 48.1,
+       "wrong_value": 16.7,
+       "not_understood": 18.5,
+       "correct": 16.7
+      },
+      "grammar_aware_endpoint": {
+       "correct": 59.3,
+       "wrong_value": 16.7,
+       "not_understood": 18.5,
+       "asked": 5.6
+      },
+      "extended": 23
+     },
+     "500": {
+      "n_cut": 37,
+      "plain_endpoint": {
+       "asked": 51.4,
+       "wrong_value": 16.2,
+       "not_understood": 16.2,
+       "correct": 16.2
+      },
+      "grammar_aware_endpoint": {
+       "correct": 59.5,
+       "wrong_value": 16.2,
+       "not_understood": 16.2,
+       "asked": 8.1
+      },
+      "extended": 17
+     },
+     "800": {
+      "n_cut": 17,
+      "plain_endpoint": {
+       "asked": 47.1,
+       "wrong_value": 17.6,
+       "not_understood": 23.5,
+       "correct": 11.8
+      },
+      "grammar_aware_endpoint": {
+       "asked": 17.6,
+       "wrong_value": 17.6,
+       "not_understood": 23.5,
+       "correct": 41.2
+      },
+      "extended": 7
+     }
+    },
+    "n_per_cell": 18
+   },
+   "tv": {
+    "no_wake_word": {
+     "sets": {
+      "narrator_tv_eq": {
+       "files": 4,
+       "minutes": 4.75,
+       "activations": 0,
+       "max_score": 0.038
+      },
+      "assistant_voices_tv_eq": {
+       "files": 10,
+       "minutes": 2.64,
+       "activations": 0,
+       "max_score": 0.001
+      },
+      "music_tv_eq": {
+       "files": 1,
+       "minutes": 1.33,
+       "activations": 0,
+       "max_score": 0.0
+      }
+     },
+     "minutes": 8.72,
+     "activations": 0,
+     "per_hour": 0.0,
+     "upper_95_per_hour_if_zero": 20.6
+    },
+    "tv_says_wake_word": {
+     "n": 12,
+     "accepted": 12,
+     "actions_from_following_tv_speech": 0,
+     "clarifying_questions": 0,
+     "listened_s_p50": 2.3,
+     "examples": [
+      "instead of pretending the house is locked.",
+      "for more reversible actions, follow rules you've set.",
+      "hard part is deciding how far it may go.",
+      "the time and a camera clip directly to the 911 centre."
+     ]
+    }
+   }
+  },
+  "tiers": {
+   "this_cpu": {
+    "label": "This machine: 2 vCPU x86 cloud VM, no GPU (measured stages from measured.json)",
+    "utterances": 1200,
+    "person_utterances": 1138,
+    "heard": 1091,
+    "ttfa_ms": {
+     "p50": 2078.4,
+     "p95": 11035.0,
+     "n": 1091
+    },
+    "ttfa_ms_rules_path": {
+     "p50": 1818.7,
+     "p95": 4370.4,
+     "n": 923
+    },
+    "ttfa_ms_llm_stub_path": {
+     "p50": 9818.9,
+     "p95": 15898.2,
+     "n": 168
+    },
+    "speech_end_to_policy_decision_ms": {
+     "p50": 840.3,
+     "p95": 4186.0
+    },
+    "ttfa_ms_executed": {
+     "p50": 2076.5,
+     "p95": 4690.5
+    },
+    "ttfa_ms_clean_rules_path": {
+     "p50": 1689.0,
+     "p95": 2983.6
+    },
+    "earcon_ms": {
+     "p50": 66.3,
+     "p95": 109.6
+    },
+    "confirmed_done_ms": {
+     "p50": 2380.2,
+     "p95": 17952.9,
+     "n": 663
+    },
+    "executed_commands": 705,
+    "executed_done_after_device_confirmed_pct": 94.0,
+    "executed_failure_told_pct": 6.0,
+    "executed_no_outcome_said_pct": 0.0,
+    "done_claims": 663,
+    "done_claims_confirmed_before_pct": 100.0,
+    "done_claims_true_at_audio_pct": 100.0,
+    "executed_wrong_tool": 33,
+    "approval_requests": 9,
+    "approval_requests_not_asked_for": 1,
+    "stage_sources": {
+     "earcon_start": "B01 assumption: pre-decoded earcon in RAM, ALSA period 10-20 ms + device buffer",
+     "net_sat_to_hub": "B01 assumption: Wi-Fi 2.4/5 GHz LAN, one audio frame, occasional retries",
+     "net_hub_to_sat": "B01 assumption: same as uplink",
+     "audio_out": "B01 assumption: satellite jitter buffer + DAC",
+     "llm_output_tokens": "B01 assumption: one JSON tool call + short reply, tokens before the first speakable sentence",
+     "wake_detect": "measured: openWakeWord hey_jarvis, delay from end of wake phrase to activation, clean clips, n=80",
+     "vad_endpoint": "measured: silero-vad, 300 ms hangover, end of command to end-of-speech event, clean clips not cut, n=80",
+     "stt": "measured: whisper (Whisper tiny.en int8, 2 threads, decode after endpoint), clean clips, n=80",
+     "tts_first_audio": "measured: Piper en_US-amy-low first sentence, 2 threads, n=18",
+     "intent_rules": "measured: B05 grammar parse, n=500",
+     "policy": "measured: B01 PolicyEngine.propose wall time for level-1 voice calls, n=200",
+     "llm_ttft": "assumption (B01 devbox): no LLM weights obtainable offline",
+     "llm_tok_per_s": "assumption (B01 devbox)"
+    },
+    "stage_ms": {
+     "earcon_start": {
+      "p50": 25,
+      "p95": 60
+     },
+     "net_sat_to_hub": {
+      "p50": 8,
+      "p95": 40
+     },
+     "net_hub_to_sat": {
+      "p50": 8,
+      "p95": 40
+     },
+     "audio_out": {
+      "p50": 30,
+      "p95": 70
+     },
+     "llm_output_tokens": {
+      "p50": 35,
+      "p95": 70
+     },
+     "wake_detect": {
+      "p50": 40.0,
+      "p95": 60.0
+     },
+     "vad_endpoint": {
+      "p50": 412.0,
+      "p95": 464.0
+     },
+     "stt": {
+      "p50": 396.35,
+      "p95": 654.37
+     },
+     "tts_first_audio": {
+      "p50": 360.09,
+      "p95": 893.77
+     },
+     "intent_rules": {
+      "p50": 0.02,
+      "p95": 0.04
+     },
+     "policy": {
+      "p50": 0.03,
+      "p95": 0.09
+     },
+     "llm_ttft": {
+      "p50": 2500,
+      "p95": 5000
+     },
+     "llm_tok_per_s": {
+      "p50": 8,
+      "p95": 5
+     }
+    }
+   },
+   "pi5_cpu": {
+    "label": "Raspberry Pi 5 class box (4x Cortex-A76 2.4 GHz, 8 GB), CPU only",
+    "utterances": 1200,
+    "person_utterances": 1138,
+    "heard": 1091,
+    "ttfa_ms": {
+     "p50": 3345.1,
+     "p95": 11696.4,
+     "n": 1091
+    },
+    "ttfa_ms_rules_path": {
+     "p50": 3091.4,
+     "p95": 5774.1,
+     "n": 923
+    },
+    "ttfa_ms_llm_stub_path": {
+     "p50": 10317.0,
+     "p95": 16427.0,
+     "n": 168
+    },
+    "speech_end_to_policy_decision_ms": {
+     "p50": 1466.7,
+     "p95": 5101.2
+    },
+    "ttfa_ms_executed": {
+     "p50": 3305.6,
+     "p95": 6267.5
+    },
+    "ttfa_ms_clean_rules_path": {
+     "p50": 2967.2,
+     "p95": 4630.0
+    },
+    "earcon_ms": {
+     "p50": 66.3,
+     "p95": 109.6
+    },
+    "confirmed_done_ms": {
+     "p50": 3788.7,
+     "p95": 20539.2,
+     "n": 660
+    },
+    "executed_commands": 705,
+    "executed_done_after_device_confirmed_pct": 93.6,
+    "executed_failure_told_pct": 6.4,
+    "executed_no_outcome_said_pct": 0.0,
+    "done_claims": 660,
+    "done_claims_confirmed_before_pct": 100.0,
+    "done_claims_true_at_audio_pct": 100.0,
+    "executed_wrong_tool": 33,
+    "approval_requests": 9,
+    "approval_requests_not_asked_for": 1,
+    "stage_sources": {
+     "earcon_start": "B01 assumption: pre-decoded earcon in RAM, ALSA period 10-20 ms + device buffer",
+     "net_sat_to_hub": "B01 assumption: Wi-Fi 2.4/5 GHz LAN, one audio frame, occasional retries",
+     "net_hub_to_sat": "B01 assumption: same as uplink",
+     "audio_out": "B01 assumption: satellite jitter buffer + DAC",
+     "llm_output_tokens": "B01 assumption: one JSON tool call + short reply, tokens before the first speakable sentence",
+     "wake_detect": "assumption: detection delay is set by the model's window, not compute (compute RTF here 0.03; x2.5 still real time) (measured 40.0/60.0 ms x1.0)",
+     "vad_endpoint": "assumption: endpoint delay is the hangover setting, not compute (measured 412.0/464.0 ms x1.0)",
+     "stt": "assumption: measured CPU STT final lag x2.5 (measured 396.35/654.37 ms x2.5)",
+     "tts_first_audio": "assumption: measured Piper low first-sentence time x2.5 (measured 360.09/893.77 ms x2.5)",
+     "intent_rules": "assumption: measured grammar time x2.5 (measured 0.02/0.04 ms x2.5)",
+     "policy": "assumption: measured policy-engine time x2.5 (measured 0.03/0.09 ms x2.5)",
+     "llm_ttft": "assumption: 1B-class Q4 LLM on Pi 5 CPU, cached system prompt",
+     "llm_tok_per_s": "assumption: decode throughput (p95 = slow tail)"
+    },
+    "stage_ms": {
+     "earcon_start": {
+      "p50": 25,
+      "p95": 60
+     },
+     "net_sat_to_hub": {
+      "p50": 8,
+      "p95": 40
+     },
+     "net_hub_to_sat": {
+      "p50": 8,
+      "p95": 40
+     },
+     "audio_out": {
+      "p50": 30,
+      "p95": 70
+     },
+     "llm_output_tokens": {
+      "p50": 35,
+      "p95": 70
+     },
+     "wake_detect": {
+      "p50": 40.0,
+      "p95": 60.0
+     },
+     "vad_endpoint": {
+      "p50": 412.0,
+      "p95": 464.0
+     },
+     "stt": {
+      "p50": 990.88,
+      "p95": 1635.92
+     },
+     "tts_first_audio": {
+      "p50": 900.22,
+      "p95": 2234.43
+     },
+     "intent_rules": {
+      "p50": 0.05,
+      "p95": 0.1
+     },
+     "policy": {
+      "p50": 0.07,
+      "p95": 0.22
+     },
+     "llm_ttft": {
+      "p50": 1500,
+      "p95": 3000
+     },
+     "llm_tok_per_s": {
+      "p50": 7,
+      "p95": 5
+     }
+    }
+   },
+   "minipc_cpu": {
+    "label": "x86 mini PC (4-8 cores, e.g. N100 to Ryzen 7 class, 16 GB), CPU only",
+    "utterances": 1200,
+    "person_utterances": 1138,
+    "heard": 1091,
+    "ttfa_ms": {
+     "p50": 2078.4,
+     "p95": 7389.3,
+     "n": 1091
+    },
+    "ttfa_ms_rules_path": {
+     "p50": 1822.2,
+     "p95": 4370.4,
+     "n": 923
+    },
+    "ttfa_ms_llm_stub_path": {
+     "p50": 5964.6,
+     "p95": 9750.1,
+     "n": 168
+    },
+    "speech_end_to_policy_decision_ms": {
+     "p50": 840.3,
+     "p95": 4031.8
+    },
+    "ttfa_ms_executed": {
+     "p50": 2076.5,
+     "p95": 4690.5
+    },
+    "ttfa_ms_clean_rules_path": {
+     "p50": 1690.0,
+     "p95": 2981.2
+    },
+    "earcon_ms": {
+     "p50": 66.3,
+     "p95": 109.6
+    },
+    "confirmed_done_ms": {
+     "p50": 2380.2,
+     "p95": 17952.9,
+     "n": 663
+    },
+    "executed_commands": 705,
+    "executed_done_after_device_confirmed_pct": 94.0,
+    "executed_failure_told_pct": 6.0,
+    "executed_no_outcome_said_pct": 0.0,
+    "done_claims": 663,
+    "done_claims_confirmed_before_pct": 100.0,
+    "done_claims_true_at_audio_pct": 100.0,
+    "executed_wrong_tool": 33,
+    "approval_requests": 9,
+    "approval_requests_not_asked_for": 1,
+    "stage_sources": {
+     "earcon_start": "B01 assumption: pre-decoded earcon in RAM, ALSA period 10-20 ms + device buffer",
+     "net_sat_to_hub": "B01 assumption: Wi-Fi 2.4/5 GHz LAN, one audio frame, occasional retries",
+     "net_hub_to_sat": "B01 assumption: same as uplink",
+     "audio_out": "B01 assumption: satellite jitter buffer + DAC",
+     "llm_output_tokens": "B01 assumption: one JSON tool call + short reply, tokens before the first speakable sentence",
+     "wake_detect": "assumption: same as measured (measured 40.0/60.0 ms x1.0)",
+     "vad_endpoint": "assumption: hangover-bound, same as measured (measured 412.0/464.0 ms x1.0)",
+     "stt": "assumption: same as measured CPU STT (measured 396.35/654.37 ms x1.0)",
+     "tts_first_audio": "assumption: same as measured Piper low (measured 360.09/893.77 ms x1.0)",
+     "intent_rules": "assumption: same as measured (measured 0.02/0.04 ms x1.0)",
+     "policy": "assumption: same as measured (measured 0.03/0.09 ms x1.0)",
+     "llm_ttft": "assumption: 1-3B Q4 LLM on mini PC CPU, cached system prompt",
+     "llm_tok_per_s": "assumption"
+    },
+    "stage_ms": {
+     "earcon_start": {
+      "p50": 25,
+      "p95": 60
+     },
+     "net_sat_to_hub": {
+      "p50": 8,
+      "p95": 40
+     },
+     "net_hub_to_sat": {
+      "p50": 8,
+      "p95": 40
+     },
+     "audio_out": {
+      "p50": 30,
+      "p95": 70
+     },
+     "llm_output_tokens": {
+      "p50": 35,
+      "p95": 70
+     },
+     "wake_detect": {
+      "p50": 40.0,
+      "p95": 60.0
+     },
+     "vad_endpoint": {
+      "p50": 412.0,
+      "p95": 464.0
+     },
+     "stt": {
+      "p50": 396.35,
+      "p95": 654.37
+     },
+     "tts_first_audio": {
+      "p50": 360.09,
+      "p95": 893.77
+     },
+     "intent_rules": {
+      "p50": 0.02,
+      "p95": 0.04
+     },
+     "policy": {
+      "p50": 0.03,
+      "p95": 0.09
+     },
+     "llm_ttft": {
+      "p50": 800,
+      "p95": 1600
+     },
+     "llm_tok_per_s": {
+      "p50": 14,
+      "p95": 9
+     }
+    }
+   },
+   "minipc_gpu": {
+    "label": "x86 mini PC + local 12 GB GPU",
+    "utterances": 1200,
+    "person_utterances": 1138,
+    "heard": 1091,
+    "ttfa_ms": {
+     "p50": 1220.9,
+     "p95": 4276.7,
+     "n": 1091
+    },
+    "ttfa_ms_rules_path": {
+     "p50": 1091.6,
+     "p95": 3642.6,
+     "n": 923
+    },
+    "ttfa_ms_llm_stub_path": {
+     "p50": 2328.3,
+     "p95": 4998.1,
+     "n": 168
+    },
+    "speech_end_to_policy_decision_ms": {
+     "p50": 492.4,
+     "p95": 3000.3
+    },
+    "ttfa_ms_executed": {
+     "p50": 1343.8,
+     "p95": 3880.8
+    },
+    "ttfa_ms_clean_rules_path": {
+     "p50": 1011.5,
+     "p95": 2139.4
+    },
+    "earcon_ms": {
+     "p50": 66.3,
+     "p95": 109.6
+    },
+    "confirmed_done_ms": {
+     "p50": 1573.8,
+     "p95": 16620.6,
+     "n": 663
+    },
+    "executed_commands": 705,
+    "executed_done_after_device_confirmed_pct": 94.0,
+    "executed_failure_told_pct": 6.0,
+    "executed_no_outcome_said_pct": 0.0,
+    "done_claims": 663,
+    "done_claims_confirmed_before_pct": 100.0,
+    "done_claims_true_at_audio_pct": 100.0,
+    "executed_wrong_tool": 33,
+    "approval_requests": 9,
+    "approval_requests_not_asked_for": 1,
+    "stage_sources": {
+     "earcon_start": "B01 assumption: pre-decoded earcon in RAM, ALSA period 10-20 ms + device buffer",
+     "net_sat_to_hub": "B01 assumption: Wi-Fi 2.4/5 GHz LAN, one audio frame, occasional retries",
+     "net_hub_to_sat": "B01 assumption: same as uplink",
+     "audio_out": "B01 assumption: satellite jitter buffer + DAC",
+     "llm_output_tokens": "B01 assumption: one JSON tool call + short reply, tokens before the first speakable sentence",
+     "wake_detect": "assumption: same as measured (measured 40.0/60.0 ms x1.0)",
+     "vad_endpoint": "assumption: hangover-bound, same as measured (measured 412.0/464.0 ms x1.0)",
+     "stt": "assumption: Whisper small/turbo class on GPU, decode after endpoint, short command",
+     "tts_first_audio": "assumption (B01 x86_gpu12gb): neural TTS on GPU, first sentence",
+     "intent_rules": "assumption: same as measured (measured 0.02/0.04 ms x1.0)",
+     "policy": "assumption: same as measured (measured 0.03/0.09 ms x1.0)",
+     "llm_ttft": "assumption (B01 x86_gpu12gb): 7-8B Q4 fully on GPU, cached system prompt",
+     "llm_tok_per_s": "assumption (B01 x86_gpu12gb)"
+    },
+    "stage_ms": {
+     "earcon_start": {
+      "p50": 25,
+      "p95": 60
+     },
+     "net_sat_to_hub": {
+      "p50": 8,
+      "p95": 40
+     },
+     "net_hub_to_sat": {
+      "p50": 8,
+      "p95": 40
+     },
+     "audio_out": {
+      "p50": 30,
+      "p95": 70
+     },
+     "llm_output_tokens": {
+      "p50": 35,
+      "p95": 70
+     },
+     "wake_detect": {
+      "p50": 40.0,
+      "p95": 60.0
+     },
+     "vad_endpoint": {
+      "p50": 412.0,
+      "p95": 464.0
+     },
+     "stt": {
+      "p50": 60,
+      "p95": 120
+     },
+     "tts_first_audio": {
+      "p50": 70,
+      "p95": 150
+     },
+     "intent_rules": {
+      "p50": 0.02,
+      "p95": 0.04
+     },
+     "policy": {
+      "p50": 0.03,
+      "p95": 0.09
+     },
+     "llm_ttft": {
+      "p50": 150,
+      "p95": 350
+     },
+     "llm_tok_per_s": {
+      "p50": 60,
+      "p95": 45
+     }
+    }
+   }
+  },
+  "baseline_ack": {
+   "utterances": 1200,
+   "person_utterances": 1138,
+   "heard": 1091,
+   "ttfa_ms": {
+    "p50": 1387.3,
+    "p95": 7602.3,
+    "n": 1091
+   },
+   "ttfa_ms_rules_path": {
+    "p50": 1304.3,
+    "p95": 4147.4,
+    "n": 923
+   },
+   "ttfa_ms_llm_stub_path": {
+    "p50": 6047.7,
+    "p95": 9734.1,
+    "n": 168
+   },
+   "speech_end_to_policy_decision_ms": {
+    "p50": 836.4,
+    "p95": 3993.6
+   },
+   "ttfa_ms_executed": {
+    "p50": 1304.3,
+    "p95": 4627.2
+   },
+   "ttfa_ms_clean_rules_path": {
+    "p50": 1249.2,
+    "p95": 1800.7
+   },
+   "earcon_ms": {
+    "p50": 66.1,
+    "p95": 107.8
+   },
+   "confirmed_done_ms": {
+    "p50": 1359.1,
+    "p95": 6178.4,
+    "n": 693
+   },
+   "executed_commands": 705,
+   "executed_done_after_device_confirmed_pct": 27.0,
+   "executed_failure_told_pct": 1.7,
+   "executed_no_outcome_said_pct": 0.0,
+   "done_claims": 693,
+   "done_claims_confirmed_before_pct": 27.4,
+   "done_claims_true_at_audio_pct": 70.3,
+   "executed_wrong_tool": 33,
+   "approval_requests": 9,
+   "approval_requests_not_asked_for": 1,
+   "device_not_confirming": {
+    "n": 52,
+    "done_said_pct": 76.9
+   }
+  },
+  "failure_cases": {
+   "wake_missed": {
+    "n": 47,
+    "of": 1138,
+    "pct": 4.1,
+    "says": "nothing (no earcon; the person has to repeat)"
+   },
+   "tv_wake_word": {
+    "n": 62,
+    "actions": 0,
+    "spoken_replies_pct": 100.0,
+    "says": [
+     "Sorry, I didn't catch that."
+    ]
+   },
+   "cut_off": {
+    "n": 95,
+    "of": 1138,
+    "pct": 8.3,
+    "outcomes": {
+     "not_understood": 23,
+     "failed": 7,
+     "confirmed": 62,
+     "clarify": 3
+    },
+    "executed_not_what_was_said": 18,
+    "says": [
+     "Sorry, I didn't catch that.",
+     "Which one: the kitchen light or the living room light?"
+    ]
+   },
+   "stt_on_named": {
+    "n": 662,
+    "not_understood_pct": 6.5,
+    "clarify_pct": 2.4,
+    "says": [
+     "Sorry, I didn't catch that.",
+     "Open or close the living room shade?"
+    ]
+   },
+   "ambiguous": {
+    "n": 308,
+    "resolved_by_context_pct": 9.7,
+    "resolved_by_room_or_relative_pct": 21.1,
+    "asked_pct": 37.7,
+    "not_a_request_pct": 25.3,
+    "says": [
+     "Which one: the kitchen light or the living room light?",
+     "Same as what? Please say the whole request."
+    ]
+   },
+   "device_not_confirming": {
+    "n": 52,
+    "by_fault": {
+     "offline": 12,
+     "stuck": 24,
+     "state_lost": 16
+    },
+    "failure_told_pct": 80.8,
+    "done_said_pct": 19.2,
+    "done_said_true_pct": 100.0,
+    "done_note": "a 'Done' here means the device already showed the target state (e.g. a stuck light that was already off)",
+    "says": [
+     "The kitchen light got the command but never showed it happened, so the light may not have changed.",
+     "The study thermostat got the command but never showed it happened, the temperature setting may not have changed."
+    ]
+   }
+  },
+  "ablation_plain_endpoint": {
+   "cut_utterances": 95,
+   "outcomes": {
+    "not_understood": 23,
+    "failed": 3,
+    "confirmed": 26,
+    "clarify": 43
+   },
+   "executed_not_what_was_said": 18
+  },
+  "examples": [
+   {
+    "truth": "set the study thermostat to twenty degrees",
+    "heard": "set a study thermos at 20 degrees, who may watch and how help gets called?",
+    "said": [
+     [
+      "done",
+      "Done. The study is set to 20.0 C."
+     ]
+    ],
+    "ttfa_ms": 4634.0
+   },
+   {
+    "truth": "lock the back door",
+    "heard": "larkster",
+    "said": [
+     [
+      "not_understood",
+      "Sorry, I didn't catch that."
+     ]
+    ],
+    "ttfa_ms": 3633.0
+   },
+   {
+    "truth": "turn off the kitchen light",
+    "heard": "turn off the kitchen light.",
+    "said": [
+     [
+      "hold",
+      "Sent. Waiting for the kitchen light to confirm."
+     ],
+     [
+      "failed",
+      "The kitchen light didn't respond, so the light may not have changed."
+     ]
+    ],
+    "ttfa_ms": 2675.7
+   },
+   {
+    "truth": "close the garage door",
+    "heard": "close the garage door.",
+    "said": [
+     [
+      "question",
+      "Should I close the garage? Say yes to go ahead."
+     ],
+     [
+      "hold",
+      "Sent. Waiting for the garage door to confirm."
+     ],
+     [
+      "done",
+      "Done. The garage door is closed."
+     ]
+    ],
+    "ttfa_ms": 1678.6
+   },
+   {
+    "truth": "turn it on",
+    "heard": "it recognizes who is speaking and answers with that person's preferences in the voice they chose.",
+    "said": [
+     [
+      "not_understood",
+      "Sorry, I didn't catch that."
+     ]
+    ],
+    "ttfa_ms": 9972.7
+   },
+   {
+    "truth": "close it",
+    "heard": "a little hard part is deciding how far it may go.",
+    "said": [
+     [
+      "not_understood",
+      "Sorry, I didn't catch that."
+     ]
+    ],
+    "ttfa_ms": 10083.5
+   },
+   {
+    "truth": "turn on the kitchen light at fifty percent",
+    "heard": "turn on the kitchen light.",
+    "said": [
+     [
+      "hold",
+      "Sent. Waiting for the kitchen light to confirm."
+     ],
+     [
+      "failed",
+      "The kitchen light didn't respond, so the light may not have changed."
+     ]
+    ],
+    "ttfa_ms": 2117.2
+   },
+   {
+    "truth": "set the kitchen to twenty one degrees",
+    "heard": "set the kitchen to 21 degrees.",
+    "said": [
+     [
+      "done",
+      "Done. The kitchen is set to 21.0 C."
+     ]
+    ],
+    "ttfa_ms": 3134.2
+   },
+   {
+    "truth": "turn off the light",
+    "heard": "turn off the light.",
+    "said": [
+     [
+      "hold",
+      "Sent. Waiting for the kitchen light to confirm."
+     ],
+     [
+      "failed",
+      "The kitchen light didn't respond, so the light may not have changed."
+     ]
+    ],
+    "ttfa_ms": 2402.7
+   },
+   {
+    "truth": "(TV)",
+    "heard": "for more reversible actions, follow rules you've set.",
+    "said": [
+     [
+      "not_understood",
+      "Sorry, I didn't catch that."
+     ]
+    ],
+    "ttfa_ms": 4775.5
+   },
+   {
+    "truth": "(TV)",
+    "heard": "for more reversible actions, follow rules you've set.",
+    "said": [
+     [
+      "not_understood",
+      "Sorry, I didn't catch that."
+     ]
+    ],
+    "ttfa_ms": 4280.3
+   },
+   {
+    "truth": "set the kitchen light to fifty percent",
+    "heard": "set the kitchen light to 50%. set the kitchen light to 50%.",
+    "said": [
+     [
+      "done",
+      "Done. The kitchen light is on at 50%."
+     ]
+    ],
+    "ttfa_ms": 1408.9
+   }
+  ]
+ },
+ "limitations": [
+  "All speech is synthetic (Piper, espeak phonemes, and the Season 1 synthetic voices); no human speakers, no real room, no far-field microphone. Accuracy numbers will be worse with real voices and rooms.",
+  "TV-like speech is the series narrator and assistant voices through an EQ, mixed digitally; no acoustic echo cancellation was modelled, which a real satellite would use against its own TV/speaker output.",
+  "Only 8.7 minutes of TV-like audio: zero false accepts bounds the rate only below about 21 per hour (95%).",
+  "The Pi 5, mini PC and GPU tiers are not measured: they scale this CPU's measured numbers or reuse B01 assumptions, as labelled per stage.",
+  "This CPU was shared with other jobs during measure.py: Whisper tiny decode (p50 396 ms) and Piper first audio (p50 360 ms) are slower than B01's unloaded measurement on the same machine (166 ms, 87 ms).",
+  "No LLM was run: model weights are hosted on huggingface.co, blocked here. The LLM path is a deterministic fuzzy matcher with assumed LLM latency.",
+  "Every tier uses the same Whisper tiny transcripts; a larger STT model on the GPU tier would likely make fewer errors.",
+  "Voice identity is a fixed confidence of 0.9 for household voices (speaker ID is episode B06).",
+  "Fault, TV and cut-off rates in the twin are scenario parameters; the per-case outcome shares are what the run measures."
+ ]
+}

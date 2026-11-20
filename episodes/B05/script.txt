@@ -1,0 +1,27 @@
+Intersog presents. Intelligent Spaces. Build Track, episode five. The voice pipeline.
+
+In season one, the family simply talks to the home. Today we build that whole voice path on a local hub and try to break it. This is research in a digital twin. The code and data are free. It is provided as is.
+
+Seven stages: a wake word, end of speech, speech to text, a grammar for the intent, the policy engine, the device, and a spoken reply. Every stage stamps its time on the bus. The voices are synthetic. The models are real open source ones, on a two core processor.
+
+On that processor, with clean audio, the first reply was heard one point seven seconds after the person stopped speaking, at the median. The short tone after the wake word came in sixty six milliseconds.
+
+We also modelled three hubs we could not test. Those numbers are labelled assumptions. A Raspberry Pi five class box: about three seconds. A mini PC: one point seven. A mini PC with a graphics card: one point zero.
+
+Where does the time go? About four hundred milliseconds to be sure the person has finished, and four hundred more for speech to text. Grammar and policy take under a millisecond. A language model path costs seconds: about six on the mini PC, two point three with the graphics card.
+
+The reply follows one rule. It says done only after the device itself reports the change. Six hundred sixty three times it said done, and every one was true when heard. The cost is waiting. A design that says done when the device answers got it replies sooner, one point two five seconds instead of one point seven. But only seventy percent of those replies were true when heard.
+
+Now break the devices: stuck, offline, or silent. The quick design still said done for seventy seven percent of those commands. Ours told people in plain words in eighty one percent. The rest were devices already in the asked state, so done was true.
+
+The hardest problem was a television. With a TV as loud as the voice, the wake word was caught only forty nine percent of the time. Commands that name a device were understood correctly fifty one percent of the time with the TV ten decibels quieter, and fourteen percent with it equally loud.
+
+When the TV itself said the wake word, the home woke up twelve times out of twelve. It never acted on what the TV said next. But it answered the TV: sorry, I didn't catch that. Without the wake word, under nine minutes of TV audio gave no false wakes. That is too little to call it safe.
+
+Pauses broke it too. A three hundred millisecond wait cut off every command with a half second pause. So the grammar checks: if the words so far are incomplete, keep listening. Confirmed commands went from twenty six to sixty two, out of ninety five cut ones. But eighteen cut commands still did something other than what was said. Turn on the kitchen light, at fifty percent, became full brightness.
+
+Speech to text made its own mistakes. One voice's unlock the front door was heard as and lock the front door, and the door was locked. For turn it off, the home asked which one thirty eight percent of the time.
+
+We found bugs too. The older parser read is the back door locked as a command to lock it. And TV speech ending in camera clip made the grammar propose sharing a clip. That happened once in nine approval requests. The policy engine held it for a phone approval.
+
+A fast voice is easy. An honest one waits for the device, says what failed, and asks when unsure. If you build devices, platforms or spaces like these, Intersog's engineers do this work.

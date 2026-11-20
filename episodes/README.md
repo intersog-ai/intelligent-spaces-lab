@@ -8,11 +8,11 @@ Each Build Track episode has a folder here: a description, its findings with lin
 | [B02](B02/) | Connect without a vendor cloud | E03 | `b02` | released |
 | [B03](B03/) | Readings you can trust | E04 | `b03` | released |
 | [B04](B04/) | Sent is not closed | E05 | `b04` | released |
-| B05 | The voice pipeline | E06 | `b05` | planned |
-| B06 | Who is speaking | E06 | `b06` | planned |
-| B07 | The agent and the approval gate | E07 | `b07` | planned |
-| B08 | Cameras and the alarm path | E08 | `b08` | planned |
-| B09 | What leaves the house | E09 | `b09` | planned |
+| [B05](B05/) | The voice pipeline | E06 | `b05` | built, not released |
+| [B06](B06/) | Who is speaking | E06 | `b06` | built, not released |
+| [B07](B07/) | The agent and the approval gate | E07 | `b07` | built, not released |
+| [B08](B08/) | Cameras and the alarm path | E08 | `b08` | built, not released |
+| [B09](B09/) | What leaves the house | E09 | `b09` | built, not released |
 | B10 | Fleet, cloud and the full test: the complete research library | E10 | `b10` | planned |
 
 B10 closes the track with the complete research library: every paper, dataset, prompt, fact ledger and scorecard from B01 to B10 in one release.
