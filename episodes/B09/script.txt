@@ -1,0 +1,27 @@
+Intersog presents. Intelligent Spaces. Build Track, episode nine. What leaves the house.
+
+In season one, someone asks the home: what did you send out today? It answers: twelve speech requests, not stored, and last night's encrypted backup. Today we check that answer in a digital twin. The code and data are free. It is provided as is.
+
+We built a ledger. Every attempt to send anything out gets a row: where it went, why, how many bytes, whether a person would notice it, and what the receiver promised to keep. Sent, blocked, held or dropped, it is all written down.
+
+On the same day as season one, three hundred and four messages left the house. Two hundred and ninety two of them, ninety six percent, were background. Alarm line check-ins, update checks, the backup. Nobody asked for them. Nobody is told.
+
+So the scripted answer was true, but not whole. It left out four of the six kinds of traffic that day. Our earlier summary from episode one did no better. Over thirty different days, it named every kind of traffic on none of them.
+
+The new short answer names what people did, and then says the background, with its count. Forty eight words for that day. It passed on thirty of thirty days, and on three hundred random days in the tests.
+
+The phone gets the full answer: every purpose, bytes, destination and promise, and what was blocked and why. Below that sits the raw ledger. That day it had four hundred and seventy three rows.
+
+Then a cheap plug phoned home. Sent to an unknown address, it was blocked every time, and the family was told at the first attempt. But when the plug labelled its traffic as an update check, to the real update server, the old rules let all of it out. The gate checked the label, not the sender. Each device now declares what it sends. The disguised plug got nothing out.
+
+Declarations have limits. An update agent that leaks a little, inside what it declared, got out every time and was never noticed. And holding a device that breaks its declaration also stops its real updates. All eight hundred, in our runs.
+
+With the internet down all day, nothing left. Two hundred of two hundred home commands still worked. Forty eight voice requests were handled locally. The twelve that needed the cloud got: I did not understand. The siren sounded at once. The alarm reached the monitoring centre ten hours later.
+
+Now deletion. Anna asks to delete a clip she shares with Mark. The home asks Mark first. In five hundred runs, three hundred ninety seven were deleted, forty three declined, sixty never answered. None was deleted without a yes. The median wait for a receipt was about fourteen and a half minutes, and that is Mark's time, modelled.
+
+We hid copies of the clip in seven places. The old delete removed two kinds. The new one removed six, by name, by fingerprint, inside bundles, and through recorded edits. A re-encoded copy with no record was not found, and the receipt says it was not checked. The old receipt said complete in two hundred sixty four runs, with five copies still there.
+
+Some copies had already left in last night's backup. With one key per night, all one hundred eighty three stayed readable until the backup expired. With one key per clip, the delete destroys that key at home. Zero of one hundred eighty three could be read.
+
+What leaves the house should be said in full, every day, and a receipt should say what it did not check. If you build devices, platforms or spaces like these, Intersog's engineers do this work.

@@ -1,0 +1,27 @@
+Intersog presents. Intelligent Spaces. Build Track, episode seven. The agent and the approval gate.
+
+In season one, the AI agent acts in the home, and you stay in charge. Today we test how, in a digital twin of that home. The code and data are free. It is provided as is. No language model ran here. Scripted and randomized stand-ins played the agent.
+
+The rules come from episode one. Lights just happen. The garage asks first. A door, the water, or the garage opened for a stranger needs a yes on an adult's phone. That gate already blocked a thousand hostile proposals. This time we attacked the yes itself.
+
+Each request now gets a ticket. It names the exact action, carries a fresh number, and expires. The phone checks that what it shows matches the ticket, then signs its answer with its own key. The hub checks the action once more, right before it runs.
+
+We tried ten kinds of attack, fifty times each. Against the original engine, six kinds worked every time. Forged replies. A reply from the wrong phone posing as Anna. A yes sent with the wrong request. Against the new gate, none worked.
+
+Here is the courier case. Anna approves opening the garage for the courier until eighteen fifty five. When a window ends, the home closes the garage itself, in all one hundred and fifty trials. Later, someone replays her old yes. Refused, already used. Pasted onto a new request, refused, wrong signature.
+
+Then the agent changed its own call after Anna saw it. She approved the front door. It tried the back. The old engine unlocked the back door, fifty times out of fifty. The new gate refused all fifty.
+
+While a request waits, the home does nothing. The courier is told it is waiting. A second ring sends no second prompt. Across twenty setups of one hundred requests, the garage moved zero times before a yes.
+
+People are not always there. With both adults free, the median wait from doorbell to open garage was twenty two seconds. With Anna's phone offline and Mark busy, eighty five percent got in within two minutes. With a five minute limit, all of them did. At night, nobody answered, so nothing opened.
+
+Then a month of household life, thirty days, two households. If the home asks about everything, that is twenty prompts a day. People got tired. In our model, two hundred and sixty answers were hurried, and sixteen percent of real requests were blocked, most because nobody answered in time.
+
+Asking only for risky actions cut that to under four prompts a day. Standing rules, set in advance with limits, cut it to about one. Weekday deliveries only, one a day, twenty minutes. One fake courier got in, in sixty household days. Remove the limits, and six did.
+
+We also hid instructions in device names, calendar entries and delivery notes, and let the stand-in agent obey every one. With the old engine, up to seventeen injected risky calls in three hundred reached a phone. With the new gate, none did. Unapproved risky actions: zero, in every run.
+
+We found gaps in our own episode one code. It trusted any reply on the right channel. It did not check the action again before running it. It checked which tool the person asked for, but not the details. We wrapped those fixes around it, and kept the old code to compare.
+
+The agent can act. A person approves one action, once, for a limited time, and the home checks it again before it moves. If you build devices, platforms or spaces like these, Intersog's engineers do this work.

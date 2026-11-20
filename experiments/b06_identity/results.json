@@ -1,0 +1,1290 @@
+{
+ "experiment": "b06_identity",
+ "date": "2026-11-19",
+ "method": "Resemblyzer GE2E 256-d embeddings of 2 s windows (1 s hop) of ElevenLabs TTS voices; every window passes through the B01 satellite channel (synthetic room, RT60 0.4 s, pink noise 30 dB). Household anna/mark/sam = Amanda/David/Ollie voices, enrolled on their first 10 s; remaining speech split in time into calibration (first half) and evaluation (second half). Guests: 4 TTS voices never enrolled, plus 3 LibriSpeech clips (real people) if available. Two identity tiers chosen on calibration by minimising expected cost, (1-pi)(FRR + c*MIS) + pi*c*FAR_guest, pi = 0.2, c = 1 (comfort) and 10 (named), named tier also with a top-1/top-2 margin. Replay = evaluation windows through phone / Bluetooth / hi-fi speaker proxies, then the room. Liveness = one-class z-score check on 6 channel features, fitted on calibration live windows only, threshold at 5 % live rejection. Challenge phrase modelled with transcripts. Overlap = two members' windows mixed at -6/0/+6 dB. All requests then go through islab.policy.PolicyEngine in the twin (IdentityHome) with phone replies scripted: legitimate requests get a yes, others a no.",
+ "params": {
+  "seed": 606,
+  "spread_seeds": [
+   607,
+   608,
+   609
+  ],
+  "enroll_s": 10.0,
+  "window_s": 2.0,
+  "hop_s": 1.0,
+  "cap_windows_per_split": 60,
+  "pi_guest": 0.2,
+  "cost_false_accept": {
+   "comfort": 1.0,
+   "named": 10.0
+  },
+  "margins_searched": [
+   0.0,
+   0.01,
+   0.02,
+   0.03,
+   0.05,
+   0.08
+  ],
+  "threshold_grid": [
+   0.6,
+   0.9475,
+   0.0025
+  ],
+  "liveness_max_live_reject": 0.05,
+  "liveness_features": [
+   "low_band_db",
+   "high_band_db",
+   "flatness",
+   "rolloff95_hz",
+   "clip_ratio",
+   "envelope_range_db"
+  ],
+  "replay_models": {
+   "phone_speaker": "B01: band-pass 300-3400 Hz 4th order, tanh clip, RT60 0.3 s, 30 dB",
+   "bluetooth_speaker": "B01: band-pass 120-7500 Hz 2nd order, RT60 0.2 s, 35 dB",
+   "hifi_speaker": "new: 1st-order 60 Hz high-pass, RT60 0.15 s, 40 dB"
+  },
+  "other_room": "RT60 0.8 s, pink noise 20 dB",
+  "noise": "B01 kitchen-like noise",
+  "voice_dir": "ISLAB_VO (not distributed)",
+  "real_guests": "LibriSpeech clips from the sherpa-onnx whisper-tiny.en test_wavs folder (0.wav, 1.wav, 8k.wav; 8k.wav is 8 kHz audio)"
+ },
+ "results": {
+  "speech_seconds_per_voice": {
+   "Amanda": 54.04,
+   "David": 224.21,
+   "Ollie": 65.46,
+   "Courtney": 6.19,
+   "AnnaAssist": 7.18,
+   "Chris": 3.6,
+   "Eric": 1.38
+  },
+  "household": {
+   "anna": {
+    "voice": "Amanda",
+    "role": "adult"
+   },
+   "mark": {
+    "voice": "David",
+    "role": "adult"
+   },
+   "sam": {
+    "voice": "Ollie",
+    "role": "teen"
+   }
+  },
+  "windows": {
+   "enroll_s": 10.0,
+   "calibration": {
+    "anna": 11,
+    "mark": 60,
+    "sam": 15
+   },
+   "evaluation": {
+    "anna": 12,
+    "mark": 60,
+    "sam": 15
+   },
+   "guest_calibration": {
+    "Courtney": 1,
+    "Chris": 1,
+    "Eric": 0,
+    "AnnaAssist": 2,
+    "LibriSpeech": 11
+   },
+   "guest_evaluation": {
+    "Courtney": 2,
+    "Chris": 1,
+    "Eric": 1,
+    "AnnaAssist": 2,
+    "LibriSpeech": 12
+   }
+  },
+  "calibration": {
+   "chosen": {
+    "comfort": {
+     "threshold": 0.7575,
+     "margin": 0.0
+    },
+    "named": {
+     "threshold": 0.8175,
+     "margin": 0.0
+    }
+   },
+   "tiers": {
+    "comfort": {
+     "cost_false_accept_vs_false_reject": 1.0,
+     "threshold": 0.7575,
+     "margin": 0.0,
+     "calibration": {
+      "threshold": 0.7575,
+      "margin": 0.0,
+      "FRR": 0.0581,
+      "misattributed": 0.0116,
+      "correct": 0.9302,
+      "guest_FAR": 0.0667,
+      "n_member_windows": 86,
+      "n_guest_windows": 15
+     },
+     "evaluation": {
+      "threshold": 0.7575,
+      "margin": 0.0,
+      "FRR": 0.0805,
+      "misattributed": 0.0,
+      "correct": 0.9195,
+      "guest_FAR": 0.1667,
+      "n_member_windows": 87,
+      "n_guest_windows": 18
+     }
+    },
+    "named": {
+     "cost_false_accept_vs_false_reject": 10.0,
+     "threshold": 0.8175,
+     "margin": 0.0,
+     "calibration": {
+      "threshold": 0.8175,
+      "margin": 0.0,
+      "FRR": 0.186,
+      "misattributed": 0.0,
+      "correct": 0.814,
+      "guest_FAR": 0.0,
+      "n_member_windows": 86,
+      "n_guest_windows": 15
+     },
+     "evaluation": {
+      "threshold": 0.8175,
+      "margin": 0.0,
+      "FRR": 0.2529,
+      "misattributed": 0.0,
+      "correct": 0.7471,
+      "guest_FAR": 0.0,
+      "n_member_windows": 87,
+      "n_guest_windows": 18
+     }
+    }
+   },
+   "eval_sweep_margin0": [
+    {
+     "threshold": 0.7,
+     "FRR": 0.0115,
+     "misattributed": 0.0,
+     "guest_FAR": 0.3333
+    },
+    {
+     "threshold": 0.71,
+     "FRR": 0.0115,
+     "misattributed": 0.0,
+     "guest_FAR": 0.2778
+    },
+    {
+     "threshold": 0.72,
+     "FRR": 0.023,
+     "misattributed": 0.0,
+     "guest_FAR": 0.2222
+    },
+    {
+     "threshold": 0.73,
+     "FRR": 0.0575,
+     "misattributed": 0.0,
+     "guest_FAR": 0.2222
+    },
+    {
+     "threshold": 0.74,
+     "FRR": 0.0575,
+     "misattributed": 0.0,
+     "guest_FAR": 0.1667
+    },
+    {
+     "threshold": 0.75,
+     "FRR": 0.069,
+     "misattributed": 0.0,
+     "guest_FAR": 0.1667
+    },
+    {
+     "threshold": 0.76,
+     "FRR": 0.1034,
+     "misattributed": 0.0,
+     "guest_FAR": 0.1667
+    },
+    {
+     "threshold": 0.77,
+     "FRR": 0.1149,
+     "misattributed": 0.0,
+     "guest_FAR": 0.1667
+    },
+    {
+     "threshold": 0.78,
+     "FRR": 0.1149,
+     "misattributed": 0.0,
+     "guest_FAR": 0.1667
+    },
+    {
+     "threshold": 0.79,
+     "FRR": 0.1494,
+     "misattributed": 0.0,
+     "guest_FAR": 0.0556
+    },
+    {
+     "threshold": 0.8,
+     "FRR": 0.1839,
+     "misattributed": 0.0,
+     "guest_FAR": 0.0556
+    },
+    {
+     "threshold": 0.81,
+     "FRR": 0.2299,
+     "misattributed": 0.0,
+     "guest_FAR": 0.0
+    },
+    {
+     "threshold": 0.82,
+     "FRR": 0.2529,
+     "misattributed": 0.0,
+     "guest_FAR": 0.0
+    },
+    {
+     "threshold": 0.83,
+     "FRR": 0.3333,
+     "misattributed": 0.0,
+     "guest_FAR": 0.0
+    },
+    {
+     "threshold": 0.84,
+     "FRR": 0.4023,
+     "misattributed": 0.0,
+     "guest_FAR": 0.0
+    },
+    {
+     "threshold": 0.85,
+     "FRR": 0.5172,
+     "misattributed": 0.0,
+     "guest_FAR": 0.0
+    },
+    {
+     "threshold": 0.86,
+     "FRR": 0.6322,
+     "misattributed": 0.0,
+     "guest_FAR": 0.0
+    },
+    {
+     "threshold": 0.87,
+     "FRR": 0.7126,
+     "misattributed": 0.0,
+     "guest_FAR": 0.0
+    },
+    {
+     "threshold": 0.88,
+     "FRR": 0.8391,
+     "misattributed": 0.0,
+     "guest_FAR": 0.0
+    },
+    {
+     "threshold": 0.89,
+     "FRR": 0.8966,
+     "misattributed": 0.0,
+     "guest_FAR": 0.0
+    },
+    {
+     "threshold": 0.9,
+     "FRR": 0.977,
+     "misattributed": 0.0,
+     "guest_FAR": 0.0
+    }
+   ],
+   "B01_thresholds_on_this_eval": {
+    "room_eer": {
+     "threshold": 0.7752,
+     "margin": 0.0,
+     "FRR": 0.1149,
+     "misattributed": 0.0,
+     "correct": 0.8851,
+     "guest_FAR": 0.1667,
+     "n_member_windows": 87,
+     "n_guest_windows": 18
+    },
+    "room_strict": {
+     "threshold": 0.8241,
+     "margin": 0.0,
+     "FRR": 0.3103,
+     "misattributed": 0.0,
+     "correct": 0.6897,
+     "guest_FAR": 0.0,
+     "n_member_windows": 87,
+     "n_guest_windows": 18
+    }
+   },
+   "overlap_second_score_threshold": 0.8061
+  },
+  "confusion_eval": {
+   "comfort": {
+    "members": {
+     "anna": {
+      "anna": 10,
+      "mark": 0,
+      "sam": 0,
+      "unknown": 2,
+      "n": 12
+     },
+     "mark": {
+      "anna": 0,
+      "mark": 58,
+      "sam": 0,
+      "unknown": 2,
+      "n": 60
+     },
+     "sam": {
+      "anna": 0,
+      "mark": 0,
+      "sam": 12,
+      "unknown": 3,
+      "n": 15
+     }
+    },
+    "guests": {
+     "AnnaAssist": {
+      "anna": 0,
+      "mark": 0,
+      "sam": 0,
+      "unknown": 2,
+      "n": 2
+     },
+     "Chris": {
+      "anna": 0,
+      "mark": 0,
+      "sam": 0,
+      "unknown": 1,
+      "n": 1
+     },
+     "Courtney": {
+      "anna": 1,
+      "mark": 0,
+      "sam": 0,
+      "unknown": 1,
+      "n": 2
+     },
+     "Eric": {
+      "anna": 0,
+      "mark": 1,
+      "sam": 0,
+      "unknown": 0,
+      "n": 1
+     },
+     "LibriSpeech": {
+      "anna": 1,
+      "mark": 0,
+      "sam": 0,
+      "unknown": 11,
+      "n": 12
+     }
+    }
+   },
+   "named": {
+    "members": {
+     "anna": {
+      "anna": 9,
+      "mark": 0,
+      "sam": 0,
+      "unknown": 3,
+      "n": 12
+     },
+     "mark": {
+      "anna": 0,
+      "mark": 48,
+      "sam": 0,
+      "unknown": 12,
+      "n": 60
+     },
+     "sam": {
+      "anna": 0,
+      "mark": 0,
+      "sam": 8,
+      "unknown": 7,
+      "n": 15
+     }
+    },
+    "guests": {
+     "AnnaAssist": {
+      "anna": 0,
+      "mark": 0,
+      "sam": 0,
+      "unknown": 2,
+      "n": 2
+     },
+     "Chris": {
+      "anna": 0,
+      "mark": 0,
+      "sam": 0,
+      "unknown": 1,
+      "n": 1
+     },
+     "Courtney": {
+      "anna": 0,
+      "mark": 0,
+      "sam": 0,
+      "unknown": 2,
+      "n": 2
+     },
+     "Eric": {
+      "anna": 0,
+      "mark": 0,
+      "sam": 0,
+      "unknown": 1,
+      "n": 1
+     },
+     "LibriSpeech": {
+      "anna": 0,
+      "mark": 0,
+      "sam": 0,
+      "unknown": 12,
+      "n": 12
+     }
+    }
+   }
+  },
+  "conditions_eval": {
+   "kitchen_noise_20dB": {
+    "comfort": {
+     "threshold": 0.7575,
+     "margin": 0.0,
+     "FRR": 0.1034,
+     "misattributed": 0.0,
+     "correct": 0.8966,
+     "guest_FAR": null,
+     "n_member_windows": 87,
+     "n_guest_windows": 0
+    },
+    "named": {
+     "threshold": 0.8175,
+     "margin": 0.0,
+     "FRR": 0.3218,
+     "misattributed": 0.0,
+     "correct": 0.6782,
+     "guest_FAR": null,
+     "n_member_windows": 87,
+     "n_guest_windows": 0
+    }
+   },
+   "kitchen_noise_10dB": {
+    "comfort": {
+     "threshold": 0.7575,
+     "margin": 0.0,
+     "FRR": 0.2644,
+     "misattributed": 0.023,
+     "correct": 0.7126,
+     "guest_FAR": null,
+     "n_member_windows": 87,
+     "n_guest_windows": 0
+    },
+    "named": {
+     "threshold": 0.8175,
+     "margin": 0.0,
+     "FRR": 0.6782,
+     "misattributed": 0.0,
+     "correct": 0.3218,
+     "guest_FAR": null,
+     "n_member_windows": 87,
+     "n_guest_windows": 0
+    }
+   },
+   "other_room_rt60_0.8_snr20": {
+    "comfort": {
+     "threshold": 0.7575,
+     "margin": 0.0,
+     "FRR": 0.1954,
+     "misattributed": 0.0,
+     "correct": 0.8046,
+     "guest_FAR": null,
+     "n_member_windows": 87,
+     "n_guest_windows": 0
+    },
+    "named": {
+     "threshold": 0.8175,
+     "margin": 0.0,
+     "FRR": 0.5747,
+     "misattributed": 0.0,
+     "correct": 0.4253,
+     "guest_FAR": null,
+     "n_member_windows": 87,
+     "n_guest_windows": 0
+    }
+   }
+  },
+  "retries_eval": {
+   "comfort": {
+    "n_requests": 29,
+    "recognised_first_try": 0.9655,
+    "recognised_within_two_tries": 1.0,
+    "recognised_with_4s_utterance": 1.0,
+    "refused_after_two_tries": 0.0
+   },
+   "named": {
+    "n_requests": 29,
+    "recognised_first_try": 0.7586,
+    "recognised_within_two_tries": 0.9655,
+    "recognised_with_4s_utterance": 1.0,
+    "refused_after_two_tries": 0.0345
+   }
+  },
+  "replay": {
+   "devices": {
+    "phone_speaker": {
+     "n": 87,
+     "liveness_pass": 0.069,
+     "liveness_pass_max_rule": 0.1034,
+     "accepted_as_victim_comfort_no_liveness": 0.0805,
+     "accepted_as_victim_named_no_liveness": 0.0115,
+     "accepted_as_victim_comfort_with_liveness": 0.0,
+     "accepted_as_victim_named_with_liveness": 0.0,
+     "accepted_as_victim_at_B01_room_eer_no_liveness": 0.0805,
+     "accepted_as_victim_at_B01_room_eer_with_liveness": 0.0
+    },
+    "bluetooth_speaker": {
+     "n": 87,
+     "liveness_pass": 0.931,
+     "liveness_pass_max_rule": 0.8851,
+     "accepted_as_victim_comfort_no_liveness": 0.8161,
+     "accepted_as_victim_named_no_liveness": 0.4828,
+     "accepted_as_victim_comfort_with_liveness": 0.7586,
+     "accepted_as_victim_named_with_liveness": 0.4483,
+     "accepted_as_victim_at_B01_room_eer_no_liveness": 0.7931,
+     "accepted_as_victim_at_B01_room_eer_with_liveness": 0.7356
+    },
+    "hifi_speaker": {
+     "n": 87,
+     "liveness_pass": 0.8851,
+     "liveness_pass_max_rule": 0.908,
+     "accepted_as_victim_comfort_no_liveness": 0.8851,
+     "accepted_as_victim_named_no_liveness": 0.4713,
+     "accepted_as_victim_comfort_with_liveness": 0.7931,
+     "accepted_as_victim_named_with_liveness": 0.4138,
+     "accepted_as_victim_at_B01_room_eer_no_liveness": 0.8161,
+     "accepted_as_victim_at_B01_room_eer_with_liveness": 0.7241
+    }
+   },
+   "liveness_threshold": 2.7132,
+   "liveness_false_reject_live": {
+    "household_eval_same_room": 0.0805,
+    "household_eval_same_room_max_rule": 0.046,
+    "n": 87,
+    "kitchen_noise_20dB": 0.046,
+    "kitchen_noise_10dB": 0.0115,
+    "other_room_rt60_0.8_snr20": 0.023,
+    "guest_Courtney": 0.0,
+    "guest_Chris": 0.0,
+    "guest_Eric": 0.0,
+    "guest_AnnaAssist": 0.5,
+    "guest_LibriSpeech": 0.6522
+   },
+   "leave_one_feature_out_replay_pass": {
+    "phone_speaker": {
+     "without_low_band_db": 0.3908,
+     "without_high_band_db": 0.3563,
+     "without_flatness": 0.0345,
+     "without_rolloff95_hz": 0.023,
+     "without_clip_ratio": 0.0115,
+     "without_envelope_range_db": 0.0345
+    },
+    "bluetooth_speaker": {
+     "without_low_band_db": 0.931,
+     "without_high_band_db": 0.8736,
+     "without_flatness": 0.908,
+     "without_rolloff95_hz": 0.9195,
+     "without_clip_ratio": 0.8851,
+     "without_envelope_range_db": 0.9195
+    },
+    "hifi_speaker": {
+     "without_low_band_db": 0.9195,
+     "without_high_band_db": 0.8851,
+     "without_flatness": 0.8851,
+     "without_rolloff95_hz": 0.9195,
+     "without_clip_ratio": 0.908,
+     "without_envelope_range_db": 0.8851
+    }
+   },
+   "feature_means": {
+    "live_calibration": {
+     "low_band_db": -9.7839,
+     "high_band_db": -15.3986,
+     "flatness": 0.2126,
+     "rolloff95_hz": 2549.4186,
+     "clip_ratio": 0.0001,
+     "envelope_range_db": 19.9247
+    },
+    "phone_speaker": {
+     "low_band_db": -32.3518,
+     "high_band_db": -29.7419,
+     "flatness": 0.1928,
+     "rolloff95_hz": 1898.3477,
+     "clip_ratio": 0.0001,
+     "envelope_range_db": 22.1352
+    },
+    "bluetooth_speaker": {
+     "low_band_db": -13.7262,
+     "high_band_db": -15.9172,
+     "flatness": 0.1784,
+     "rolloff95_hz": 2613.5057,
+     "clip_ratio": 0.0001,
+     "envelope_range_db": 19.5998
+    },
+    "hifi_speaker": {
+     "low_band_db": -11.8328,
+     "high_band_db": -15.9021,
+     "flatness": 0.1789,
+     "rolloff95_hz": 2476.2931,
+     "clip_ratio": 0.0002,
+     "envelope_range_db": 19.5907
+    }
+   }
+  },
+  "challenge_phrase_modelled": {
+   "combinations": 3600,
+   "per_victim": {
+    "anna": {
+     "recorded_lines_available_to_attacker": 16,
+     "challenges": 1000,
+     "a_recorded_line_contains_the_phrase": 0
+    },
+    "mark": {
+     "recorded_lines_available_to_attacker": 37,
+     "challenges": 1000,
+     "a_recorded_line_contains_the_phrase": 0
+    },
+    "sam": {
+     "recorded_lines_available_to_attacker": 4,
+     "challenges": 1000,
+     "a_recorded_line_contains_the_phrase": 0
+    }
+   }
+  },
+  "overlap": {
+   "mixes": {
+    "sam+anna@-6dB": {
+     "n": 12,
+     "sir_db_first_over_second": -6,
+     "comfort_no_overlap_rule": {
+      "named_first": 0,
+      "named_second": 1,
+      "none": 11
+     },
+     "comfort_with_overlap_rule": {
+      "named_first": 0,
+      "named_second": 1,
+      "none": 11
+     },
+     "named_no_overlap_rule": {
+      "named_first": 0,
+      "named_second": 0,
+      "none": 12
+     },
+     "named_with_overlap_rule": {
+      "named_first": 0,
+      "named_second": 0,
+      "none": 12
+     },
+     "overlap_flagged": 0
+    },
+    "sam+anna@+0dB": {
+     "n": 12,
+     "sir_db_first_over_second": 0,
+     "comfort_no_overlap_rule": {
+      "named_first": 1,
+      "named_second": 1,
+      "none": 8
+     },
+     "comfort_with_overlap_rule": {
+      "named_first": 1,
+      "named_second": 1,
+      "none": 8
+     },
+     "named_no_overlap_rule": {
+      "named_first": 0,
+      "named_second": 0,
+      "none": 11
+     },
+     "named_with_overlap_rule": {
+      "named_first": 0,
+      "named_second": 0,
+      "none": 12
+     },
+     "overlap_flagged": 1
+    },
+    "sam+anna@+6dB": {
+     "n": 12,
+     "sir_db_first_over_second": 6,
+     "comfort_no_overlap_rule": {
+      "named_first": 4,
+      "named_second": 0,
+      "none": 8
+     },
+     "comfort_with_overlap_rule": {
+      "named_first": 4,
+      "named_second": 0,
+      "none": 8
+     },
+     "named_no_overlap_rule": {
+      "named_first": 3,
+      "named_second": 0,
+      "none": 9
+     },
+     "named_with_overlap_rule": {
+      "named_first": 2,
+      "named_second": 0,
+      "none": 10
+     },
+     "overlap_flagged": 1
+    },
+    "sam+mark@-6dB": {
+     "n": 15,
+     "sir_db_first_over_second": -6,
+     "comfort_no_overlap_rule": {
+      "named_first": 0,
+      "named_second": 9,
+      "none": 6
+     },
+     "comfort_with_overlap_rule": {
+      "named_first": 0,
+      "named_second": 9,
+      "none": 6
+     },
+     "named_no_overlap_rule": {
+      "named_first": 0,
+      "named_second": 4,
+      "none": 11
+     },
+     "named_with_overlap_rule": {
+      "named_first": 0,
+      "named_second": 4,
+      "none": 11
+     },
+     "overlap_flagged": 0
+    },
+    "sam+mark@+0dB": {
+     "n": 15,
+     "sir_db_first_over_second": 0,
+     "comfort_no_overlap_rule": {
+      "named_first": 5,
+      "named_second": 7,
+      "none": 3
+     },
+     "comfort_with_overlap_rule": {
+      "named_first": 5,
+      "named_second": 7,
+      "none": 3
+     },
+     "named_no_overlap_rule": {
+      "named_first": 1,
+      "named_second": 3,
+      "none": 11
+     },
+     "named_with_overlap_rule": {
+      "named_first": 0,
+      "named_second": 2,
+      "none": 13
+     },
+     "overlap_flagged": 2
+    },
+    "sam+mark@+6dB": {
+     "n": 15,
+     "sir_db_first_over_second": 6,
+     "comfort_no_overlap_rule": {
+      "named_first": 8,
+      "named_second": 4,
+      "none": 3
+     },
+     "comfort_with_overlap_rule": {
+      "named_first": 8,
+      "named_second": 4,
+      "none": 3
+     },
+     "named_no_overlap_rule": {
+      "named_first": 3,
+      "named_second": 1,
+      "none": 11
+     },
+     "named_with_overlap_rule": {
+      "named_first": 1,
+      "named_second": 0,
+      "none": 14
+     },
+     "overlap_flagged": 3
+    },
+    "anna+mark@-6dB": {
+     "n": 12,
+     "sir_db_first_over_second": -6,
+     "comfort_no_overlap_rule": {
+      "named_first": 0,
+      "named_second": 9,
+      "none": 3
+     },
+     "comfort_with_overlap_rule": {
+      "named_first": 0,
+      "named_second": 9,
+      "none": 3
+     },
+     "named_no_overlap_rule": {
+      "named_first": 0,
+      "named_second": 4,
+      "none": 8
+     },
+     "named_with_overlap_rule": {
+      "named_first": 0,
+      "named_second": 4,
+      "none": 8
+     },
+     "overlap_flagged": 0
+    },
+    "anna+mark@+0dB": {
+     "n": 12,
+     "sir_db_first_over_second": 0,
+     "comfort_no_overlap_rule": {
+      "named_first": 0,
+      "named_second": 5,
+      "none": 7
+     },
+     "comfort_with_overlap_rule": {
+      "named_first": 0,
+      "named_second": 5,
+      "none": 7
+     },
+     "named_no_overlap_rule": {
+      "named_first": 0,
+      "named_second": 2,
+      "none": 10
+     },
+     "named_with_overlap_rule": {
+      "named_first": 0,
+      "named_second": 2,
+      "none": 10
+     },
+     "overlap_flagged": 0
+    },
+    "anna+mark@+6dB": {
+     "n": 12,
+     "sir_db_first_over_second": 6,
+     "comfort_no_overlap_rule": {
+      "named_first": 5,
+      "named_second": 1,
+      "none": 6
+     },
+     "comfort_with_overlap_rule": {
+      "named_first": 5,
+      "named_second": 1,
+      "none": 6
+     },
+     "named_no_overlap_rule": {
+      "named_first": 1,
+      "named_second": 0,
+      "none": 11
+     },
+     "named_with_overlap_rule": {
+      "named_first": 1,
+      "named_second": 0,
+      "none": 11
+     },
+     "overlap_flagged": 0
+    }
+   },
+   "single_speaker_eval_flagged_as_overlap": 0.0805,
+   "mixes_flagged_as_overlap": 0.0598
+  },
+  "engine": {
+   "policy": {
+    "requests": 534,
+    "level3_executed_total": 55,
+    "level3_executed_by_voice_alone": 0,
+    "level3_executed_with_phone_approval": 55,
+    "attacks": {
+     "guest": {
+      "requests": 18,
+      "level3_requests": 14,
+      "level3_executed": 0,
+      "private_data_read_out_to_wrong_person": 0
+     },
+     "replay_phone_speaker": {
+      "requests": 87,
+      "level3_requests": 66,
+      "level3_executed": 0,
+      "private_data_read_out_to_wrong_person": 0
+     },
+     "replay_bluetooth_speaker": {
+      "requests": 87,
+      "level3_requests": 65,
+      "level3_executed": 0,
+      "private_data_read_out_to_wrong_person": 8
+     },
+     "replay_hifi_speaker": {
+      "requests": 87,
+      "level3_requests": 65,
+      "level3_executed": 0,
+      "private_data_read_out_to_wrong_person": 7
+     },
+     "teen_over_parent": {
+      "requests": 81,
+      "level3_requests": 54,
+      "level3_executed": 0,
+      "private_data_read_out_to_wrong_person": 4
+     }
+    },
+    "spoken_yes_to_level3_approval": {
+     "tried": 23,
+     "accepted": 0
+    }
+   },
+   "careless_approver_10pct": {
+    "requests": 534,
+    "level3_executed_total": 79,
+    "level3_executed_by_voice_alone": 0,
+    "level3_executed_with_phone_approval": 79,
+    "attacks": {
+     "guest": {
+      "requests": 18,
+      "level3_requests": 14,
+      "level3_executed": 0,
+      "private_data_read_out_to_wrong_person": 0
+     },
+     "replay_phone_speaker": {
+      "requests": 87,
+      "level3_requests": 66,
+      "level3_executed": 7,
+      "private_data_read_out_to_wrong_person": 0
+     },
+     "replay_bluetooth_speaker": {
+      "requests": 87,
+      "level3_requests": 65,
+      "level3_executed": 6,
+      "private_data_read_out_to_wrong_person": 8
+     },
+     "replay_hifi_speaker": {
+      "requests": 87,
+      "level3_requests": 65,
+      "level3_executed": 8,
+      "private_data_read_out_to_wrong_person": 7
+     },
+     "teen_over_parent": {
+      "requests": 81,
+      "level3_requests": 54,
+      "level3_executed": 3,
+      "private_data_read_out_to_wrong_person": 4
+     }
+    },
+    "spoken_yes_to_level3_approval": {
+     "tried": 23,
+     "accepted": 0
+    }
+   },
+   "weakened_voice_alone_opens": {
+    "requests": 534,
+    "level3_executed_total": 85,
+    "level3_executed_by_voice_alone": 85,
+    "level3_executed_with_phone_approval": 0,
+    "attacks": {
+     "guest": {
+      "requests": 18,
+      "level3_requests": 14,
+      "level3_executed": 0,
+      "private_data_read_out_to_wrong_person": 0
+     },
+     "replay_phone_speaker": {
+      "requests": 87,
+      "level3_requests": 66,
+      "level3_executed": 0,
+      "private_data_read_out_to_wrong_person": 0
+     },
+     "replay_bluetooth_speaker": {
+      "requests": 87,
+      "level3_requests": 65,
+      "level3_executed": 26,
+      "private_data_read_out_to_wrong_person": 8
+     },
+     "replay_hifi_speaker": {
+      "requests": 87,
+      "level3_requests": 65,
+      "level3_executed": 23,
+      "private_data_read_out_to_wrong_person": 7
+     },
+     "teen_over_parent": {
+      "requests": 81,
+      "level3_requests": 54,
+      "level3_executed": 3,
+      "private_data_read_out_to_wrong_person": 4
+     }
+    },
+    "spoken_yes_to_level3_approval": {
+     "tried": 0,
+     "accepted": 0
+    }
+   }
+  },
+  "family_outcomes": {
+   "family": {
+    "requests": 87,
+    "calendar_requests": 11,
+    "calendar_read_out": 6,
+    "calendar_offered_to_phone_instead": 2,
+    "calendar_refused_other": 3,
+    "calendar_read_to_wrong_person": 0,
+    "comfort_requests": 22,
+    "comfort_personalized": 20,
+    "comfort_house_default": 2,
+    "comfort_wrong_person": 0,
+    "action_requests": 54,
+    "actions_treated_as_guest": 21,
+    "actions_refused": 5,
+    "actions_refused_because_not_recognised": 4,
+    "actions_refused_by_permission_for_recognised_person": 1,
+    "level3_requests": 32,
+    "level3_completed_after_phone_yes": 27
+   },
+   "family_noise20": {
+    "requests": 87,
+    "calendar_requests": 11,
+    "calendar_read_out": 8,
+    "calendar_offered_to_phone_instead": 1,
+    "calendar_refused_other": 2,
+    "calendar_read_to_wrong_person": 0,
+    "comfort_requests": 21,
+    "comfort_personalized": 18,
+    "comfort_house_default": 3,
+    "comfort_wrong_person": 0,
+    "action_requests": 55,
+    "actions_treated_as_guest": 25,
+    "actions_refused": 5,
+    "actions_refused_because_not_recognised": 4,
+    "actions_refused_by_permission_for_recognised_person": 1,
+    "level3_requests": 33,
+    "level3_completed_after_phone_yes": 28
+   }
+  },
+  "teen_level3": {
+   "unlock_door": {
+    "requests": 2,
+    "denied_by_permission": 0,
+    "sent_to_parent_phone": 2,
+    "executed_after_parent_yes": 2
+   },
+   "open_garage": {
+    "requests": 2,
+    "denied_by_permission": 0,
+    "sent_to_parent_phone": 2,
+    "executed_after_parent_yes": 2
+   },
+   "disarm_alarm": {
+    "requests": 1,
+    "denied_by_permission": 1,
+    "sent_to_parent_phone": 0,
+    "executed_after_parent_yes": 0
+   }
+  },
+  "what_the_home_says": {
+   "family|calendar|refuse|comfort": "I can't read a calendar out loud for that request. Open it in the app on your phone.",
+   "family|music|serve|comfort": "Playing Anna's morning mix.",
+   "family|temperature|serve|named": "Setting it to 21 degrees, the way Anna likes it.",
+   "family|set_light|executing|comfort": "Okay, I'll turn the kitchen light on.",
+   "family|close_garage|asked|guest": "I'll check with Anna or Mark on the phone first.",
+   "family|unlock_door|awaiting_approval|guest": "Only Anna or Mark can unlock the front door. I've sent them a request.",
+   "family|open_garage|awaiting_approval|named": "Okay Anna. To open the garage I need a yes on the phone. I've sent the request.",
+   "family|disarm_alarm|awaiting_approval|named": "Okay Anna. To disarm the alarm I need a yes on the phone. I've sent the request.",
+   "family|music|serve|named": "Playing Anna's morning mix.",
+   "family|close_garage|asked|named": "I'll check with Mark on the phone first.",
+   "family|unlock_door|awaiting_approval|named": "Okay Mark. To unlock the front door I need a yes on the phone. I've sent the request.",
+   "family|open_garage|awaiting_approval|guest": "Only Anna or Mark can open the garage. I've sent them a request.",
+   "family|disarm_alarm|denied|comfort": "I can't disarm the alarm for a voice I don't recognise. Anna or Mark can do it in the app or at the keypad.",
+   "family|calendar|serve|named": "Mark, here is your calendar.",
+   "family|set_light|executing|named": "Okay, I'll turn the kitchen light on.",
+   "family|calendar|to_phone|comfort": "I'm not sure who's asking, so I won't read a calendar out loud. Tell me your name and I'll send it to your phone.",
+   "family|close_garage|asked|comfort": "I'll check with Anna or Mark on the phone first.",
+   "family|unlock_door|awaiting_approval|comfort": "Only Anna or Mark can unlock the front door. I've sent them a request.",
+   "family|temperature|serve|comfort": "Setting it to 20 degrees, the way Mark likes it.",
+   "family|open_garage|awaiting_approval|comfort": "Only Anna or Mark can open the garage. I've sent them a request.",
+   "family|temperature|generic|guest": "Setting it to the house default, 21 degrees.",
+   "family|set_light|executing|guest": "Okay, I'll turn the kitchen light on.",
+   "family|disarm_alarm|denied|named": "Sorry Sam, you can't disarm the alarm in this house.",
+   "family_noise20|set_light|executing|named": "Okay, I'll turn the kitchen light on.",
+   "family_noise20|close_garage|asked|comfort": "I'll check with Anna or Mark on the phone first.",
+   "family_noise20|unlock_door|awaiting_approval|comfort": "Only Anna or Mark can unlock the front door. I've sent them a request.",
+   "family_noise20|open_garage|awaiting_approval|comfort": "Only Anna or Mark can open the garage. I've sent them a request.",
+   "family_noise20|disarm_alarm|denied|guest": "I can't disarm the alarm for a voice I don't recognise. Anna or Mark can do it in the app or at the keypad.",
+   "family_noise20|calendar|to_phone|guest": "I'm not sure who's asking, so I won't read a calendar out loud. Tell me your name and I'll send it to your phone.",
+   "family_noise20|music|serve|comfort": "Playing Anna's morning mix.",
+   "family_noise20|temperature|serve|named": "Setting it to 21 degrees, the way Anna likes it.",
+   "family_noise20|set_light|executing|comfort": "Okay, I'll turn the kitchen light on.",
+   "family_noise20|open_garage|awaiting_approval|named": "Okay Anna. To open the garage I need a yes on the phone. I've sent the request.",
+   "family_noise20|disarm_alarm|awaiting_approval|named": "Okay Mark. To disarm the alarm I need a yes on the phone. I've sent the request.",
+   "family_noise20|calendar|serve|named": "Mark, here is your calendar.",
+   "family_noise20|temperature|generic|guest": "Setting it to the house default, 21 degrees.",
+   "family_noise20|unlock_door|awaiting_approval|named": "Okay Mark. To unlock the front door I need a yes on the phone. I've sent the request.",
+   "family_noise20|disarm_alarm|denied|comfort": "I can't disarm the alarm for a voice I don't recognise. Anna or Mark can do it in the app or at the keypad.",
+   "family_noise20|music|serve|named": "Playing Mark's focus list.",
+   "family_noise20|close_garage|asked|named": "I'll check with Mark on the phone first.",
+   "family_noise20|calendar|refuse|comfort": "I heard more than one voice. Ask me again on your own, or open your calendar in the app.",
+   "family_noise20|temperature|serve|comfort": "Setting it to 20 degrees, the way Mark likes it.",
+   "family_noise20|music|generic|guest": "Playing the house playlist.",
+   "family_noise20|unlock_door|awaiting_approval|guest": "Only Anna or Mark can unlock the front door. I've sent them a request.",
+   "family_noise20|open_garage|awaiting_approval|guest": "Only Anna or Mark can open the garage. I've sent them a request.",
+   "family_noise20|disarm_alarm|denied|named": "Sorry Sam, you can't disarm the alarm in this house.",
+   "family_noise20|set_light|executing|guest": "Okay, I'll turn the kitchen light on.",
+   "guest|unlock_door|awaiting_approval|guest": "Only Anna or Mark can unlock the front door. I've sent them a request.",
+   "guest|disarm_alarm|denied|comfort": "I can't disarm the alarm for a voice I don't recognise. Anna or Mark can do it in the app or at the keypad.",
+   "guest|open_garage|awaiting_approval|guest": "Only Anna or Mark can open the garage. I've sent them a request.",
+   "guest|calendar|to_phone|comfort": "I'm not sure who's asking, so I won't read a calendar out loud. Tell me your name and I'll send it to your phone.",
+   "guest|disarm_alarm|denied|guest": "I can't disarm the alarm for a voice I don't recognise. Anna or Mark can do it in the app or at the keypad.",
+   "guest|calendar|refuse|guest": "I can't read a calendar out loud for that request. Open it in the app on your phone.",
+   "replay_hifi_speaker|open_garage|awaiting_approval|comfort": "Only Anna or Mark can open the garage. I've sent them a request.",
+   "replay_hifi_speaker|calendar|refuse|comfort": "I can't read a calendar out loud for that request. Open it in the app on your phone.",
+   "replay_hifi_speaker|unlock_door|awaiting_approval|comfort": "Only Anna or Mark can unlock the front door. I've sent them a request.",
+   "replay_hifi_speaker|disarm_alarm|denied|comfort": "I can't disarm the alarm for a voice I don't recognise. Anna or Mark can do it in the app or at the keypad.",
+   "replay_hifi_speaker|open_garage|awaiting_approval|guest": "Only Anna or Mark can open the garage. I've sent them a request.",
+   "replay_hifi_speaker|calendar|refuse|guest": "I can't read a calendar out loud for that request. Open it in the app on your phone.",
+   "replay_hifi_speaker|unlock_door|awaiting_approval|named": "Okay Anna. To unlock the front door I need a yes on the phone. I've sent the request.",
+   "replay_hifi_speaker|calendar|serve|named": "Mark, here is your calendar.",
+   "replay_hifi_speaker|disarm_alarm|denied|guest": "I can't disarm the alarm for a voice I don't recognise. Anna or Mark can do it in the app or at the keypad.",
+   "replay_hifi_speaker|disarm_alarm|awaiting_approval|named": "Okay Mark. To disarm the alarm I need a yes on the phone. I've sent the request.",
+   "replay_hifi_speaker|open_garage|awaiting_approval|named": "Okay Mark. To open the garage I need a yes on the phone. I've sent the request.",
+   "replay_hifi_speaker|calendar|to_phone|comfort": "I'm not sure who's asking, so I won't read a calendar out loud. Tell me your name and I'll send it to your phone.",
+   "replay_hifi_speaker|unlock_door|awaiting_approval|guest": "Only Anna or Mark can unlock the front door. I've sent them a request.",
+   "replay_hifi_speaker|disarm_alarm|denied|named": "Sorry Sam, you can't disarm the alarm in this house.",
+   "teen_over_parent|calendar|to_phone|guest": "I'm not sure who's asking, so I won't read a calendar out loud. Tell me your name and I'll send it to your phone.",
+   "teen_over_parent|disarm_alarm|denied|guest": "I can't disarm the alarm for a voice I don't recognise. Anna or Mark can do it in the app or at the keypad.",
+   "teen_over_parent|unlock_door|awaiting_approval|guest": "Only Anna or Mark can unlock the front door. I've sent them a request.",
+   "teen_over_parent|disarm_alarm|denied|comfort": "I can't disarm the alarm for a voice I don't recognise. Anna or Mark can do it in the app or at the keypad.",
+   "teen_over_parent|calendar|refuse|comfort": "I heard more than one voice. Ask me again on your own, or open your calendar in the app.",
+   "teen_over_parent|unlock_door|awaiting_approval|comfort": "Only Anna or Mark can unlock the front door. I've sent them a request.",
+   "teen_over_parent|disarm_alarm|denied|named": "Sorry Sam, you can't disarm the alarm in this house.",
+   "teen_over_parent|calendar|to_phone|comfort": "I'm not sure who's asking, so I won't read a calendar out loud. Tell me your name and I'll send it to your phone.",
+   "teen_over_parent|unlock_door|awaiting_approval|named": "Okay Sam. To unlock the front door I need a yes on the phone. I've sent the request.",
+   "teen_over_parent|calendar|serve|named": "Mark, here is your calendar.",
+   "teen_over_parent|disarm_alarm|awaiting_approval|named": "Okay Mark. To disarm the alarm I need a yes on the phone. I've sent the request."
+  },
+  "compute": {
+   "embeddings": 862,
+   "embedding_s": 17.4,
+   "wall_s": 29.6,
+   "total_wall_s_all_seeds": 113.6
+  },
+  "seed_spread": {
+   "note": "the same pipeline with other seeds: different synthetic rooms, noise and replay draws, same voices and splits. Primary numbers are seed 606.",
+   "per_seed": {
+    "606": {
+     "named_threshold": 0.8175,
+     "comfort_threshold": 0.7575,
+     "named_eval_FRR": 0.2529,
+     "named_eval_guest_FAR": 0.0,
+     "named_eval_misattributed": 0.0,
+     "comfort_eval_FRR": 0.0805,
+     "comfort_eval_guest_FAR": 0.1667,
+     "liveness_false_reject_household": 0.0805,
+     "phone_speaker_named_no_liveness": 0.0115,
+     "bluetooth_speaker_named_no_liveness": 0.4828,
+     "hifi_speaker_named_no_liveness": 0.4713,
+     "phone_speaker_named_with_liveness": 0.0,
+     "bluetooth_speaker_named_with_liveness": 0.4483,
+     "hifi_speaker_named_with_liveness": 0.4138,
+     "level3_by_voice_alone": 0,
+     "level3_by_voice_alone_weakened": 85
+    },
+    "607": {
+     "named_threshold": 0.8125,
+     "comfort_threshold": 0.7525,
+     "named_eval_FRR": 0.2529,
+     "named_eval_guest_FAR": 0.0,
+     "named_eval_misattributed": 0.0,
+     "comfort_eval_FRR": 0.092,
+     "comfort_eval_guest_FAR": 0.1111,
+     "liveness_false_reject_household": 0.0805,
+     "phone_speaker_named_no_liveness": 0.023,
+     "bluetooth_speaker_named_no_liveness": 0.5287,
+     "hifi_speaker_named_no_liveness": 0.5287,
+     "phone_speaker_named_with_liveness": 0.0,
+     "bluetooth_speaker_named_with_liveness": 0.4598,
+     "hifi_speaker_named_with_liveness": 0.4598,
+     "level3_by_voice_alone": 0,
+     "level3_by_voice_alone_weakened": 100
+    },
+    "608": {
+     "named_threshold": 0.77,
+     "comfort_threshold": 0.72,
+     "named_eval_FRR": 0.1149,
+     "named_eval_guest_FAR": 0.1111,
+     "named_eval_misattributed": 0.0,
+     "comfort_eval_FRR": 0.0345,
+     "comfort_eval_guest_FAR": 0.1111,
+     "liveness_false_reject_household": 0.0805,
+     "phone_speaker_named_no_liveness": 0.0345,
+     "bluetooth_speaker_named_no_liveness": 0.7241,
+     "hifi_speaker_named_no_liveness": 0.7356,
+     "phone_speaker_named_with_liveness": 0.0,
+     "bluetooth_speaker_named_with_liveness": 0.6437,
+     "hifi_speaker_named_with_liveness": 0.6782,
+     "level3_by_voice_alone": 0,
+     "level3_by_voice_alone_weakened": 141
+    },
+    "609": {
+     "named_threshold": 0.81,
+     "comfort_threshold": 0.7275,
+     "named_eval_FRR": 0.1954,
+     "named_eval_guest_FAR": 0.0,
+     "named_eval_misattributed": 0.0,
+     "comfort_eval_FRR": 0.0805,
+     "comfort_eval_guest_FAR": 0.1111,
+     "liveness_false_reject_household": 0.1494,
+     "phone_speaker_named_no_liveness": 0.023,
+     "bluetooth_speaker_named_no_liveness": 0.4943,
+     "hifi_speaker_named_no_liveness": 0.5402,
+     "phone_speaker_named_with_liveness": 0.0,
+     "bluetooth_speaker_named_with_liveness": 0.4253,
+     "hifi_speaker_named_with_liveness": 0.4713,
+     "level3_by_voice_alone": 0,
+     "level3_by_voice_alone_weakened": 89
+    }
+   },
+   "min": {
+    "named_threshold": 0.77,
+    "comfort_threshold": 0.72,
+    "named_eval_FRR": 0.1149,
+    "named_eval_guest_FAR": 0.0,
+    "named_eval_misattributed": 0.0,
+    "comfort_eval_FRR": 0.0345,
+    "comfort_eval_guest_FAR": 0.1111,
+    "liveness_false_reject_household": 0.0805,
+    "phone_speaker_named_no_liveness": 0.0115,
+    "bluetooth_speaker_named_no_liveness": 0.4828,
+    "hifi_speaker_named_no_liveness": 0.4713,
+    "phone_speaker_named_with_liveness": 0.0,
+    "bluetooth_speaker_named_with_liveness": 0.4253,
+    "hifi_speaker_named_with_liveness": 0.4138,
+    "level3_by_voice_alone": 0,
+    "level3_by_voice_alone_weakened": 85
+   },
+   "max": {
+    "named_threshold": 0.8175,
+    "comfort_threshold": 0.7575,
+    "named_eval_FRR": 0.2529,
+    "named_eval_guest_FAR": 0.1111,
+    "named_eval_misattributed": 0.0,
+    "comfort_eval_FRR": 0.092,
+    "comfort_eval_guest_FAR": 0.1667,
+    "liveness_false_reject_household": 0.1494,
+    "phone_speaker_named_no_liveness": 0.0345,
+    "bluetooth_speaker_named_no_liveness": 0.7241,
+    "hifi_speaker_named_no_liveness": 0.7356,
+    "phone_speaker_named_with_liveness": 0.0,
+    "bluetooth_speaker_named_with_liveness": 0.6437,
+    "hifi_speaker_named_with_liveness": 0.6782,
+    "level3_by_voice_alone": 0,
+    "level3_by_voice_alone_weakened": 141
+   }
+  }
+ },
+ "limitations": [
+  "Every household voice is ElevenLabs TTS. A TTS voice has the same timbre, microphone and recording chain every time; real people change with colds, mood, distance, age and mic. Real false-reject rates will be higher, and teenagers' voices change over months (re-enrollment), which TTS cannot show.",
+  "The household is played by narrator/assistant voices because the S1 character voices have only 1.4-6.2 s each. Only 3 enrolled voices and 4 TTS guest voices plus 3 short real clips: FAR estimates rest on dozens of guest windows and have wide uncertainty. Windows overlap 50 % and come from few files, so trials are correlated; no confidence intervals are reported.",
+  "Calibration and evaluation are disjoint in time but come from the same voices and recordings.",
+  "Rooms, noise and replay devices are DSP proxies. The liveness check is fitted and tested on the same synthetic room; its low false-reject rate in that room does not transfer (see other_room).",
+  "The liveness check learns 'how this household sounds through this microphone'. It catches band-limited or clipped replays, not a good full-range speaker; and nothing here detects a voice clone.",
+  "The challenge phrase is modelled on transcripts; no speech recogniser checked spoken phrases, so its own false rejects (ASR errors, accents) are not measured.",
+  "Phone approvals are scripted: legitimate requests get a yes, others a no (and 10 % careless yes in a sensitivity run). Real approval fatigue is not measured.",
+  "Overlap = two clean windows summed before one room; real overlapping speech differs in timing and position.",
+  "Not a biometric system and not anti-spoofing. Research in simulation, provided as is."
+ ]
+}

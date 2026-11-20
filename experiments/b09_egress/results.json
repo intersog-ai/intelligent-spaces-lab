@@ -1,0 +1,880 @@
+{
+ "experiment": "b09_egress",
+ "date": "2026-11-19",
+ "method": "Discrete-event twin, seeded. A: the Season 1 E09 day (plan and seed of experiments/egress) through LedgerGate, which keeps every B01 gate rule, adds the B04 push purpose, a ledger row for every attempt, per-sender manifests and a notice on the first undeclared attempt; the answer to 'what did you send out today?' at three levels, graded for category coverage, and the scripted E09 line graded the same way. B: 30 varied days (seeds 2026-2055; random cloud speech count, pushes, assistant questions, leaks, 2-6 h outages). C: 7 phone-home modes x 200 seeded days, B01 gate rules vs LedgerGate. D: the E09 day with the internet down 00:00-24:00, and with cloud speech opted out. E: 500 seeded deletions with 11 kinds of planted copies, B01 delete vs B09 SharedStore; 500 shared-data deletions per backup key scheme with a modelled co-owner.",
+ "params": {
+  "seed": 2026,
+  "settings": {
+   "cloud_speech_opt_in": true,
+   "cloud_llm_opt_in": false,
+   "alarm_clips_allowed": false
+  },
+  "plan": {
+   "voice_requests_total": 60,
+   "voice_requests_cloud_asr": 12,
+   "speech_bytes_range": [
+    9000,
+    18000
+   ],
+   "backup_bytes": 48000000,
+   "update_checks_every_s": 21600,
+   "update_check_bytes": 1200,
+   "alarm_heartbeat_s": 300.0,
+   "camera_motion_clips": 25,
+   "phone_home_every_s": 600,
+   "home_control_commands": 200
+  },
+  "e09_line": "Twelve speech requests, not stored. Last night's encrypted backup.",
+  "phone_home_trials": 200,
+  "deletion_trials": 500,
+  "consent_model": {
+   "answer_yes": 0.8,
+   "answer_no": 0.1,
+   "never_answers": 0.1,
+   "reply_delay_lognormal_median_s": 900.0,
+   "reply_delay_sigma": 1.0,
+   "ask_timeout_s": 86400.0
+  },
+  "clip_bytes": 100000,
+  "clips_per_store": 20,
+  "scan_model": {
+   "disk_rate_bytes_s": 200000000.0,
+   "per_location_s": 0.005
+  },
+  "backup_rotation_days": 30,
+  "deletion_kinds": [
+   "main",
+   "index",
+   "thumb",
+   "backup_queue",
+   "renamed_copy_registered",
+   "share_link_record_registered",
+   "transcode_with_lineage",
+   "transcode_no_lineage",
+   "exact_copy_unregistered",
+   "embedded_in_bundle",
+   "thumb_copy_unregistered"
+  ]
+ },
+ "results": {
+  "a_e09_day": {
+   "report": {
+    "by_purpose": {
+     "alarm": {
+      "messages": 287,
+      "bytes": 27839,
+      "destinations": [
+       "receiver.monitoring.example"
+      ],
+      "visibility": [
+       "background"
+      ],
+      "retention": [
+       "alarm records kept per monitoring contract"
+      ],
+      "classes": {
+       "alarm_heartbeat": 287
+      }
+     },
+     "backup_encrypted": {
+      "messages": 1,
+      "bytes": 48000000,
+      "destinations": [
+       "backup.storage.example"
+      ],
+      "visibility": [
+       "background"
+      ],
+      "retention": [
+       "encrypted, rotated after 30 days"
+      ],
+      "classes": {
+       "encrypted_blob": 1
+      }
+     },
+     "fleet_update": {
+      "messages": 4,
+      "bytes": 4800,
+      "destinations": [
+       "updates.vendor.example"
+      ],
+      "visibility": [
+       "background"
+      ],
+      "retention": [
+       "request logs kept 90 days, no content"
+      ],
+      "classes": {
+       "update_check": 4
+      }
+     },
+     "speech_recognition_optional": {
+      "messages": 12,
+      "bytes": 164980,
+      "destinations": [
+       "asr.provider.example"
+      ],
+      "visibility": [
+       "person"
+      ],
+      "retention": [
+       "not stored"
+      ],
+      "classes": {
+       "speech_audio": 12
+      }
+     }
+    },
+    "messages": 304,
+    "bytes": 48197619,
+    "by_visibility": {
+     "background": {
+      "messages": 292,
+      "bytes": 48032639
+     },
+     "person": {
+      "messages": 12,
+      "bytes": 164980
+     }
+    },
+    "background_share_messages": 0.9605,
+    "background_share_bytes": 0.9966,
+    "camera_items_out": 0,
+    "blocked": 169,
+    "blocked_by_source": {
+     "camera.front": 25,
+     "plug.cheap": 144
+    },
+    "blocked_by_reason": {
+     "destination_not_allowlisted": 1,
+     "source_has_no_manifest": 1,
+     "source_quarantined": 167
+    },
+    "dropped_offline": 0,
+    "dropped_offline_by_purpose": {},
+    "queued": 0,
+    "waiting_now": 0,
+    "violations": 1,
+    "notices": [
+     {
+      "t": 69.62344079966377,
+      "source": "plug.cheap",
+      "dest": "telemetry.unknown-vendor.example",
+      "reason": "destination_not_allowlisted"
+     },
+     {
+      "t": 3908.4415793950884,
+      "source": "camera.front",
+      "dest": "backup.storage.example",
+      "reason": "source_has_no_manifest"
+     },
+     {
+      "t": 43200.01,
+      "source": "camera.front",
+      "dest": "egress/backup_encrypted",
+      "reason": "bypass_attempt"
+     }
+    ]
+   },
+   "answer_short": "Twelve voice requests for speech recognition, not stored. In the background: two hundred ninety-two messages, the nightly encrypted backup, alarm-line check-ins, and update checks. No camera footage left. One hundred sixty-nine attempts to send elsewhere were blocked, from two devices. One try to go around the gate, logged.",
+   "answer_short_words": 48,
+   "answer_phone": "Sent out today: 304 messages, 48.2 MB.\nBackground (nobody asked for it, nobody is told): 292 messages (96.1%), 48.0 MB (99.7% of bytes).\n- alarm: 287 messages, 27.8 KB, to receiver.monitoring.example; background; promised: alarm records kept per monitoring contract.\n- backup_encrypted: 1 messages, 48.0 MB, to backup.storage.example; background; promised: encrypted, rotated after 30 days.\n- fleet_update: 4 messages, 4.8 KB, to updates.vendor.example; background; promised: request logs kept 90 days, no content.\n- speech_recognition_optional: 12 messages, 165.0 KB, to asr.provider.example; you would notice; promised: not stored.\nCamera items out: 0.\nBlocked: 169 attempts.\n- from camera.front: 25\n- from plug.cheap: 144\n- reason destination_not_allowlisted: 1\n- reason source_has_no_manifest: 1\n- reason source_quarantined: 167\nNotice at 00:01: plug.cheap tried to send to telemetry.unknown-vendor.example (fleet_update). That is not what it declared. Blocked; the device is held at home until you review it.\nNotice at 01:05: camera.front tried to send to backup.storage.example (backup_encrypted). That is not what it declared. Blocked; the device is held at home until you review it.\nNotice at 12:00: camera.front tried to send without going through the gate. Logged; in a real home the firewall must stop it.\nTries to go around the gate: 1 (logged).\nFull ledger: every row, on request.",
+   "raw_ledger_rows": 473,
+   "raw_ledger_rows_by_outcome": {
+    "blocked": 169,
+    "sent": 304
+   },
+   "raw_ledger_first_rows": [
+    {
+     "t": 69.62344079966377,
+     "source": "plug.cheap",
+     "dest": "telemetry.unknown-vendor.example",
+     "purpose": "fleet_update",
+     "payload_class": "telemetry",
+     "bytes": 420,
+     "msg_id": null,
+     "visibility": "background",
+     "retention": "undeclared destination",
+     "outcome": "blocked",
+     "reason": "destination_not_allowlisted"
+    },
+    {
+     "t": 300.0,
+     "source": "alarm_hub",
+     "dest": "receiver.monitoring.example",
+     "purpose": "alarm",
+     "payload_class": "alarm_heartbeat",
+     "bytes": 97,
+     "msg_id": "hb:1",
+     "visibility": "background",
+     "retention": "alarm records kept per monitoring contract",
+     "outcome": "sent",
+     "reason": null,
+     "t_out": 300.0
+    },
+    {
+     "t": 600.0,
+     "source": "alarm_hub",
+     "dest": "receiver.monitoring.example",
+     "purpose": "alarm",
+     "payload_class": "alarm_heartbeat",
+     "bytes": 97,
+     "msg_id": "hb:2",
+     "visibility": "background",
+     "retention": "alarm records kept per monitoring contract",
+     "outcome": "sent",
+     "reason": null,
+     "t_out": 600.0
+    }
+   ],
+   "short_answer_coverage": {
+    "categories": [
+     "alarm_checkin",
+     "backup",
+     "blocked",
+     "bypass",
+     "speech",
+     "update_check"
+    ],
+    "missing": [],
+    "background_messages": 292,
+    "background_count_said": true,
+    "ok": true
+   },
+   "e09_scripted_line": "Twelve speech requests, not stored. Last night's encrypted backup.",
+   "e09_scripted_line_coverage": {
+    "categories": [
+     "alarm_checkin",
+     "backup",
+     "blocked",
+     "bypass",
+     "speech",
+     "update_check"
+    ],
+    "missing": [
+     "alarm_checkin",
+     "update_check",
+     "blocked",
+     "bypass"
+    ],
+    "background_messages": 292,
+    "background_count_said": true,
+    "ok": false
+   },
+   "b01_summary_without_routine": "Twelve voice requests for speech recognition, not stored, and last night's encrypted backup. No camera footage left the house. 169 attempts to send elsewhere were blocked (camera.front, plug.cheap).",
+   "b01_summary_without_routine_coverage": {
+    "categories": [
+     "alarm_checkin",
+     "backup",
+     "blocked",
+     "bypass",
+     "speech",
+     "update_check"
+    ],
+    "missing": [
+     "alarm_checkin",
+     "update_check",
+     "bypass"
+    ],
+    "background_messages": 292,
+    "background_count_said": true,
+    "ok": false
+   },
+   "voice": {
+    "local": 48,
+    "cloud": 12,
+    "local_said_not_understood": 0
+   },
+   "home_control_confirmed": 200,
+   "plug_attempts": 144,
+   "plug_bytes_out": 0
+  },
+  "b_thirty_days": {
+   "days": 30,
+   "per_purpose_per_day": {
+    "alarm": {
+     "messages_mean": 280.2,
+     "messages_min": 237,
+     "messages_max": 288,
+     "bytes_mean": 27182,
+     "bytes_min": 23024,
+     "bytes_max": 27971,
+     "days_present": 30
+    },
+    "backup_encrypted": {
+     "messages_mean": 1,
+     "messages_min": 1,
+     "messages_max": 1,
+     "bytes_mean": 48000000,
+     "bytes_min": 48000000,
+     "bytes_max": 48000000,
+     "days_present": 30
+    },
+    "fleet_update": {
+     "messages_mean": 3.9,
+     "messages_min": 3,
+     "messages_max": 4,
+     "bytes_mean": 4640,
+     "bytes_min": 3600,
+     "bytes_max": 4800,
+     "days_present": 30
+    },
+    "llm_text_optional": {
+     "messages_mean": 2.3,
+     "messages_min": 0,
+     "messages_max": 10,
+     "bytes_mean": 2369,
+     "bytes_min": 0,
+     "bytes_max": 12114,
+     "days_present": 12
+    },
+    "notify_push": {
+     "messages_mean": 1.5,
+     "messages_min": 0,
+     "messages_max": 5,
+     "bytes_mean": 53,
+     "bytes_min": 0,
+     "bytes_max": 180,
+     "days_present": 16
+    },
+    "speech_recognition_optional": {
+     "messages_mean": 10.7,
+     "messages_min": 1,
+     "messages_max": 24,
+     "bytes_mean": 146968,
+     "bytes_min": 10637,
+     "bytes_max": 354364,
+     "days_present": 30
+    }
+   },
+   "background_share_messages_mean": 0.9518,
+   "background_share_messages_min": 0.9097,
+   "background_share_messages_max": 0.9865,
+   "background_share_bytes_mean": 0.9969,
+   "background_share_bytes_min": 0.9927,
+   "background_share_bytes_max": 0.9997,
+   "categories_seen": [
+    "alarm_checkin",
+    "alarm_signal",
+    "backup",
+    "blocked",
+    "bypass",
+    "dropped",
+    "llm_text",
+    "push",
+    "speech",
+    "update_check"
+   ],
+   "short_answer_all_categories_days": 30,
+   "b01_summary_all_categories_days": 0,
+   "b01_summary_missing_by_category": {
+    "alarm_checkin": 30,
+    "bypass": 30,
+    "dropped": 6,
+    "push": 16,
+    "update_check": 30
+   },
+   "short_answer_words_max": 73,
+   "example_day_with_outage_and_leak": {
+    "seed": 2041,
+    "short": "Three voice requests for speech recognition, not stored, and one alarm signal to the monitoring centre. In the background: two hundred forty messages, the nightly encrypted backup, alarm-line check-ins, and update checks. No camera footage left. One hundred sixty-nine attempts to send elsewhere were blocked, from two devices. One try to go around the gate, logged. Fifty-two messages were not sent because the internet was down."
+   }
+  },
+  "c_phone_home": {
+   "undeclared_destination": {
+    "b01_gate": {
+     "trials": 200,
+     "attempts": 28794,
+     "got_out": 0,
+     "blocked_pct": 100.0,
+     "bytes_out_per_day_mean": 0,
+     "attempt_logged_pct": 100.0,
+     "household_told_pct": 0.0,
+     "detect_delay_s_p50": null,
+     "detect_delay_s_max": null,
+     "legit_update_checks_blocked": 0,
+     "legit_update_checks": 800
+    },
+    "ledger_gate": {
+     "trials": 200,
+     "attempts": 28794,
+     "got_out": 0,
+     "blocked_pct": 100.0,
+     "bytes_out_per_day_mean": 0,
+     "attempt_logged_pct": 100.0,
+     "household_told_pct": 100.0,
+     "detect_delay_s_p50": 0.0,
+     "detect_delay_s_max": 0.0,
+     "legit_update_checks_blocked": 0,
+     "legit_update_checks": 800
+    }
+   },
+   "allowlisted_host_wrong_class": {
+    "b01_gate": {
+     "trials": 200,
+     "attempts": 28794,
+     "got_out": 0,
+     "blocked_pct": 100.0,
+     "bytes_out_per_day_mean": 0,
+     "attempt_logged_pct": 100.0,
+     "household_told_pct": 0.0,
+     "detect_delay_s_p50": null,
+     "detect_delay_s_max": null,
+     "legit_update_checks_blocked": 0,
+     "legit_update_checks": 800
+    },
+    "ledger_gate": {
+     "trials": 200,
+     "attempts": 28794,
+     "got_out": 0,
+     "blocked_pct": 100.0,
+     "bytes_out_per_day_mean": 0,
+     "attempt_logged_pct": 100.0,
+     "household_told_pct": 100.0,
+     "detect_delay_s_p50": 0.0,
+     "detect_delay_s_max": 0.0,
+     "legit_update_checks_blocked": 0,
+     "legit_update_checks": 800
+    }
+   },
+   "mimic_update_check": {
+    "b01_gate": {
+     "trials": 200,
+     "attempts": 28794,
+     "got_out": 28794,
+     "blocked_pct": 0.0,
+     "bytes_out_per_day_mean": 60467.4,
+     "attempt_logged_pct": 0.0,
+     "household_told_pct": 0.0,
+     "detect_delay_s_p50": null,
+     "detect_delay_s_max": null,
+     "legit_update_checks_blocked": 0,
+     "legit_update_checks": 800
+    },
+    "ledger_gate": {
+     "trials": 200,
+     "attempts": 28794,
+     "got_out": 0,
+     "blocked_pct": 100.0,
+     "bytes_out_per_day_mean": 0,
+     "attempt_logged_pct": 100.0,
+     "household_told_pct": 100.0,
+     "detect_delay_s_p50": 0.0,
+     "detect_delay_s_max": 0.0,
+     "legit_update_checks_blocked": 0,
+     "legit_update_checks": 800
+    }
+   },
+   "declared_sender_oversize": {
+    "b01_gate": {
+     "trials": 200,
+     "attempts": 800,
+     "got_out": 800,
+     "blocked_pct": 0.0,
+     "bytes_out_per_day_mean": 200000,
+     "attempt_logged_pct": 0.0,
+     "household_told_pct": 0.0,
+     "detect_delay_s_p50": null,
+     "detect_delay_s_max": null,
+     "legit_update_checks_blocked": 0,
+     "legit_update_checks": 800
+    },
+    "ledger_gate": {
+     "trials": 200,
+     "attempts": 800,
+     "got_out": 0,
+     "blocked_pct": 100.0,
+     "bytes_out_per_day_mean": 0,
+     "attempt_logged_pct": 100.0,
+     "household_told_pct": 100.0,
+     "detect_delay_s_p50": 0.0,
+     "detect_delay_s_max": 0.0,
+     "legit_update_checks_blocked": 800,
+     "legit_update_checks": 800
+    }
+   },
+   "declared_sender_extra_checks": {
+    "b01_gate": {
+     "trials": 200,
+     "attempts": 4000,
+     "got_out": 4000,
+     "blocked_pct": 0.0,
+     "bytes_out_per_day_mean": 24000,
+     "attempt_logged_pct": 0.0,
+     "household_told_pct": 0.0,
+     "detect_delay_s_p50": null,
+     "detect_delay_s_max": null,
+     "legit_update_checks_blocked": 0,
+     "legit_update_checks": 800
+    },
+    "ledger_gate": {
+     "trials": 200,
+     "attempts": 4000,
+     "got_out": 1000,
+     "blocked_pct": 75.0,
+     "bytes_out_per_day_mean": 6000,
+     "attempt_logged_pct": 100.0,
+     "household_told_pct": 100.0,
+     "detect_delay_s_p50": 21599.408,
+     "detect_delay_s_max": 21653.232,
+     "legit_update_checks_blocked": 600,
+     "legit_update_checks": 800
+    }
+   },
+   "declared_sender_low_and_slow": {
+    "b01_gate": {
+     "trials": 200,
+     "attempts": 400,
+     "got_out": 400,
+     "blocked_pct": 0.0,
+     "bytes_out_per_day_mean": 2400,
+     "attempt_logged_pct": 0.0,
+     "household_told_pct": 0.0,
+     "detect_delay_s_p50": null,
+     "detect_delay_s_max": null,
+     "legit_update_checks_blocked": 0,
+     "legit_update_checks": 800
+    },
+    "ledger_gate": {
+     "trials": 200,
+     "attempts": 400,
+     "got_out": 400,
+     "blocked_pct": 0.0,
+     "bytes_out_per_day_mean": 2400,
+     "attempt_logged_pct": 0.0,
+     "household_told_pct": 0.0,
+     "detect_delay_s_p50": null,
+     "detect_delay_s_max": null,
+     "legit_update_checks_blocked": 0,
+     "legit_update_checks": 800
+    }
+   },
+   "bypass_gate": {
+    "b01_gate": {
+     "trials": 200,
+     "attempts": 28794,
+     "got_out": 0,
+     "blocked_pct": 100.0,
+     "bytes_out_per_day_mean": 0,
+     "attempt_logged_pct": 100.0,
+     "household_told_pct": 0.0,
+     "detect_delay_s_p50": null,
+     "detect_delay_s_max": null,
+     "legit_update_checks_blocked": 0,
+     "legit_update_checks": 800
+    },
+    "ledger_gate": {
+     "trials": 200,
+     "attempts": 28794,
+     "got_out": 0,
+     "blocked_pct": 100.0,
+     "bytes_out_per_day_mean": 0,
+     "attempt_logged_pct": 100.0,
+     "household_told_pct": 100.0,
+     "detect_delay_s_p50": 0.01,
+     "detect_delay_s_max": 0.01,
+     "legit_update_checks_blocked": 0,
+     "legit_update_checks": 800
+    }
+   }
+  },
+  "d_internet_down": {
+   "internet_up": {
+    "short": "Twelve voice requests for speech recognition, not stored. In the background: two hundred ninety-two messages, the nightly encrypted backup, alarm-line check-ins, and update checks. No camera footage left. One hundred sixty-nine attempts to send elsewhere were blocked, from two devices. One try to go around the gate, logged.",
+    "voice": {
+     "local": 48,
+     "cloud": 12,
+     "local_said_not_understood": 0
+    },
+    "home_control_confirmed": 200
+   },
+   "internet_down": {
+    "short": "Nothing left the house today. No camera footage left. One hundred sixty-nine attempts to send elsewhere were blocked, from two devices. One try to go around the gate, logged. Two messages are waiting for the internet. Three hundred three messages were not sent because the internet was down.",
+    "messages_out": 0,
+    "bytes_out": 0,
+    "home_control_confirmed": 200,
+    "home_control_commands": 200,
+    "home_control_p50_s": 0.32,
+    "voice": {
+     "local": 48,
+     "cloud": 0,
+     "local_said_not_understood": 12
+    },
+    "leak": {
+     "siren_s": 0.01,
+     "centre_ack_s": 36000.3
+    },
+    "waiting_at_end_of_day": 2,
+    "queued_attempts": 1730,
+    "dropped_offline_by_purpose": {
+     "alarm": 287,
+     "fleet_update": 4,
+     "speech_recognition_optional": 12
+    },
+    "blocked": 169,
+    "sent_in_first_hour_back": 15,
+    "delete_receipt_offline": {
+     "status": "deleted",
+     "seconds": 0.0203,
+     "backup_restore_after_delete": false
+    }
+   },
+   "cloud_speech_opted_out": {
+    "short": "Only background traffic: two hundred ninety-two messages, the nightly encrypted backup, alarm-line check-ins, and update checks. No camera footage left. One hundred sixty-nine attempts to send elsewhere were blocked, from two devices. One try to go around the gate, logged.",
+    "voice": {
+     "local": 48,
+     "cloud": 0,
+     "local_said_not_understood": 12
+    },
+    "speech_bytes_out": 0
+   }
+  },
+  "e_deletion": {
+   "b01": {
+    "trials": 500,
+    "removed_pct_by_kind": {
+     "main": 100.0,
+     "index": 100.0,
+     "thumb": 100.0,
+     "backup_queue": 100.0,
+     "renamed_copy_registered": 100.0,
+     "share_link_record_registered": 100.0,
+     "transcode_with_lineage": 0.0,
+     "transcode_no_lineage": 0.0,
+     "exact_copy_unregistered": 0.0,
+     "embedded_in_bundle": 0.0,
+     "thumb_copy_unregistered": 0.0
+    },
+    "trials_with_a_copy_left": 500,
+    "trials_with_a_copy_left_of_a_kind_the_receipt_says_it_checks": 500,
+    "receipt_claimed_complete": 264,
+    "receipt_claimed_complete_while_copy_left": 264,
+    "receipt_said_none_left_locally_while_copy_left": 500,
+    "collateral_records_damaged": 0,
+    "wall_ms_p50": 5.45,
+    "wall_ms_p95": 6.16,
+    "modelled_scan_s_p50": 0.0,
+    "modelled_scan_s_p95": 0.0,
+    "target_in_backup": 236
+   },
+   "b09": {
+    "trials": 500,
+    "removed_pct_by_kind": {
+     "main": 100.0,
+     "index": 100.0,
+     "thumb": 100.0,
+     "backup_queue": 100.0,
+     "renamed_copy_registered": 100.0,
+     "share_link_record_registered": 100.0,
+     "transcode_with_lineage": 100.0,
+     "transcode_no_lineage": 0.0,
+     "exact_copy_unregistered": 100.0,
+     "embedded_in_bundle": 100.0,
+     "thumb_copy_unregistered": 100.0
+    },
+    "trials_with_a_copy_left": 500,
+    "trials_with_a_copy_left_of_a_kind_the_receipt_says_it_checks": 0,
+    "receipt_claimed_complete": 0,
+    "receipt_claimed_complete_while_copy_left": 0,
+    "receipt_said_none_left_locally_while_copy_left": 500,
+    "collateral_records_damaged": 0,
+    "wall_ms_p50": 12.5,
+    "wall_ms_p95": 13.54,
+    "modelled_scan_s_p50": 0.064,
+    "modelled_scan_s_p95": 0.064,
+    "target_in_backup": 236
+   },
+   "b09_example_receipt": {
+    "receipt_id": "e84902a3fd360535",
+    "status": "deleted",
+    "removed": [
+     {
+      "location": "main",
+      "key": "clip015",
+      "matched_by": "id_in_key",
+      "registered": true
+     },
+     {
+      "location": "index",
+      "key": "clip015",
+      "matched_by": "id_in_key",
+      "registered": true
+     },
+     {
+      "location": "thumbs",
+      "key": "clip015",
+      "matched_by": "id_in_key",
+      "registered": true
+     },
+     {
+      "location": "backup_queue",
+      "key": "5",
+      "matched_by": "id_in_record",
+      "registered": true
+     },
+     {
+      "location": "exports",
+      "key": "export_3b5dc6f1.mp4",
+      "matched_by": "content_hash",
+      "registered": true
+     },
+     {
+      "location": "exports",
+      "key": "bundle_3b5dc6f1.zip",
+      "matched_by": "contained_in_blob",
+      "registered": true
+     },
+     {
+      "location": "share_links",
+      "key": "tok_3b5dc6f1",
+      "matched_by": "content_hash_in_record",
+      "registered": true
+     },
+     {
+      "location": "previews",
+      "key": "preview_3b5dc6f1.webm",
+      "matched_by": "content_hash",
+      "registered": true
+     },
+     {
+      "location": "debug_dump",
+      "key": "dump_3b5dc6f1",
+      "matched_by": "content_hash",
+      "registered": false
+     },
+     {
+      "location": "thumb_cache_old",
+      "key": "t_3b5dc6f1",
+      "matched_by": "content_hash",
+      "registered": false
+     }
+    ],
+    "locations_scanned": [
+     "backup_queue",
+     "debug_dump",
+     "exports",
+     "index",
+     "main",
+     "previews",
+     "share_links",
+     "thumb_cache_old",
+     "thumbs"
+    ],
+    "matched_by": [
+     "id",
+     "content hash",
+     "contained in a larger file",
+     "recorded lineage"
+    ],
+    "no_copy_found_on_hub_disk": true,
+    "backup": {
+     "in_backup": false,
+     "statement": "No copy had left in a backup."
+    },
+    "not_checked": [
+     "copies with different bytes made without recorded lineage (re-encoded outside the store)",
+     "copies on phones, laptops or anywhere off the hub disk",
+     "copies a person exported or shared before the request"
+    ]
+   },
+   "b01_example_receipt": {
+    "receipt_id": "f0eedc8156fe96a6",
+    "complete": true,
+    "verified_absent_locally": true,
+    "removed": [
+     {
+      "location": "backup_queue",
+      "key": "8",
+      "matched_by": "id_in_record"
+     },
+     {
+      "location": "exports",
+      "key": "export_a655544e.mp4",
+      "matched_by": "content_hash"
+     },
+     {
+      "location": "index",
+      "key": "clip018",
+      "matched_by": "id_in_key"
+     },
+     {
+      "location": "main",
+      "key": "clip018",
+      "matched_by": "id_in_key"
+     },
+     {
+      "location": "share_links",
+      "key": "tok_a655544e",
+      "matched_by": "content_hash_in_record"
+     },
+     {
+      "location": "thumbs",
+      "key": "clip018",
+      "matched_by": "id_in_key"
+     }
+    ],
+    "locations_scanned": [
+     "backup_queue",
+     "exports",
+     "index",
+     "main",
+     "previews",
+     "share_links",
+     "thumbs"
+    ],
+    "pending_remote": []
+   },
+   "shared_per_record_keys": {
+    "trials": 500,
+    "status": {
+     "declined": 43,
+     "deleted": 397,
+     "no_answer": 60
+    },
+    "deleted_without_yes": 0,
+    "kept_after_no_or_no_answer": 103,
+    "seconds_to_receipt_deleted_p50": 872.567,
+    "seconds_to_receipt_deleted_p95": 4995.759,
+    "seconds_to_receipt_declined_p50": 1024.149,
+    "seconds_to_receipt_no_answer": 86400.0,
+    "deleted_with_copy_in_backup": 183,
+    "backup_restorable_after_delete": 0,
+    "receipt_says_backup_unreadable": 183,
+    "ask_pushes_out": 500,
+    "example_backup_statement": "A copy is in an encrypted backup at backup.storage.example. Its key was destroyed at home, so it can no longer be read. The unreadable copy expires with rotation on day 30."
+   },
+   "shared_nightly_keys": {
+    "trials": 500,
+    "status": {
+     "declined": 43,
+     "deleted": 397,
+     "no_answer": 60
+    },
+    "deleted_without_yes": 0,
+    "kept_after_no_or_no_answer": 103,
+    "seconds_to_receipt_deleted_p50": 872.567,
+    "seconds_to_receipt_deleted_p95": 4995.759,
+    "seconds_to_receipt_declined_p50": 1024.149,
+    "seconds_to_receipt_no_answer": 86400.0,
+    "deleted_with_copy_in_backup": 183,
+    "backup_restorable_after_delete": 183,
+    "receipt_says_backup_unreadable": 0,
+    "ask_pushes_out": 500,
+    "example_backup_statement": "A copy is in an encrypted backup at backup.storage.example. It shares a key with the rest of that night's backup, so it stays readable until rotation on day 30."
+   }
+  }
+ },
+ "limitations": [
+  "Byte sizes are modelled (Opus voice, 48 MB backup, 100 KB clips), not measured on devices.",
+  "Visibility (person vs background) is a label we assign per purpose and payload class; the nightly backup is labelled background.",
+  "Retention promises are declared in DESTINATIONS; the gate records them and cannot verify what a provider keeps.",
+  "Manifests are written by people. A declared sender that leaks inside its declared size and count (low and slow) is not detected; payload content is not inspected.",
+  "The gate sees only traffic routed through it; a device with its own uplink needs network default-deny (VLAN, firewall), which is not simulated. 'bypass_gate' only shows the watchdog logs a direct egress/ publication on the bus.",
+  "Which voice requests the local recogniser is unsure about is an input (12 of 60), not a measured recogniser; no speech model was run.",
+  "The co-owner's answers and delays are modelled (80% yes, 10% no, 10% never; lognormal delay, median 15 min).",
+  "Scan time on the hub is modelled (200 MB/s, 5 ms per location); wall_ms is the Python run time on the 2-core test machine, not on a hub.",
+  "Copies off the hub disk (phones, exports already shared) are outside any scan; the receipt lists them as not checked.",
+  "AES-GCM is real (cryptography package); key storage at home is modelled as a dict, and a key store lost with the hub makes every backup unreadable."
+ ],
+ "runtime_s": 26.1
+}

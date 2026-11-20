@@ -1,0 +1,27 @@
+Intersog presents. Intelligent Spaces. Build Track, episode eight. Cameras and the alarm path.
+
+In season one, the home keeps two things apart: what it observed, and what that might mean. The home reports. A person, or the monitoring centre, decides. For smoke, the centre calls nine one one. The home never does.
+
+Today we build that in a digital twin. The code and the data are free. It is provided as is, and it is not a certified alarm system. The cellular link, the camera detector and the people in it are models, and every assumption is written down.
+
+First, a gap we left open. In episodes one and four, with the internet down, an alarm reached the monitoring centre only when the internet came back. Four and a half minutes in one test. Ten hours in another.
+
+So we added a second path: a modelled cellular link, with its own delay, losses and cost. Both paths send heartbeats, so the hub and the centre know which one works. If an alarm is not acknowledged in five seconds, the next try goes on the other path, at once.
+
+The internet goes down for ten minutes. With one path, thirteen percent of alarms reached the centre within a minute. With two paths, one hundred percent, in under six seconds at the ninety fifth percentile. Down all day: zero percent with one path, one hundred with two.
+
+We made the cell worse too: thirty percent of messages lost, four times slower. Ninety nine point three percent still arrived within a minute. With both paths down, the second path cannot help: thirteen percent either way. The family is told both paths are down, and to call nine one one themselves if there is a fire.
+
+Two paths mean more copies. With a slow cell, the centre received one hundred fifty eight extra copies, and suppressed all of them. Then the bug from episode four: a rebooted hub sends the same smoke alarm again, with a new number. Matching by number opened a second incident in two hundred of two hundred runs. Grouping by open incident: zero.
+
+What does the backup cost? On a normal day, about ten and a half thousand bytes, mostly heartbeats. About one cent, at the tariff we assumed. With the internet down all day, about two hundred thirteen thousand bytes, around twenty one cents.
+
+Now the cameras. A detector sometimes calls a cat or a shadow a person. With an alert at confidence zero point five, the owner got eight point four false person alerts a week. At zero point nine, almost none. But fifty six real people a week were never reported.
+
+The worst design turns a guess into a verdict. While armed, it told the centre there was an intruder. Thirty four point eight signals a week. Thirty three point nine of them false: residents coming home, couriers, a cat at night.
+
+Our design states the evidence and asks. Something that looks like a person, confidence zero point five eight. It could also be a pet or a shadow. The clip is kept at home. Share it with the monitoring centre, yes or no? Nothing leaves unless a person says yes. One and a half clips a week left the house, each with that person's consent. Zero without.
+
+Asking has a cost. An unexpected person reached the centre in sixty nine percent of tests, forty seconds at the median. In five of twenty six, nobody answered, and the clip stayed home. And one thing still breaks: a flapping backup told the family about its paths almost eighty eight times a day. That is open.
+
+The home says what it saw, and how sure it is. People decide. The centre calls for help. If you build devices, platforms or spaces like these, Intersog's engineers do this work.

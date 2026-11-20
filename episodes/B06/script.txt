@@ -1,0 +1,27 @@
+Intersog presents. Intelligent Spaces. Build Track, episode six. Who is speaking.
+
+In season one, the home knows who is speaking. Same request, a different person, a different answer. But in episode one of this track, a replayed recording passed as the person eighty one percent of the time. So what can a home safely do with a voice?
+
+This is research in a digital twin, with synthetic voices. The code and data are free. It is provided as is. It is not a biometric system.
+
+Our rule is simple. Voice can choose whose calendar, whose music, whose temperature. It can raise trust a little. It can never unlock the door, disarm the alarm or open the garage on its own. Those need a yes on a phone.
+
+The family: Anna, Mark, and Sam, who is a teenager. Guests are anyone the home does not know. Sam may ask for the door, and a parent decides. Sam may not disarm the alarm. Each voice was enrolled with ten seconds of speech, heard through a simulated room.
+
+We set two thresholds. For music and temperature, a wrong guess is cheap. The family was refused eight percent of the time, and three of eighteen guest samples passed. For reading a calendar out loud, a wrong guess costs more. The family was refused twenty five percent of the time. No guest passed, and no one was mistaken for another family member.
+
+A refusal is not the end. Three quarters of first tries were recognised. Within two tries, ninety seven percent. With one longer sentence, all of them. And when the home is unsure, it says so: I won't read a calendar out loud, but I can send it to your phone.
+
+Noise is harder. With the kitchen loud, the family was refused thirty two percent of the time. In a different room, fifty seven percent. Thresholds belong to the room the home actually hears.
+
+Then we replayed the family's own voices. Through a phone speaker, the home almost never accepted it. Through a Bluetooth speaker, forty eight percent passed as the person. We added a cheap liveness check that looks at bass, treble and clipping. It stopped every phone replay. Bluetooth still passed forty five percent of the time. And it wrongly refused eight percent of the family.
+
+A random challenge phrase does better against a recording. In a thousand tries per person, no recorded line contained the phrase. But a cloned voice can say anything. Every voice in this series is synthetic.
+
+Two people talking at once mostly confused the home into knowing no one. But with Sam talking over a parent, it named the parent eight times in eighty one. Our rule to detect overlap did not work.
+
+Now the whole house. Five hundred thirty four requests through the policy engine: family, guests, replays, and a teenager over a parent. Fifty five high risk actions ran, every one after a yes on a phone. By voice alone, zero. Twenty three spoken yes answers were refused. If voice alone had been allowed, replays and overlaps would have opened the house fifty two times.
+
+Two weaknesses remain. Calendars read out loud reached a replay eight times in twenty two. And the phone is only as good as the person: with one careless yes in ten, twenty four attacks got through.
+
+Knowing who is speaking makes a home personal. It does not make a voice a key. If you build devices, platforms or spaces like these, Intersog's engineers do this work.

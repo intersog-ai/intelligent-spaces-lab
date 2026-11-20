@@ -1,0 +1,1631 @@
+{
+ "experiment": "b08_security",
+ "date": "2026-11-19",
+ "method": "Seeded discrete-event runs in the islab twin. Part A: one alarm per run sent by the B01 AlarmHub over the home internet (one_path) or by DualPathAlarmHub over the home internet plus a modelled cellular link (two_paths) to a DualPathCentre that dedupes copies by message and repeats by open incident. Internet down = WanLink outage plus egress gate offline (alarms queue, heartbeats drop). Part B: 24 h with two paths and one alarm of each kind, counting cellular traffic billed. Part C: one week of front camera scenes per seed through an assumed detector model and three designs; household members answer asks through an assumed person model. Ground truth for camera scenes comes from the scene generator, never from messages.",
+ "params": {
+  "trials_per_cell": 300,
+  "trials_internet_down_all_day": 60,
+  "days_per_condition": 10,
+  "weeks_per_camera_design": 26,
+  "conditions": {
+   "normal": "home internet up; alarm 0-600 s after warm-up",
+   "loss_20pct": "20% of messages lost each way on the home internet path",
+   "internet_down_10min": "home internet down 600 s; alarm at a uniform time inside the outage",
+   "internet_down_all_day": "home internet down 86,400 s; alarm at a uniform time inside it",
+   "internet_down_10min_cell_degraded": "internet down 600 s and the cell degraded (30% loss, latency x4, 10% late tail)",
+   "internet_and_cell_down_10min": "internet and cellular both down for the same 600 s",
+   "hub_reboot": "home internet up; hub crashes 0.5-4 s after the alarm, back after 20-40 s; the detector's next state report 0-10 s later (the B04 duplicate)"
+  },
+  "day_conditions": [
+   "normal",
+   "loss_20pct",
+   "internet_down_all_day",
+   "internet_down_all_day_cell_degraded"
+  ],
+  "hub": {
+   "ack_timeout": 5.0,
+   "backoff_base": 1.0,
+   "backoff_cap": 16.0,
+   "heartbeat_s": 60.0,
+   "fmt": "SIA-DCS"
+  },
+  "dual_path": {
+   "primary_heartbeat_s": 60,
+   "primary_fails_after_no_ack_s": 130,
+   "cellular_heartbeat_s": 3600,
+   "cellular_heartbeat_while_primary_failed_s": 180,
+   "cellular_probe_s": 20,
+   "cellular_fails_after_unacked_probes": 3,
+   "first_failover": "attempt 2 goes on the other path at once, after a 5 s ack timeout",
+   "household_told_after_primary_failed_s": 300
+  },
+  "centre": {
+   "path_supervision_s": {
+    "primary": 180,
+    "cellular": 9000,
+    "cellular_when_primary_down": 450
+   },
+   "incident_window_s": 1800,
+   "actions": {
+    "fire": "centre_calls_911_with_address_sensor_time",
+    "burglary": "centre_verifies_with_keyholder_then_calls_911",
+    "water": "centre_calls_keyholder",
+    "panic": "centre_calls_911_with_address_sensor_time",
+    "other": "centre_operator_review"
+   }
+  },
+  "cellular_assumptions": {
+   "latency_s": [
+    0.05,
+    0.2
+   ],
+   "rrc_idle_after_s": 10.0,
+   "rrc_setup_s": [
+    0.1,
+    0.8
+   ],
+   "tail_p": 0.02,
+   "tail_s": [
+    1.0,
+    6.0
+   ],
+   "loss": 0.01,
+   "overhead_bytes": 120,
+   "usd_per_mb": 1.0
+  },
+  "cellular_degraded": {
+   "latency_mult": 4.0,
+   "loss": 0.3,
+   "tail_p": 0.1
+  },
+  "detector_assumptions": {
+   "person": [
+    [
+     "person",
+     0.95,
+     [
+      0.85,
+      0.08
+     ]
+    ],
+    [
+     null,
+     0.05,
+     null
+    ]
+   ],
+   "parcel": [
+    [
+     "parcel",
+     0.85,
+     [
+      0.8,
+      0.1
+     ]
+    ],
+    [
+     null,
+     0.15,
+     null
+    ]
+   ],
+   "vehicle": [
+    [
+     "vehicle",
+     0.9,
+     [
+      0.85,
+      0.08
+     ]
+    ],
+    [
+     "person",
+     0.02,
+     [
+      0.55,
+      0.1
+     ]
+    ],
+    [
+     null,
+     0.08,
+     null
+    ]
+   ],
+   "pet": [
+    [
+     "pet",
+     0.8,
+     [
+      0.8,
+      0.1
+     ]
+    ],
+    [
+     "person",
+     0.12,
+     [
+      0.62,
+      0.12
+     ]
+    ],
+    [
+     null,
+     0.08,
+     null
+    ]
+   ],
+   "shadow": [
+    [
+     null,
+     0.85,
+     null
+    ],
+    [
+     "person",
+     0.07,
+     [
+      0.5,
+      0.12
+     ]
+    ],
+    [
+     "pet",
+     0.05,
+     [
+      0.5,
+      0.1
+     ]
+    ],
+    [
+     "vehicle",
+     0.03,
+     [
+      0.5,
+      0.1
+     ]
+    ]
+   ]
+  },
+  "scenes_per_day": [
+   [
+    "person",
+    6.0,
+    [
+     7,
+     22
+    ]
+   ],
+   [
+    "person",
+    3.0,
+    [
+     8,
+     21
+    ]
+   ],
+   [
+    "courier",
+    1.5,
+    [
+     9,
+     18
+    ]
+   ],
+   [
+    "vehicle",
+    6.0,
+    [
+     6,
+     23
+    ]
+   ],
+   [
+    "pet",
+    6.0,
+    [
+     0,
+     24
+    ]
+   ],
+   [
+    "shadow",
+    15.0,
+    [
+     0,
+     24
+    ]
+   ]
+  ],
+  "unexpected_person_per_week": 1,
+  "arming": "night 23:00-06:30 every day; away 08:30-17:30 Monday-Friday",
+  "person_model": {
+   "p_answer_day": 0.85,
+   "p_answer_night": 0.5,
+   "delay_median_s": 45,
+   "delay_spread": "x 2^N(0,1)",
+   "p_correct_judgement": 0.97,
+   "ask_timeout_s": 180,
+   "no_answer_rule": "ask the next person, then keep it at home"
+  },
+  "clip_bytes": 3000000,
+  "verdict_words": [
+   "intruder",
+   "burglar",
+   "stranger",
+   "break-in",
+   "threat",
+   "suspicious",
+   "criminal"
+  ],
+  "camera_designs": [
+   "threshold_0.5",
+   "threshold_0.6",
+   "threshold_0.7",
+   "threshold_0.8",
+   "threshold_0.9",
+   "verdict_0.7",
+   "ask_0.5",
+   "ask_0.7"
+  ]
+ },
+ "results": {
+  "alarms": {
+   "normal": {
+    "one_path": {
+     "alarms": 300,
+     "within_60s_pct": 100.0,
+     "reached_centre_pct": 100.0,
+     "latency_s": {
+      "p50": 0.15,
+      "p95": 0.25,
+      "max": 0.26
+     },
+     "first_copy_path": {
+      "primary": 300,
+      "cellular": 0
+     },
+     "duplicate_copies_at_centre": 0,
+     "runs_with_duplicate_copies_pct": 0.0,
+     "extra_incidents_with_incident_dedupe": 0,
+     "extra_incidents_message_dedupe_only": 0,
+     "mean_transmissions_per_alarm": 1.0,
+     "cellular_alarm_messages_mean": 0.0,
+     "person_told_received_s": {
+      "p50": 0.31,
+      "p95": 0.45
+     },
+     "all_paths_lost_raised_at_centre_pct": 0.0,
+     "egress_destinations": [
+      "receiver.monitoring.example"
+     ],
+     "messages_to_household": {
+      "Perimeter alarm (zone 3) received by the monitoring centre. They handle dispatch.": 100,
+      "Smoke alarm (zone 1) received by the monitoring centre. They handle dispatch.": 100,
+      "Leak alarm (zone 2) received by the monitoring centre. They handle dispatch.": 100
+     },
+     "by_kind": {
+      "smoke": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_calls_911_with_address_sensor_time"
+       ]
+      },
+      "leak": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_calls_keyholder"
+       ]
+      },
+      "intrusion": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_verifies_with_keyholder_then_calls_911"
+       ]
+      }
+     }
+    },
+    "two_paths": {
+     "alarms": 300,
+     "within_60s_pct": 100.0,
+     "reached_centre_pct": 100.0,
+     "latency_s": {
+      "p50": 0.17,
+      "p95": 0.25,
+      "max": 0.26
+     },
+     "first_copy_path": {
+      "primary": 300,
+      "cellular": 0
+     },
+     "duplicate_copies_at_centre": 0,
+     "runs_with_duplicate_copies_pct": 0.0,
+     "extra_incidents_with_incident_dedupe": 0,
+     "extra_incidents_message_dedupe_only": 0,
+     "mean_transmissions_per_alarm": 1.0,
+     "cellular_alarm_messages_mean": 0.0,
+     "person_told_received_s": {
+      "p50": 0.32,
+      "p95": 0.44
+     },
+     "all_paths_lost_raised_at_centre_pct": 0.0,
+     "egress_destinations": [
+      "receiver.monitoring.example"
+     ],
+     "messages_to_household": {
+      "Perimeter alarm (zone 3) received by the monitoring centre. They handle dispatch.": 100,
+      "Smoke alarm (zone 1) received by the monitoring centre. They handle dispatch.": 100,
+      "Leak alarm (zone 2) received by the monitoring centre. They handle dispatch.": 100
+     },
+     "by_kind": {
+      "smoke": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_calls_911_with_address_sensor_time"
+       ]
+      },
+      "leak": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_calls_keyholder"
+       ]
+      },
+      "intrusion": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_verifies_with_keyholder_then_calls_911"
+       ]
+      }
+     }
+    }
+   },
+   "loss_20pct": {
+    "one_path": {
+     "alarms": 300,
+     "within_60s_pct": 100.0,
+     "reached_centre_pct": 100.0,
+     "latency_s": {
+      "p50": 0.18,
+      "p95": 6.59,
+      "max": 31.78
+     },
+     "first_copy_path": {
+      "primary": 300,
+      "cellular": 0
+     },
+     "duplicate_copies_at_centre": 82,
+     "runs_with_duplicate_copies_pct": 23.3,
+     "extra_incidents_with_incident_dedupe": 0,
+     "extra_incidents_message_dedupe_only": 0,
+     "mean_transmissions_per_alarm": 1.53,
+     "cellular_alarm_messages_mean": 0.0,
+     "person_told_received_s": {
+      "p50": 0.38,
+      "p95": 14.09
+     },
+     "all_paths_lost_raised_at_centre_pct": 13.7,
+     "egress_destinations": [
+      "receiver.monitoring.example"
+     ],
+     "messages_to_household": {
+      "Monitoring centre link is down. Alarms are queued and retried; local sirens work without it.": 225,
+      "Monitoring centre link restored.": 224,
+      "Perimeter alarm (zone 3) received by the monitoring centre. They handle dispatch.": 100,
+      "Smoke alarm (zone 1) received by the monitoring centre. They handle dispatch.": 100,
+      "Leak alarm (zone 2) received by the monitoring centre. They handle dispatch.": 100
+     },
+     "by_kind": {
+      "smoke": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_calls_911_with_address_sensor_time"
+       ]
+      },
+      "leak": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_calls_keyholder"
+       ]
+      },
+      "intrusion": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_verifies_with_keyholder_then_calls_911"
+       ]
+      }
+     }
+    },
+    "two_paths": {
+     "alarms": 300,
+     "within_60s_pct": 100.0,
+     "reached_centre_pct": 100.0,
+     "latency_s": {
+      "p50": 0.19,
+      "p95": 5.78,
+      "max": 13.1
+     },
+     "first_copy_path": {
+      "primary": 229,
+      "cellular": 71
+     },
+     "duplicate_copies_at_centre": 49,
+     "runs_with_duplicate_copies_pct": 15.7,
+     "extra_incidents_with_incident_dedupe": 0,
+     "extra_incidents_message_dedupe_only": 0,
+     "mean_transmissions_per_alarm": 1.33,
+     "cellular_alarm_messages_mean": 0.4,
+     "person_told_received_s": {
+      "p50": 0.4,
+      "p95": 6.05
+     },
+     "all_paths_lost_raised_at_centre_pct": 0.0,
+     "egress_destinations": [
+      "receiver.monitoring.example"
+     ],
+     "messages_to_household": {
+      "Perimeter alarm (zone 3) received by the monitoring centre. They handle dispatch.": 100,
+      "Smoke alarm (zone 1) received by the monitoring centre. They handle dispatch.": 100,
+      "Leak alarm (zone 2) received by the monitoring centre. They handle dispatch.": 100,
+      "The internet path to the monitoring centre is down. Alarms now go over the cellular backup.": 2,
+      "The internet path to the monitoring centre is back.": 2
+     },
+     "by_kind": {
+      "smoke": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_calls_911_with_address_sensor_time"
+       ]
+      },
+      "leak": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_calls_keyholder"
+       ]
+      },
+      "intrusion": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_verifies_with_keyholder_then_calls_911"
+       ]
+      }
+     }
+    }
+   },
+   "internet_down_10min": {
+    "one_path": {
+     "alarms": 300,
+     "within_60s_pct": 13.0,
+     "reached_centre_pct": 100.0,
+     "latency_s": {
+      "p50": 293.82,
+      "p95": 575.58,
+      "max": 600.15
+     },
+     "first_copy_path": {
+      "primary": 300,
+      "cellular": 0
+     },
+     "duplicate_copies_at_centre": 4,
+     "runs_with_duplicate_copies_pct": 1.3,
+     "extra_incidents_with_incident_dedupe": 0,
+     "extra_incidents_message_dedupe_only": 0,
+     "mean_transmissions_per_alarm": 17.18,
+     "cellular_alarm_messages_mean": 0.0,
+     "person_told_received_s": {
+      "p50": 293.9,
+      "p95": 575.72
+     },
+     "all_paths_lost_raised_at_centre_pct": 100.0,
+     "egress_destinations": [
+      "receiver.monitoring.example"
+     ],
+     "messages_to_household": {
+      "Monitoring centre link is down. Alarms are queued and retried; local sirens work without it.": 300,
+      "Monitoring centre link restored.": 300,
+      "Perimeter alarm (zone 3) received by the monitoring centre. They handle dispatch.": 100,
+      "Smoke alarm (zone 1) received by the monitoring centre. They handle dispatch.": 100,
+      "Leak alarm (zone 2) received by the monitoring centre. They handle dispatch.": 100
+     },
+     "by_kind": {
+      "smoke": {
+       "n": 100,
+       "within_60s_pct": 17.0,
+       "centre_action": [
+        "centre_calls_911_with_address_sensor_time"
+       ]
+      },
+      "leak": {
+       "n": 100,
+       "within_60s_pct": 12.0,
+       "centre_action": [
+        "centre_calls_keyholder"
+       ]
+      },
+      "intrusion": {
+       "n": 100,
+       "within_60s_pct": 10.0,
+       "centre_action": [
+        "centre_verifies_with_keyholder_then_calls_911"
+       ]
+      }
+     }
+    },
+    "two_paths": {
+     "alarms": 300,
+     "within_60s_pct": 100.0,
+     "reached_centre_pct": 100.0,
+     "latency_s": {
+      "p50": 0.68,
+      "p95": 5.79,
+      "max": 7.36
+     },
+     "first_copy_path": {
+      "primary": 0,
+      "cellular": 300
+     },
+     "duplicate_copies_at_centre": 3,
+     "runs_with_duplicate_copies_pct": 1.0,
+     "extra_incidents_with_incident_dedupe": 0,
+     "extra_incidents_message_dedupe_only": 0,
+     "mean_transmissions_per_alarm": 1.22,
+     "cellular_alarm_messages_mean": 1.01,
+     "person_told_received_s": {
+      "p50": 0.79,
+      "p95": 5.93
+     },
+     "all_paths_lost_raised_at_centre_pct": 0.0,
+     "egress_destinations": [
+      "receiver.monitoring.example"
+     ],
+     "messages_to_household": {
+      "The internet path to the monitoring centre is down. Alarms now go over the cellular backup.": 300,
+      "The internet path to the monitoring centre is back.": 300,
+      "Perimeter alarm (zone 3) received by the monitoring centre. They handle dispatch.": 100,
+      "Smoke alarm (zone 1) received by the monitoring centre. They handle dispatch.": 100,
+      "Leak alarm (zone 2) received by the monitoring centre. They handle dispatch.": 100
+     },
+     "by_kind": {
+      "smoke": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_calls_911_with_address_sensor_time"
+       ]
+      },
+      "leak": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_calls_keyholder"
+       ]
+      },
+      "intrusion": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_verifies_with_keyholder_then_calls_911"
+       ]
+      }
+     }
+    }
+   },
+   "internet_down_all_day": {
+    "one_path": {
+     "alarms": 60,
+     "within_60s_pct": 0.0,
+     "reached_centre_pct": 100.0,
+     "latency_s": {
+      "p50": 40847.35,
+      "p95": 82574.97,
+      "max": 84795.53
+     },
+     "first_copy_path": {
+      "primary": 60,
+      "cellular": 0
+     },
+     "duplicate_copies_at_centre": 2,
+     "runs_with_duplicate_copies_pct": 3.3,
+     "extra_incidents_with_incident_dedupe": 0,
+     "extra_incidents_message_dedupe_only": 0,
+     "mean_transmissions_per_alarm": 2039.83,
+     "cellular_alarm_messages_mean": 0.0,
+     "person_told_received_s": {
+      "p50": 40847.55,
+      "p95": 82575.15
+     },
+     "all_paths_lost_raised_at_centre_pct": 100.0,
+     "egress_destinations": [
+      "receiver.monitoring.example"
+     ],
+     "messages_to_household": {
+      "Monitoring centre link is down. Alarms are queued and retried; local sirens work without it.": 60,
+      "Monitoring centre link restored.": 60,
+      "Perimeter alarm (zone 3) received by the monitoring centre. They handle dispatch.": 20,
+      "Smoke alarm (zone 1) received by the monitoring centre. They handle dispatch.": 20,
+      "Leak alarm (zone 2) received by the monitoring centre. They handle dispatch.": 20
+     },
+     "by_kind": {
+      "smoke": {
+       "n": 20,
+       "within_60s_pct": 0.0,
+       "centre_action": [
+        "centre_calls_911_with_address_sensor_time"
+       ]
+      },
+      "leak": {
+       "n": 20,
+       "within_60s_pct": 0.0,
+       "centre_action": [
+        "centre_calls_keyholder"
+       ]
+      },
+      "intrusion": {
+       "n": 20,
+       "within_60s_pct": 0.0,
+       "centre_action": [
+        "centre_verifies_with_keyholder_then_calls_911"
+       ]
+      }
+     }
+    },
+    "two_paths": {
+     "alarms": 60,
+     "within_60s_pct": 100.0,
+     "reached_centre_pct": 100.0,
+     "latency_s": {
+      "p50": 0.59,
+      "p95": 0.9,
+      "max": 1.51
+     },
+     "first_copy_path": {
+      "primary": 0,
+      "cellular": 60
+     },
+     "duplicate_copies_at_centre": 0,
+     "runs_with_duplicate_copies_pct": 0.0,
+     "extra_incidents_with_incident_dedupe": 0,
+     "extra_incidents_message_dedupe_only": 0,
+     "mean_transmissions_per_alarm": 1.0,
+     "cellular_alarm_messages_mean": 1.0,
+     "person_told_received_s": {
+      "p50": 0.75,
+      "p95": 1.09
+     },
+     "all_paths_lost_raised_at_centre_pct": 0.0,
+     "egress_destinations": [
+      "receiver.monitoring.example"
+     ],
+     "messages_to_household": {
+      "The internet path to the monitoring centre is down. Alarms now go over the cellular backup.": 60,
+      "The internet path to the monitoring centre is back.": 60,
+      "Perimeter alarm (zone 3) received by the monitoring centre. They handle dispatch.": 20,
+      "Smoke alarm (zone 1) received by the monitoring centre. They handle dispatch.": 20,
+      "Leak alarm (zone 2) received by the monitoring centre. They handle dispatch.": 20
+     },
+     "by_kind": {
+      "smoke": {
+       "n": 20,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_calls_911_with_address_sensor_time"
+       ]
+      },
+      "leak": {
+       "n": 20,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_calls_keyholder"
+       ]
+      },
+      "intrusion": {
+       "n": 20,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_verifies_with_keyholder_then_calls_911"
+       ]
+      }
+     }
+    }
+   },
+   "internet_down_10min_cell_degraded": {
+    "one_path": {
+     "alarms": 300,
+     "within_60s_pct": 13.0,
+     "reached_centre_pct": 100.0,
+     "latency_s": {
+      "p50": 293.82,
+      "p95": 575.58,
+      "max": 600.15
+     },
+     "first_copy_path": {
+      "primary": 300,
+      "cellular": 0
+     },
+     "duplicate_copies_at_centre": 4,
+     "runs_with_duplicate_copies_pct": 1.3,
+     "extra_incidents_with_incident_dedupe": 0,
+     "extra_incidents_message_dedupe_only": 0,
+     "mean_transmissions_per_alarm": 17.18,
+     "cellular_alarm_messages_mean": 0.0,
+     "person_told_received_s": {
+      "p50": 293.9,
+      "p95": 575.72
+     },
+     "all_paths_lost_raised_at_centre_pct": 100.0,
+     "egress_destinations": [
+      "receiver.monitoring.example"
+     ],
+     "messages_to_household": {
+      "Monitoring centre link is down. Alarms are queued and retried; local sirens work without it.": 300,
+      "Monitoring centre link restored.": 300,
+      "Perimeter alarm (zone 3) received by the monitoring centre. They handle dispatch.": 100,
+      "Smoke alarm (zone 1) received by the monitoring centre. They handle dispatch.": 100,
+      "Leak alarm (zone 2) received by the monitoring centre. They handle dispatch.": 100
+     },
+     "by_kind": {
+      "smoke": {
+       "n": 100,
+       "within_60s_pct": 17.0,
+       "centre_action": [
+        "centre_calls_911_with_address_sensor_time"
+       ]
+      },
+      "leak": {
+       "n": 100,
+       "within_60s_pct": 12.0,
+       "centre_action": [
+        "centre_calls_keyholder"
+       ]
+      },
+      "intrusion": {
+       "n": 100,
+       "within_60s_pct": 10.0,
+       "centre_action": [
+        "centre_verifies_with_keyholder_then_calls_911"
+       ]
+      }
+     }
+    },
+    "two_paths": {
+     "alarms": 300,
+     "within_60s_pct": 99.3,
+     "reached_centre_pct": 100.0,
+     "latency_s": {
+      "p50": 3.68,
+      "p95": 23.93,
+      "max": 102.5
+     },
+     "first_copy_path": {
+      "primary": 4,
+      "cellular": 296
+     },
+     "duplicate_copies_at_centre": 158,
+     "runs_with_duplicate_copies_pct": 35.3,
+     "extra_incidents_with_incident_dedupe": 0,
+     "extra_incidents_message_dedupe_only": 0,
+     "mean_transmissions_per_alarm": 2.59,
+     "cellular_alarm_messages_mean": 2.08,
+     "person_told_received_s": {
+      "p50": 7.21,
+      "p95": 65.54
+     },
+     "all_paths_lost_raised_at_centre_pct": 9.0,
+     "egress_destinations": [
+      "receiver.monitoring.example"
+     ],
+     "messages_to_household": {
+      "The internet path to the monitoring centre is down. Alarms now go over the cellular backup.": 287,
+      "The internet path to the monitoring centre is back.": 287,
+      "Both paths to the monitoring centre are down. Alarms are kept and retried; local sirens still work. If there is a fire, leave and call 911 yourself.": 132,
+      "The monitoring centre can be reached again.": 132,
+      "Perimeter alarm (zone 3) received by the monitoring centre. They handle dispatch.": 100,
+      "Smoke alarm (zone 1) received by the monitoring centre. They handle dispatch.": 100,
+      "Leak alarm (zone 2) received by the monitoring centre. They handle dispatch.": 100
+     },
+     "by_kind": {
+      "smoke": {
+       "n": 100,
+       "within_60s_pct": 99.0,
+       "centre_action": [
+        "centre_calls_911_with_address_sensor_time"
+       ]
+      },
+      "leak": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_calls_keyholder"
+       ]
+      },
+      "intrusion": {
+       "n": 100,
+       "within_60s_pct": 99.0,
+       "centre_action": [
+        "centre_verifies_with_keyholder_then_calls_911"
+       ]
+      }
+     }
+    }
+   },
+   "internet_and_cell_down_10min": {
+    "one_path": {
+     "alarms": 300,
+     "within_60s_pct": 13.0,
+     "reached_centre_pct": 100.0,
+     "latency_s": {
+      "p50": 293.82,
+      "p95": 575.58,
+      "max": 600.15
+     },
+     "first_copy_path": {
+      "primary": 300,
+      "cellular": 0
+     },
+     "duplicate_copies_at_centre": 4,
+     "runs_with_duplicate_copies_pct": 1.3,
+     "extra_incidents_with_incident_dedupe": 0,
+     "extra_incidents_message_dedupe_only": 0,
+     "mean_transmissions_per_alarm": 17.18,
+     "cellular_alarm_messages_mean": 0.0,
+     "person_told_received_s": {
+      "p50": 293.9,
+      "p95": 575.72
+     },
+     "all_paths_lost_raised_at_centre_pct": 100.0,
+     "egress_destinations": [
+      "receiver.monitoring.example"
+     ],
+     "messages_to_household": {
+      "Monitoring centre link is down. Alarms are queued and retried; local sirens work without it.": 300,
+      "Monitoring centre link restored.": 300,
+      "Perimeter alarm (zone 3) received by the monitoring centre. They handle dispatch.": 100,
+      "Smoke alarm (zone 1) received by the monitoring centre. They handle dispatch.": 100,
+      "Leak alarm (zone 2) received by the monitoring centre. They handle dispatch.": 100
+     },
+     "by_kind": {
+      "smoke": {
+       "n": 100,
+       "within_60s_pct": 17.0,
+       "centre_action": [
+        "centre_calls_911_with_address_sensor_time"
+       ]
+      },
+      "leak": {
+       "n": 100,
+       "within_60s_pct": 12.0,
+       "centre_action": [
+        "centre_calls_keyholder"
+       ]
+      },
+      "intrusion": {
+       "n": 100,
+       "within_60s_pct": 10.0,
+       "centre_action": [
+        "centre_verifies_with_keyholder_then_calls_911"
+       ]
+      }
+     }
+    },
+    "two_paths": {
+     "alarms": 300,
+     "within_60s_pct": 13.0,
+     "reached_centre_pct": 100.0,
+     "latency_s": {
+      "p50": 294.81,
+      "p95": 578.58,
+      "max": 600.88
+     },
+     "first_copy_path": {
+      "primary": 271,
+      "cellular": 29
+     },
+     "duplicate_copies_at_centre": 2,
+     "runs_with_duplicate_copies_pct": 0.7,
+     "extra_incidents_with_incident_dedupe": 0,
+     "extra_incidents_message_dedupe_only": 0,
+     "mean_transmissions_per_alarm": 17.32,
+     "cellular_alarm_messages_mean": 9.33,
+     "person_told_received_s": {
+      "p50": 294.96,
+      "p95": 578.72
+     },
+     "all_paths_lost_raised_at_centre_pct": 100.0,
+     "egress_destinations": [
+      "receiver.monitoring.example"
+     ],
+     "messages_to_household": {
+      "Both paths to the monitoring centre are down. Alarms are kept and retried; local sirens still work. If there is a fire, leave and call 911 yourself.": 300,
+      "The monitoring centre can be reached again.": 300,
+      "Perimeter alarm (zone 3) received by the monitoring centre. They handle dispatch.": 100,
+      "Smoke alarm (zone 1) received by the monitoring centre. They handle dispatch.": 100,
+      "Leak alarm (zone 2) received by the monitoring centre. They handle dispatch.": 100
+     },
+     "by_kind": {
+      "smoke": {
+       "n": 100,
+       "within_60s_pct": 17.0,
+       "centre_action": [
+        "centre_calls_911_with_address_sensor_time"
+       ]
+      },
+      "leak": {
+       "n": 100,
+       "within_60s_pct": 12.0,
+       "centre_action": [
+        "centre_calls_keyholder"
+       ]
+      },
+      "intrusion": {
+       "n": 100,
+       "within_60s_pct": 10.0,
+       "centre_action": [
+        "centre_verifies_with_keyholder_then_calls_911"
+       ]
+      }
+     }
+    }
+   },
+   "hub_reboot": {
+    "one_path": {
+     "alarms": 300,
+     "within_60s_pct": 100.0,
+     "reached_centre_pct": 100.0,
+     "latency_s": {
+      "p50": 0.15,
+      "p95": 0.25,
+      "max": 0.26
+     },
+     "first_copy_path": {
+      "primary": 300,
+      "cellular": 0
+     },
+     "duplicate_copies_at_centre": 0,
+     "runs_with_duplicate_copies_pct": 0.0,
+     "extra_incidents_with_incident_dedupe": 0,
+     "extra_incidents_message_dedupe_only": 200,
+     "mean_transmissions_per_alarm": 1.67,
+     "cellular_alarm_messages_mean": 0.0,
+     "person_told_received_s": {
+      "p50": 0.31,
+      "p95": 0.45
+     },
+     "all_paths_lost_raised_at_centre_pct": 0.0,
+     "egress_destinations": [
+      "receiver.monitoring.example"
+     ],
+     "messages_to_household": {
+      "Smoke alarm (zone 1) received by the monitoring centre. They handle dispatch.": 200,
+      "Leak alarm (zone 2) received by the monitoring centre. They handle dispatch.": 200,
+      "Perimeter alarm (zone 3) received by the monitoring centre. They handle dispatch.": 100,
+      "Monitoring centre link is down. Alarms are queued and retried; local sirens work without it.": 100,
+      "Monitoring centre link restored.": 100
+     },
+     "by_kind": {
+      "smoke": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_calls_911_with_address_sensor_time"
+       ]
+      },
+      "leak": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_calls_keyholder"
+       ]
+      },
+      "intrusion": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_verifies_with_keyholder_then_calls_911"
+       ]
+      }
+     }
+    },
+    "two_paths": {
+     "alarms": 300,
+     "within_60s_pct": 100.0,
+     "reached_centre_pct": 100.0,
+     "latency_s": {
+      "p50": 0.17,
+      "p95": 0.25,
+      "max": 0.26
+     },
+     "first_copy_path": {
+      "primary": 300,
+      "cellular": 0
+     },
+     "duplicate_copies_at_centre": 0,
+     "runs_with_duplicate_copies_pct": 0.0,
+     "extra_incidents_with_incident_dedupe": 0,
+     "extra_incidents_message_dedupe_only": 200,
+     "mean_transmissions_per_alarm": 1.67,
+     "cellular_alarm_messages_mean": 0.0,
+     "person_told_received_s": {
+      "p50": 0.32,
+      "p95": 0.44
+     },
+     "all_paths_lost_raised_at_centre_pct": 0.0,
+     "egress_destinations": [
+      "receiver.monitoring.example"
+     ],
+     "messages_to_household": {
+      "Smoke alarm (zone 1) received by the monitoring centre. They handle dispatch.": 200,
+      "Leak alarm (zone 2) received by the monitoring centre. They handle dispatch.": 200,
+      "Perimeter alarm (zone 3) received by the monitoring centre. They handle dispatch.": 100
+     },
+     "by_kind": {
+      "smoke": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_calls_911_with_address_sensor_time"
+       ]
+      },
+      "leak": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_calls_keyholder"
+       ]
+      },
+      "intrusion": {
+       "n": 100,
+       "within_60s_pct": 100.0,
+       "centre_action": [
+        "centre_verifies_with_keyholder_then_calls_911"
+       ]
+      }
+     }
+    }
+   }
+  },
+  "cellular_days": {
+   "normal": {
+    "days": 10,
+    "cell_messages_billed_per_day": {
+     "mean": 48.9,
+     "min": 48,
+     "max": 52
+    },
+    "cell_bytes_billed_per_day": {
+     "mean": 10586.9,
+     "min": 10392,
+     "max": 11258
+    },
+    "cell_usd_per_day": {
+     "mean": 0.01,
+     "min": 0.0104,
+     "max": 0.0113
+    },
+    "cell_uplink_by_class_mean_per_day": {
+     "alarm_heartbeat": 24.5
+    },
+    "primary_failovers_per_day": {
+     "mean": 0.0,
+     "min": 0,
+     "max": 0
+    },
+    "cell_failures_per_day": {
+     "mean": 0.0,
+     "min": 0,
+     "max": 0
+    },
+    "path_messages_to_household_per_day": {
+     "mean": 0.0,
+     "min": 0,
+     "max": 0
+    },
+    "alarms_acked": "30/30",
+    "centre_incidents": 30,
+    "all_paths_lost_at_centre": 0,
+    "camera_items_out": 0,
+    "path_messages_seen": {}
+   },
+   "loss_20pct": {
+    "days": 10,
+    "cell_messages_billed_per_day": {
+     "mean": 335.0,
+     "min": 292,
+     "max": 369
+    },
+    "cell_bytes_billed_per_day": {
+     "mean": 72598.8,
+     "min": 63290,
+     "max": 80064
+    },
+    "cell_usd_per_day": {
+     "mean": 0.07,
+     "min": 0.0633,
+     "max": 0.0801
+    },
+    "cell_uplink_by_class_mean_per_day": {
+     "alarm_heartbeat": 166.8,
+     "alarm_event": 2.0
+    },
+    "primary_failovers_per_day": {
+     "mean": 119.9,
+     "min": 112,
+     "max": 130
+    },
+    "cell_failures_per_day": {
+     "mean": 0.0,
+     "min": 0,
+     "max": 0
+    },
+    "path_messages_to_household_per_day": {
+     "mean": 0.6,
+     "min": 0,
+     "max": 4
+    },
+    "alarms_acked": "30/30",
+    "centre_incidents": 30,
+    "all_paths_lost_at_centre": 0,
+    "camera_items_out": 0,
+    "path_messages_seen": {
+     "The internet path to the monitoring centre is down. Alarms now go over the cellular backup.": 3,
+     "The internet path to the monitoring centre is back.": 3
+    }
+   },
+   "internet_down_all_day": {
+    "days": 10,
+    "cell_messages_billed_per_day": {
+     "mean": 985.2,
+     "min": 976,
+     "max": 994
+    },
+    "cell_bytes_billed_per_day": {
+     "mean": 213480.6,
+     "min": 211481,
+     "max": 215379
+    },
+    "cell_usd_per_day": {
+     "mean": 0.21,
+     "min": 0.2115,
+     "max": 0.2154
+    },
+    "cell_uplink_by_class_mean_per_day": {
+     "alarm_heartbeat": 490.2,
+     "alarm_event": 5.2
+    },
+    "primary_failovers_per_day": {
+     "mean": 1.0,
+     "min": 1,
+     "max": 1
+    },
+    "cell_failures_per_day": {
+     "mean": 0.0,
+     "min": 0,
+     "max": 0
+    },
+    "path_messages_to_household_per_day": {
+     "mean": 1.0,
+     "min": 1,
+     "max": 1
+    },
+    "alarms_acked": "30/30",
+    "centre_incidents": 30,
+    "all_paths_lost_at_centre": 0,
+    "camera_items_out": 0,
+    "path_messages_seen": {
+     "The internet path to the monitoring centre is down. Alarms now go over the cellular backup.": 10
+    }
+   },
+   "internet_down_all_day_cell_degraded": {
+    "days": 10,
+    "cell_messages_billed_per_day": {
+     "mean": 1269.7,
+     "min": 1240,
+     "max": 1311
+    },
+    "cell_bytes_billed_per_day": {
+     "mean": 275384.0,
+     "min": 268941,
+     "max": 284542
+    },
+    "cell_usd_per_day": {
+     "mean": 0.28,
+     "min": 0.2689,
+     "max": 0.2845
+    },
+    "cell_uplink_by_class_mean_per_day": {
+     "alarm_heartbeat": 732.8,
+     "alarm_event": 11.0
+    },
+    "primary_failovers_per_day": {
+     "mean": 1.0,
+     "min": 1,
+     "max": 1
+    },
+    "cell_failures_per_day": {
+     "mean": 50.2,
+     "min": 44,
+     "max": 58
+    },
+    "path_messages_to_household_per_day": {
+     "mean": 87.6,
+     "min": 78,
+     "max": 99
+    },
+    "alarms_acked": "30/30",
+    "centre_incidents": 30,
+    "all_paths_lost_at_centre": 63,
+    "camera_items_out": 0,
+    "path_messages_seen": {
+     "Both paths to the monitoring centre are down. Alarms are kept and retried; local sirens still work. If there is a fire, leave and call 911 yourself.": 436,
+     "The internet path to the monitoring centre is down. Alarms now go over the cellular backup.": 10,
+     "The monitoring centre can be reached again.": 430
+    }
+   }
+  },
+  "camera_weeks": {
+   "threshold_0.5": {
+    "weeks": 26,
+    "per_week": {
+     "scenes": 264.58,
+     "person_labels": 85.38,
+     "false_person_labels": 13.85,
+     "person_alerts": 79.96,
+     "false_person_alerts": 8.42,
+     "person_alerts_while_armed": 39.62,
+     "false_person_alerts_while_armed": 4.81,
+     "real_persons_not_alerted": 4.0,
+     "asks": 0.0,
+     "first_asks": 0.0,
+     "false_person_asks": 0.0,
+     "signals_to_centre": 0.0,
+     "false_signals_to_centre": 0.0,
+     "centre_incidents": 0.0,
+     "clips_left_house": 0.0
+    },
+    "clips_left_without_consent_total": 0,
+    "messages_with_verdict_words_total": 0,
+    "ask_outcomes_total": {},
+    "unexpected_person_tests": {
+     "n": 26,
+     "reported_as_person_pct": 92.3,
+     "owner_messaged_within_60s_pct": 92.3,
+     "asked_within_60s_pct": 0.0,
+     "reached_centre_pct": 0.0,
+     "reached_centre_s": {
+      "p50": null,
+      "p95": null
+     },
+     "outcomes": {
+      "None": 26
+     }
+    },
+    "egress_classes_total": {},
+    "example_ask": null,
+    "example_tell": "Person detected at the front door."
+   },
+   "threshold_0.6": {
+    "weeks": 26,
+    "per_week": {
+     "scenes": 264.58,
+     "person_labels": 85.38,
+     "false_person_labels": 13.85,
+     "person_alerts": 76.04,
+     "false_person_alerts": 4.5,
+     "person_alerts_while_armed": 37.31,
+     "false_person_alerts_while_armed": 2.5,
+     "real_persons_not_alerted": 4.0,
+     "asks": 0.0,
+     "first_asks": 0.0,
+     "false_person_asks": 0.0,
+     "signals_to_centre": 0.0,
+     "false_signals_to_centre": 0.0,
+     "centre_incidents": 0.0,
+     "clips_left_house": 0.0
+    },
+    "clips_left_without_consent_total": 0,
+    "messages_with_verdict_words_total": 0,
+    "ask_outcomes_total": {},
+    "unexpected_person_tests": {
+     "n": 26,
+     "reported_as_person_pct": 92.3,
+     "owner_messaged_within_60s_pct": 92.3,
+     "asked_within_60s_pct": 0.0,
+     "reached_centre_pct": 0.0,
+     "reached_centre_s": {
+      "p50": null,
+      "p95": null
+     },
+     "outcomes": {
+      "None": 26
+     }
+    },
+    "egress_classes_total": {},
+    "example_ask": null,
+    "example_tell": "Person detected at the front door."
+   },
+   "threshold_0.7": {
+    "weeks": 26,
+    "per_week": {
+     "scenes": 264.58,
+     "person_labels": 85.38,
+     "false_person_labels": 13.85,
+     "person_alerts": 70.81,
+     "false_person_alerts": 1.46,
+     "person_alerts_while_armed": 34.81,
+     "false_person_alerts_while_armed": 0.81,
+     "real_persons_not_alerted": 6.19,
+     "asks": 0.0,
+     "first_asks": 0.0,
+     "false_person_asks": 0.0,
+     "signals_to_centre": 0.0,
+     "false_signals_to_centre": 0.0,
+     "centre_incidents": 0.0,
+     "clips_left_house": 0.0
+    },
+    "clips_left_without_consent_total": 0,
+    "messages_with_verdict_words_total": 0,
+    "ask_outcomes_total": {},
+    "unexpected_person_tests": {
+     "n": 26,
+     "reported_as_person_pct": 92.3,
+     "owner_messaged_within_60s_pct": 88.5,
+     "asked_within_60s_pct": 0.0,
+     "reached_centre_pct": 0.0,
+     "reached_centre_s": {
+      "p50": null,
+      "p95": null
+     },
+     "outcomes": {
+      "None": 26
+     }
+    },
+    "egress_classes_total": {},
+    "example_ask": null,
+    "example_tell": "Person detected at the front door."
+   },
+   "threshold_0.8": {
+    "weeks": 26,
+    "per_week": {
+     "scenes": 264.58,
+     "person_labels": 85.38,
+     "false_person_labels": 13.85,
+     "person_alerts": 53.58,
+     "false_person_alerts": 0.42,
+     "person_alerts_while_armed": 25.92,
+     "false_person_alerts_while_armed": 0.35,
+     "real_persons_not_alerted": 22.38,
+     "asks": 0.0,
+     "first_asks": 0.0,
+     "false_person_asks": 0.0,
+     "signals_to_centre": 0.0,
+     "false_signals_to_centre": 0.0,
+     "centre_incidents": 0.0,
+     "clips_left_house": 0.0
+    },
+    "clips_left_without_consent_total": 0,
+    "messages_with_verdict_words_total": 0,
+    "ask_outcomes_total": {},
+    "unexpected_person_tests": {
+     "n": 26,
+     "reported_as_person_pct": 92.3,
+     "owner_messaged_within_60s_pct": 69.2,
+     "asked_within_60s_pct": 0.0,
+     "reached_centre_pct": 0.0,
+     "reached_centre_s": {
+      "p50": null,
+      "p95": null
+     },
+     "outcomes": {
+      "None": 26
+     }
+    },
+    "egress_classes_total": {},
+    "example_ask": null,
+    "example_tell": "Person detected at the front door."
+   },
+   "threshold_0.9": {
+    "weeks": 26,
+    "per_week": {
+     "scenes": 264.58,
+     "person_labels": 85.38,
+     "false_person_labels": 13.85,
+     "person_alerts": 19.42,
+     "false_person_alerts": 0.08,
+     "person_alerts_while_armed": 9.38,
+     "false_person_alerts_while_armed": 0.0,
+     "real_persons_not_alerted": 56.19,
+     "asks": 0.0,
+     "first_asks": 0.0,
+     "false_person_asks": 0.0,
+     "signals_to_centre": 0.0,
+     "false_signals_to_centre": 0.0,
+     "centre_incidents": 0.0,
+     "clips_left_house": 0.0
+    },
+    "clips_left_without_consent_total": 0,
+    "messages_with_verdict_words_total": 0,
+    "ask_outcomes_total": {},
+    "unexpected_person_tests": {
+     "n": 26,
+     "reported_as_person_pct": 92.3,
+     "owner_messaged_within_60s_pct": 19.2,
+     "asked_within_60s_pct": 0.0,
+     "reached_centre_pct": 0.0,
+     "reached_centre_s": {
+      "p50": null,
+      "p95": null
+     },
+     "outcomes": {
+      "None": 26
+     }
+    },
+    "egress_classes_total": {},
+    "example_ask": null,
+    "example_tell": "Person detected at the front door."
+   },
+   "verdict_0.7": {
+    "weeks": 26,
+    "per_week": {
+     "scenes": 264.58,
+     "person_labels": 85.38,
+     "false_person_labels": 13.85,
+     "person_alerts": 34.81,
+     "false_person_alerts": 0.81,
+     "person_alerts_while_armed": 34.81,
+     "false_person_alerts_while_armed": 0.81,
+     "real_persons_not_alerted": 41.54,
+     "asks": 0.0,
+     "first_asks": 0.0,
+     "false_person_asks": 0.0,
+     "signals_to_centre": 34.81,
+     "false_signals_to_centre": 33.92,
+     "centre_incidents": 25.23,
+     "clips_left_house": 0.0
+    },
+    "clips_left_without_consent_total": 0,
+    "messages_with_verdict_words_total": 905,
+    "ask_outcomes_total": {},
+    "unexpected_person_tests": {
+     "n": 26,
+     "reported_as_person_pct": 92.3,
+     "owner_messaged_within_60s_pct": 88.5,
+     "asked_within_60s_pct": 0.0,
+     "reached_centre_pct": 88.5,
+     "reached_centre_s": {
+      "p50": 0.01,
+      "p95": 0.01
+     },
+     "outcomes": {
+      "None": 26
+     }
+    },
+    "egress_classes_total": {
+     "alarm_event": 905
+    },
+    "example_ask": null,
+    "example_tell": "Intruder detected at the front door. The monitoring centre has been alerted."
+   },
+   "ask_0.5": {
+    "weeks": 26,
+    "per_week": {
+     "scenes": 264.58,
+     "person_labels": 85.38,
+     "false_person_labels": 13.85,
+     "person_alerts": 0.0,
+     "false_person_alerts": 0.0,
+     "person_alerts_while_armed": 0.0,
+     "false_person_alerts_while_armed": 0.0,
+     "real_persons_not_alerted": 0.0,
+     "asks": 47.62,
+     "first_asks": 39.62,
+     "false_person_asks": 4.81,
+     "signals_to_centre": 1.46,
+     "false_signals_to_centre": 0.77,
+     "centre_incidents": 1.46,
+     "clips_left_house": 1.46
+    },
+    "clips_left_without_consent_total": 0,
+    "messages_with_verdict_words_total": 0,
+    "ask_outcomes_total": {
+     "person_said_no": 792,
+     "no_answer": 208,
+     "person_shared": 30
+    },
+    "unexpected_person_tests": {
+     "n": 26,
+     "reported_as_person_pct": 92.3,
+     "owner_messaged_within_60s_pct": 92.3,
+     "asked_within_60s_pct": 92.3,
+     "reached_centre_pct": 69.2,
+     "reached_centre_s": {
+      "p50": 40.71,
+      "p95": 340.09
+     },
+     "outcomes": {
+      "person_shared": 18,
+      "no_answer_kept_home": 5,
+      "None": 2,
+      "person_said_no": 1
+     }
+    },
+    "egress_classes_total": {
+     "alarm_event": 38,
+     "camera_clip": 38
+    },
+    "example_ask": "The front door camera saw something that looks like a person at 00:27 (confidence 0.58). It could also be a pet, a shadow or a reflection. The clip is kept at home (clip/camera.front/0001); you can watch it in the home app. The alarm is set to night. Share this clip with the monitoring centre? Yes / No.",
+    "example_tell": null
+   },
+   "ask_0.7": {
+    "weeks": 26,
+    "per_week": {
+     "scenes": 264.58,
+     "person_labels": 85.38,
+     "false_person_labels": 13.85,
+     "person_alerts": 0.0,
+     "false_person_alerts": 0.0,
+     "person_alerts_while_armed": 0.0,
+     "false_person_alerts_while_armed": 0.0,
+     "real_persons_not_alerted": 0.0,
+     "asks": 41.35,
+     "first_asks": 34.81,
+     "false_person_asks": 0.81,
+     "signals_to_centre": 1.42,
+     "false_signals_to_centre": 0.65,
+     "centre_incidents": 1.42,
+     "clips_left_house": 1.42
+    },
+    "clips_left_without_consent_total": 0,
+    "messages_with_verdict_words_total": 0,
+    "ask_outcomes_total": {
+     "person_said_no": 704,
+     "no_answer": 170,
+     "person_shared": 31
+    },
+    "unexpected_person_tests": {
+     "n": 26,
+     "reported_as_person_pct": 92.3,
+     "owner_messaged_within_60s_pct": 88.5,
+     "asked_within_60s_pct": 88.5,
+     "reached_centre_pct": 76.9,
+     "reached_centre_s": {
+      "p50": 63.46,
+      "p95": 234.48
+     },
+     "outcomes": {
+      "person_shared": 20,
+      "None": 3,
+      "no_answer_kept_home": 3
+     }
+    },
+    "egress_classes_total": {
+     "alarm_event": 37,
+     "camera_clip": 37
+    },
+    "example_ask": "The front door camera saw something that looks like a person at 09:25 (confidence 0.81). It could also be a pet, a shadow or a reflection. The clip is kept at home (clip/camera.front/0006); you can watch it in the home app. The alarm is set to away. Share this clip with the monitoring centre? Yes / No.",
+    "example_tell": null
+   }
+  },
+  "egress_destinations_containing_911": [],
+  "wall_time_s": 238.2
+ },
+ "limitations": [
+  "Simulation only. The cellular link is a model with assumed latency, radio setup, loss, overhead and tariff; no modem, operator or real network was used.",
+  "The camera detector is an assumed confusion table; no detector was run and no footage exists. False 'person' counts follow from these assumptions and the assumed scene rates.",
+  "The person model (answer rates, delay, judgement) is assumed; real people vary widely.",
+  "Alarms are injected as detector events; the full 15-device home is not built in part A.",
+  "The centre's actions are a modelled workflow, not any real centre's procedure, and the operator's own time to act is not modelled.",
+  "Push messages to people away from home still need the internet; a cellular SMS or call path to people is not modelled (the centre calls the keyholder in its workflow).",
+  "Incident-level dedupe can merge a genuinely new alarm in the same zone into an open incident within 30 minutes if no restore was received.",
+  "Not a certified alarm system and not conformance testing against EN 50136, UL or NFPA."
+ ]
+}

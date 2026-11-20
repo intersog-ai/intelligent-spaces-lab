@@ -1,0 +1,20 @@
+# B07 visuals: one scene per narration paragraph
+
+Numbers on screen come from `experiments/b07_approval/results.json`. Every scene is in motion from its first half second.
+
+| # | Key | Headline (max 7 words) | On-screen numbers | Moving visual |
+|---|---|---|---|---|
+| 1 | title | The agent and the approval gate | B07 | Schematic: a house outline draws itself line by line; a phone icon slides in beside the garage and a padlock clicks shut on the link between them. |
+| 2 | twin | It acts. You stay in charge. | "No language model ran" | Real footage idea: a hand taps a phone on a kitchen counter, a garage door rises in soft focus behind. Pexels: "smartphone kitchen smart home", "garage door opening". |
+| 3 | levels | Three levels, one needs your yes | 1 act · 2 ask · 3 never alone · 1,000 blocked (B01) | Schematic: three lanes scroll left to right; tokens in lane 1 pass straight through, lane 2 tokens pause at a "?" gate, lane 3 tokens stop at a lock until a phone pulse arrives. |
+| 4 | ticket | Each yes is a signed ticket | action · nonce · expiry · signature | Schematic: a ticket card assembles field by field (action, digest, nonce, clock); a phone stamps it with a key glyph; the hub re-reads it with a scanning line before a garage icon moves. |
+| 5 | attacks | Ten attacks, fifty times each | B01-style: 6 of 10 types got through · new gate: 0 | Schematic: ten attack arrows fire at two gates side by side; six pierce the left gate in red, all ten bounce off the right gate; counters tick to 50. |
+| 6 | courier | Until 18:55 means until 18:55 | 18:55 · 150/150 closed at window end · replay refused | Schematic: a clock hand sweeps to 18:55 and the garage icon closes itself; the clock jumps to 23:00, a grey copy of the old ticket slides in and gets a "used" stamp. |
+| 7 | swap | It changed the door. Refused. | front approved · back tried · old engine 50/50 unlocked · new 0/50 | Schematic: a ticket reading "front door" is approved; the agent's card flips to "back door"; on the left the back lock opens, on the right the hub's digest check flashes and the lock stays shut. |
+| 8 | waiting | While waiting, nothing moves | 0 movements · 20 setups x 100 requests | Real footage idea: a courier waits at a closed garage holding a parcel, a doorbell light pulses. Pexels: "delivery man waiting door", "courier package doorstep". Overlay: a "waiting" indicator ring that fills slowly. |
+| 9 | away | Away, offline, asleep | p50 22 s free · 85% offline in 2 min · 100% with 5 min · 0% asleep | Schematic: two phone icons on a timeline; one greys out (offline) then reconnects, a reply arrow arrives late and hits an "expired" wall; with a longer timeline bar, the same arrow gets through. |
+| 10 | fatigue | Ask everything: twenty prompts a day | 20.25 prompts/day · 260 hurried answers · 16.4% blocked | Schematic: notification bubbles pile up on a phone screen faster and faster; a thumb starts tapping "yes" without reading, bubbles shown blurred. |
+| 11 | rules | Standing rules, with limits | by level 3.75/day · rules 1.02/day · 1 wrong vs 6 without limits | Schematic: a calendar week fills; a rule card ("weekdays, 10-17, once, 20 min") slides on and most bubbles vanish; remove the card's limit rows and red night-time garage openings appear. |
+| 12 | injection | Hidden instructions never reached the phone | old engine up to 17 in 300 · new gate 0 · unapproved 0 | Schematic: text snippets in a device list, a calendar and a delivery note glow red and flow toward the agent; the agent's output arrows hit the gate and dissolve before reaching the phone icon. |
+| 13 | ourbugs | We fixed our own episode-one code | 3 gaps: replies trusted, action not rechecked, details not traced | Schematic: a code panel scrolls; three lines highlight one after another and a wrapper box draws around the original block without changing it. |
+| 14 | close | One action, once, for a limited time | B07 · intersog.com | Schematic: the ticket from scene 4 is used, stamped, and fades; the house outline settles with the garage closed and a steady green status dot; Intersog wordmark fades in. |

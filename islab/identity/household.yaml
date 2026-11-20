@@ -1,0 +1,50 @@
+# B06 household trust settings. A person edits this file; load with islab.identity.load_config().
+#
+# Voice identity PERSONALIZES (whose calendar, whose music, whose temperature) and can RAISE trust
+# from "guest" to a named person for level-1 and level-2 actions. It NEVER authorizes a level-3
+# action (unlock, disarm, open garage): those always need a single-use approval on an approver's
+# phone, enforced by islab.policy.PolicyEngine. Nothing in this file can change that.
+
+# Who lives here. 'voice' says which synthetic series voice plays the person in experiments/b06_identity.
+people:
+  anna: {role: adult, voice: Amanda, climate_c: 21, playlist: "Anna's morning mix"}
+  mark: {role: adult, voice: David,  climate_c: 20, playlist: "Mark's focus list"}
+  sam:  {role: teen,  voice: Ollie,  climate_c: 22, playlist: "Sam's playlist"}
+# Anyone the home does not recognise is a guest. Guest voices in the experiment: Courtney, Chris,
+# Eric and the "AnnaAssist" voice (never enrolled).
+house_defaults: {climate_c: 21, playlist: "the house playlist"}
+
+# Identity tiers. Values are the operating points chosen in experiments/b06_identity (results.json ->
+# calibration.chosen). tests/test_b06_identity.py checks they match.
+#   comfort: music, temperature preference, greeting. A wrong guess costs little.
+#   named:   private data read out loud (calendar, messages) and acting as the named person in the
+#            policy engine (level 1 and 2). A wrong guess exposes someone else's data.
+tiers:
+  comfort: {threshold: 0.7575, margin: 0.0}
+  named:   {threshold: 0.8175, margin: 0.0}
+# Two known voices at once: if the second-best profile also scores at least this, the hub assumes overlap
+# (results.json -> calibration.overlap_second_score_threshold).
+overlap: {second_score: 0.8061}
+# A request is never "named" if the liveness check fails or two voices overlap.
+require_live_for: [named]
+
+# What each person may do. Level 3 = needs a phone approval, whatever the voice says.
+permissions:
+  sam:   {deny: [disarm_alarm, open_valve, share_camera_clip, arm_away]}
+  guest: {allow: [get_state, set_light, set_shade, set_climate, close_valve, lock_door, close_garage,
+                  unlock_door, open_garage]}     # a guest may ASK for a door; an adult decides on the phone
+approvers:
+  default: [anna, mark]
+  unlock_door: [anna, mark]
+  open_garage: [anna, mark]
+  disarm_alarm: [anna, mark]
+levels:
+  open_garage: 3
+  disarm_alarm: 3
+
+# Personal scopes and the tier each one needs.
+scopes:
+  calendar: named
+  messages: named
+  music: comfort
+  temperature: comfort
